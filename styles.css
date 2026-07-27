@@ -87,62 +87,15 @@ button { font: inherit; color: inherit; }
 }
 .hero-title {
   position: absolute;
-  left: 20.5%;
-  top: 3.2%;
-  width: 59%;
-  height: 48%;
+  left: 26.5%;
+  top: 9%;
+  width: 47%;
+  height: auto;
   z-index: 2;
-  overflow: visible;
   filter: drop-shadow(0 7px 8px rgba(30,8,7,.62));
+  user-select: none;
+  -webkit-user-drag: none;
 }
-.hero-title text { fill: url(#heroGold); }
-.svg-momo {
-  font-family: Impact, "Arial Black", sans-serif;
-  font-size: 242px;
-  font-weight: 900;
-  letter-spacing: 14px;
-  stroke: url(#heroGold);
-  stroke-width: 2.4px;
-  paint-order: stroke fill;
-}
-.svg-cn {
-  font-family: "STKaiti", "KaiTi", "FZKai-Z03", serif;
-  font-size: 91px;
-  font-weight: 900;
-  letter-spacing: 11px;
-}
-.svg-en {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 25px;
-  font-weight: 600;
-  letter-spacing: 11px;
-}
-.svg-motto {
-  font-family: "STKaiti", "KaiTi", serif;
-  font-size: 41px;
-  font-weight: 700;
-  letter-spacing: 10px;
-}
-.title-motto line, .title-motto path {
-  fill: none;
-  stroke: url(#heroGold);
-  stroke-width: 2;
-}
-.title-motto path { fill: url(#heroGold); stroke-width: 1; }
-.title-line {
-  opacity: 0;
-  transform-origin: 50% 45%;
-}
-.scene-home.is-active .title-primary { animation: titleReveal 1.2s .18s cubic-bezier(.2,.8,.2,1) forwards; }
-.scene-home.is-active .title-english { animation: titleReveal .9s .72s ease forwards; }
-.scene-home.is-active .title-motto { animation: titleReveal .9s 1.02s ease forwards; }
-.title-sheen {
-  opacity: 0;
-  mix-blend-mode: screen;
-}
-.scene-home.is-active .title-sheen { animation: codeSheen 4.8s 1.45s ease-in-out infinite; }
-.hero-title:hover .title-primary { filter: brightness(1.12); }
-.hero-title:hover .title-backglow { opacity: .8; }
 }
 
 .water-shimmer {
