@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0a10" />
+  <title>MOMO 默默 · 非遗漫游</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main id="app" aria-live="polite">
+    <div class="stage" id="stage">
+      <section class="scene scene-home is-active" data-scene="home" aria-label="默默·非遗漫游首页">
+        <img class="scene-art" src="./assets/home.jpg" alt="灯火辉煌的非遗小镇水乡夜景" />
+        <div class="title-aura" aria-hidden="true"></div>
+        <div class="water-shimmer" aria-hidden="true"></div>
+        <button class="journey-gate" id="enterJourney" type="button">
+          <span class="gate-seal">默</span>
+          <span class="gate-copy"><b>开启非遗漫游</b><small>ENTER THE JOURNEY</small></span>
+          <span class="gate-arrow">→</span>
+        </button>
+        <p class="home-hint">移动灵珠，照见小镇深处</p>
+      </section>
+
+      <section class="scene scene-draw" data-scene="draw" aria-label="抽取非遗盲盒">
+        <img class="scene-art" src="./assets/draw.jpg" alt="九款非遗角色陈列在水乡夜景中" />
+        <header class="draw-nav">
+          <button class="icon-button" data-go="home" type="button" aria-label="返回首页">←</button>
+          <span>九大非遗 · 一盏一遇</span>
+          <button class="text-button" id="quickDraw" type="button">随机一抽</button>
+        </header>
+        <div class="choice-grid" id="choiceGrid" aria-label="九款非遗盲盒">
+          <button style="--i:0" data-index="0" aria-label="选择醒狮少年"></button>
+          <button style="--i:1" data-index="1" aria-label="选择京剧戏迷"></button>
+          <button style="--i:2" data-index="2" aria-label="选择景德镇"></button>
+          <button style="--i:3" data-index="3" aria-label="选择皮影戏"></button>
+          <button style="--i:4" data-index="4" aria-label="选择布老虎"></button>
+          <button style="--i:5" data-index="5" aria-label="选择苗绣蝴蝶"></button>
+          <button style="--i:6" data-index="6" aria-label="选择纸鸢高手"></button>
+          <button style="--i:7" data-index="7" aria-label="选择鱼灯"></button>
+          <button style="--i:8" data-index="8" aria-label="选择敦煌飞天"></button>
+        </div>
+        <div class="draw-action">
+          <p id="drawPrompt">九盏灵灯，藏着九段非遗故事</p>
+          <button class="primary-button" id="drawButton" type="button"><span>抽取盲盒</span><i>开启</i></button>
+        </div>
+      </section>
+
+      <section class="scene scene-result" data-scene="result" aria-label="盲盒抽取结果">
+        <img class="scene-art" src="./assets/result.jpg" alt="非遗盲盒与九款角色的收藏展示" />
+        <header class="result-nav">
+          <button class="icon-button" data-go="draw" type="button" aria-label="返回抽取页面">←</button>
+          <span>本次结缘</span>
+          <button class="text-button" data-go="home" type="button">回到首页</button>
+        </header>
+        <div class="reveal-card" id="revealCard">
+          <div class="reveal-halo"></div>
+          <span class="reveal-kicker">MOMO · 非遗结缘签</span>
+          <h1 id="resultName">醒狮少年</h1>
+          <p id="resultStory">鼓点一响，百厄皆退。愿你心有热望，步步生风。</p>
+          <span class="rarity">典藏 · HERITAGE</span>
+        </div>
+        <div class="result-actions">
+          <button class="secondary-button" data-go="draw" type="button">再抽一次</button>
+          <button class="primary-button" id="collectButton" type="button"><span>收入藏阁</span><i>珍藏</i></button>
+        </div>
+      </section>
+
+      <canvas id="fxCanvas" width="1600" height="1000" aria-hidden="true"></canvas>
+      <div class="lantern-cursor" id="lanternCursor" aria-hidden="true"><i></i><b></b></div>
+      <div class="light-source" id="lightSource" aria-hidden="true"></div>
+      <div class="transition-veil" aria-hidden="true"><span>默</span></div>
+      <button class="sound-toggle" id="soundToggle" type="button" aria-label="切换环境音"><span>♪</span><small>静谧</small></button>
+    </div>
+  </main>
+  <script src="./script.js"></script>
+</body>
+</html>
