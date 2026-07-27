@@ -174,6 +174,135 @@ button { font: inherit; color: inherit; }
 .text-button { padding: 8px 14px; border-radius: 999px; }
 .icon-button:hover, .text-button:hover { color: #fff4c9; border-color: var(--bright-gold); }
 
+.blind-box-stage {
+  --box-w: clamp(82px, 8.2vw, 132px);
+  --box-h: clamp(112px, 11.2vw, 180px);
+  --box-d: clamp(30px, 3.2vw, 52px);
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  width: 22%;
+  height: 31%;
+  translate: -50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+}
+.box-float {
+  width: var(--box-w);
+  height: var(--box-h);
+  animation: boxFloat 4s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+.box-spin {
+  width: 100%;
+  height: 100%;
+  animation: boxTurn 13s linear infinite;
+  transform-style: preserve-3d;
+}
+.blind-box-stage:hover .box-spin { animation-play-state: paused; }
+.box-model {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--tilt-x, -8deg)) rotateY(var(--tilt-y, -18deg));
+  transition: transform .18s ease-out;
+}
+.box-face {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255,222,150,.72);
+  color: #f9d98d;
+  background:
+    radial-gradient(circle at 60% 30%, rgba(235,102,45,.3), transparent 35%),
+    linear-gradient(145deg, #7d1e18, #290b0c 72%);
+  box-shadow: inset 0 0 26px rgba(255,157,46,.14);
+  backface-visibility: hidden;
+}
+.box-front, .box-back {
+  inset: 0;
+  padding: 10% 8%;
+}
+.box-front { transform: translateZ(calc(var(--box-d) / 2)); align-content: center; }
+.box-back { transform: rotateY(180deg) translateZ(calc(var(--box-d) / 2)); }
+.box-left, .box-right {
+  left: 50%;
+  top: 0;
+  width: var(--box-d);
+  height: var(--box-h);
+  margin-left: calc(var(--box-d) / -2);
+  padding: 8px 3px;
+  text-align: center;
+}
+.box-left { transform: rotateY(-90deg) translateZ(calc(var(--box-w) / 2)); }
+.box-right { transform: rotateY(90deg) translateZ(calc(var(--box-w) / 2)); }
+.box-top, .box-bottom {
+  left: 0;
+  top: 50%;
+  width: var(--box-w);
+  height: var(--box-d);
+  margin-top: calc(var(--box-d) / -2);
+}
+.box-top { transform: rotateX(90deg) translateZ(calc(var(--box-h) / 2)); }
+.box-bottom { transform: rotateX(-90deg) translateZ(calc(var(--box-h) / 2)); }
+.box-front::before {
+  content: "";
+  position: absolute;
+  inset: 5%;
+  border: 1px solid rgba(247,199,105,.28);
+  background:
+    linear-gradient(45deg, transparent 46%, rgba(247,199,105,.13) 48% 52%, transparent 54%),
+    linear-gradient(-45deg, transparent 46%, rgba(247,199,105,.1) 48% 52%, transparent 54%);
+}
+.box-front small { font-family: Georgia, serif; font-size: clamp(9px, 1vw, 16px); letter-spacing: .12em; z-index: 1; }
+.box-front strong {
+  display: grid;
+  place-items: center;
+  width: 42%;
+  aspect-ratio: 1;
+  margin: 4% 0;
+  border: 1px solid #edbd62;
+  border-radius: 50%;
+  color: #4f130f;
+  background: radial-gradient(circle, #ffe19a, #b86227);
+  font-size: clamp(20px, 2.4vw, 38px);
+  text-shadow: 0 1px #fff0b8;
+  box-shadow: 0 0 18px rgba(255,172,57,.45);
+  z-index: 1;
+}
+.box-front span { font-size: clamp(7px, .65vw, 11px); letter-spacing: .16em; z-index: 1; }
+.box-front i { margin-top: 8%; font: normal clamp(5px, .42vw, 7px)/1 Georgia, serif; letter-spacing: .12em; z-index: 1; }
+.box-back { align-content: center; gap: 8px; }
+.box-back b { font-size: clamp(10px, 1vw, 16px); letter-spacing: .15em; }
+.box-back span, .box-left span, .box-right span, .box-top span { font: clamp(5px, .42vw, 7px)/1.5 Georgia, serif; letter-spacing: .1em; }
+.box-left, .box-right { align-content: center; gap: 10px; }
+.box-left b, .box-right b { writing-mode: vertical-rl; font-size: clamp(7px, .65vw, 11px); letter-spacing: .18em; }
+.box-top span { font-family: "STSong", "SimSun", serif; }
+.box-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 11%;
+  width: 45%;
+  height: 9%;
+  translate: -50%;
+  border-radius: 50%;
+  background: rgba(18,5,4,.72);
+  filter: blur(8px);
+  animation: shadowBreathe 4s ease-in-out infinite;
+}
+.model-note {
+  position: absolute;
+  bottom: 1%;
+  margin: 0;
+  font: clamp(5px, .45vw, 8px)/1 Georgia, serif;
+  letter-spacing: .22em;
+  color: rgba(255,224,159,.66);
+}
+
 .choice-grid {
   position: absolute;
   left: 2.5%;
@@ -215,12 +344,12 @@ button { font: inherit; color: inherit; }
 .draw-action {
   position: absolute;
   left: 50%;
-  top: 49%;
+  top: 57%;
   translate: -50% -50%;
   z-index: 3;
   display: grid;
   justify-items: center;
-  gap: 12px;
+  gap: 7px;
   opacity: 0;
   transform: translateY(12px);
   transition: .6s .5s;
@@ -228,8 +357,8 @@ button { font: inherit; color: inherit; }
 .is-active .draw-action { opacity: 1; transform: translateY(0); }
 .draw-action p {
   margin: 0;
-  padding: 7px 15px;
-  font-size: clamp(8px, .75vw, 12px);
+  padding: 5px 11px;
+  font-size: clamp(6px, .58vw, 10px);
   letter-spacing: .18em;
   color: #ffe6ac;
   background: rgba(12,8,12,.28);
@@ -263,6 +392,16 @@ button { font: inherit; color: inherit; }
 }
 .primary-button:hover { translate: 0 -3px; box-shadow: 0 0 28px rgba(242,157,54,.5); }
 .primary-button.is-drawing i { animation: spin 1s linear infinite; }
+.draw-action .primary-button {
+  gap: 10px;
+  padding: 6px 7px 6px 15px;
+  font-size: clamp(9px, .78vw, 13px);
+}
+.draw-action .primary-button i {
+  width: 28px;
+  height: 28px;
+  font-size: 8px;
+}
 .secondary-button { padding: 13px 22px; background: rgba(14,9,11,.66); }
 .secondary-button:hover { background: rgba(91,28,20,.84); }
 
@@ -403,6 +542,9 @@ button { font: inherit; color: inherit; }
 @keyframes halo { 50% { transform: scale(1.08); opacity: .65; } }
 @keyframes veil { 0% { clip-path: circle(0 at 50% 50%); } 45%, 57% { clip-path: circle(85% at 50% 50%); } 100% { clip-path: circle(0 at 50% 50%); } }
 @keyframes pulse { 50% { box-shadow: 0 0 14px #f6b34e; } }
+@keyframes boxFloat { 0%, 100% { transform: translateY(3px); } 50% { transform: translateY(-8px); } }
+@keyframes boxTurn { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+@keyframes shadowBreathe { 0%, 100% { transform: scale(1); opacity: .7; } 50% { transform: scale(.8); opacity: .42; } }
 
 @media (pointer: coarse) {
   body, button, a { cursor: auto; }

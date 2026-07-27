@@ -8,6 +8,8 @@ const ctx = canvas.getContext("2d");
 const drawButton = document.querySelector("#drawButton");
 const choiceButtons = [...document.querySelectorAll("#choiceGrid button")];
 const prompt = document.querySelector("#drawPrompt");
+const blindBoxStage = document.querySelector("#blindBoxStage");
+const boxModel = document.querySelector("#boxModel");
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -50,6 +52,18 @@ function goTo(name) {
 
 document.querySelector("#enterJourney").addEventListener("click", () => goTo("draw"));
 document.querySelectorAll("[data-go]").forEach(button => button.addEventListener("click", () => goTo(button.dataset.go)));
+
+blindBoxStage.addEventListener("pointermove", event => {
+  const rect = blindBoxStage.getBoundingClientRect();
+  const x = (event.clientX - rect.left) / rect.width - .5;
+  const y = (event.clientY - rect.top) / rect.height - .5;
+  boxModel.style.setProperty("--tilt-x", `${-8 - y * 22}deg`);
+  boxModel.style.setProperty("--tilt-y", `${x * 34}deg`);
+});
+blindBoxStage.addEventListener("pointerleave", () => {
+  boxModel.style.setProperty("--tilt-x", "-8deg");
+  boxModel.style.setProperty("--tilt-y", "-18deg");
+});
 
 choiceButtons.forEach((button, index) => {
   button.addEventListener("click", () => {
