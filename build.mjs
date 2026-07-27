@@ -8,6 +8,7 @@ await Promise.all([
   cp("index.html", "dist/index.html"),
   cp("styles.css", "dist/styles.css"),
   cp("script.js", "dist/script.js"),
+  cp("gesture.js", "dist/gesture.js"),
   cp("assets", "dist/assets", { recursive: true }),
   cp(".openai/hosting.json", "dist/.openai/hosting.json"),
   writeFile(
