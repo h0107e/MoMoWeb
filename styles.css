@@ -567,6 +567,183 @@ button { font: inherit; color: inherit; }
   background: #f7c868;
 }
 
+.gesture-ui {
+  position: absolute;
+  right: 1.4%;
+  bottom: 1.5%;
+  z-index: 18;
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+.gesture-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px 7px 7px;
+  border: 1px solid rgba(255,215,137,.48);
+  border-radius: 999px;
+  color: #f7d68e;
+  background: rgba(30,10,11,.68);
+  box-shadow: 0 8px 24px rgba(7,2,4,.38);
+  backdrop-filter: blur(10px);
+  font-size: clamp(7px, .62vw, 10px);
+  letter-spacing: .12em;
+  transition: .3s;
+}
+.gesture-toggle:hover, .gesture-toggle.gesture-hover, .gesture-toggle[aria-pressed="true"] {
+  border-color: #ffe5a4;
+  background: rgba(100,31,22,.82);
+  box-shadow: 0 0 22px rgba(240,153,52,.32);
+}
+.gesture-icon {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(255,224,157,.52);
+  border-radius: 50%;
+  font-family: "Segoe UI Symbol", sans-serif;
+  font-size: 13px;
+}
+.gesture-panel {
+  width: clamp(140px, 12vw, 190px);
+  padding: 7px;
+  border: 1px solid rgba(255,213,132,.34);
+  border-radius: 10px;
+  color: #f7dda0;
+  background: rgba(13,8,12,.78);
+  box-shadow: 0 16px 45px rgba(0,0,0,.46);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  translate: 0 8px;
+  visibility: hidden;
+  transition: opacity .35s, translate .35s, visibility 0s .35s;
+}
+.gesture-panel.is-visible {
+  opacity: 1;
+  translate: 0;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.camera-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+  background: radial-gradient(circle, #3b1717, #08080d);
+}
+.camera-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  opacity: .82;
+  filter: sepia(.22) saturate(.78) contrast(1.08);
+}
+.camera-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(rgba(245,183,79,.05) 50%, rgba(0,0,0,.05) 50%);
+  background-size: 100% 4px;
+}
+.camera-scan {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ffd77d, transparent);
+  box-shadow: 0 0 8px #f8a63d;
+  animation: cameraScan 2.8s linear infinite;
+}
+.camera-corner { position: absolute; width: 15px; height: 15px; border-color: rgba(255,218,143,.75); }
+.corner-a { left: 6px; top: 6px; border-left: 1px solid; border-top: 1px solid; }
+.corner-b { right: 6px; bottom: 6px; border-right: 1px solid; border-bottom: 1px solid; }
+.gesture-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 7px 2px 0;
+  font-size: clamp(7px, .54vw, 9px);
+  letter-spacing: .08em;
+}
+.gesture-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8e6650;
+  box-shadow: 0 0 0 rgba(255,190,80,0);
+}
+.gesture-status i.is-ready { background: #f3b94f; box-shadow: 0 0 9px #f3a344; }
+.gesture-status i.is-tracking { background: #ffe39b; box-shadow: 0 0 12px #ffbd4f; animation: trackingPulse 1s infinite; }
+.gesture-panel p {
+  margin: 5px 2px 1px;
+  color: rgba(247,221,160,.58);
+  font-size: clamp(5px, .42vw, 7px);
+  line-height: 1.5;
+  letter-spacing: .04em;
+}
+.gesture-cursor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 26;
+  width: 46px;
+  height: 46px;
+  translate: -50% -50%;
+  pointer-events: none;
+  opacity: 0;
+  scale: .72;
+  transition: opacity .16s, scale .16s;
+  filter: drop-shadow(0 0 9px rgba(255,187,72,.72));
+}
+.gesture-cursor.is-visible { opacity: 1; scale: 1; }
+.gesture-cursor svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.gesture-cursor circle { fill: none; stroke-width: 2.2; }
+.gesture-track { stroke: rgba(255,226,162,.25); }
+.gesture-progress {
+  stroke: #ffd77e;
+  stroke-linecap: round;
+  stroke-dasharray: 106.82;
+  stroke-dashoffset: 106.82;
+}
+.gesture-cursor > span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  translate: -50% -50%;
+  border: 1px solid #fff0bd;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7ca, #f3a83d 62%, #9a351e);
+  box-shadow: 0 0 12px #f5a941;
+}
+.gesture-cursor.is-targeting > span { animation: fingerFocus .7s ease-in-out infinite alternate; }
+.gesture-cursor.is-complete { filter: drop-shadow(0 0 16px #ffe4a0); }
+button.gesture-hover, a.gesture-hover {
+  outline: 1px solid rgba(255,227,164,.82);
+  outline-offset: 4px;
+  filter: brightness(1.13);
+}
+.hub-area.gesture-hover {
+  border-color: rgba(255,219,143,.82);
+  background: radial-gradient(circle, rgba(255,191,74,.16), transparent 70%);
+  box-shadow: 0 0 25px rgba(255,170,51,.32), inset 0 0 18px rgba(255,191,74,.11);
+}
+.choice-grid button.gesture-hover {
+  transform: translateY(-3.5%);
+  background: radial-gradient(ellipse at 50% 62%, rgba(255,195,91,.26), transparent 65%);
+  filter: brightness(1.18);
+}
+.primary-button.gesture-hover, .journey-gate.gesture-hover {
+  box-shadow: 0 0 30px rgba(242,157,54,.58);
+}
+
 .transition-veil {
   position: absolute;
   inset: -2px;
@@ -617,6 +794,9 @@ button { font: inherit; color: inherit; }
 @keyframes boxFloat { 0%, 100% { transform: translateY(3px); } 50% { transform: translateY(-8px); } }
 @keyframes boxTurn { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @keyframes shadowBreathe { 0%, 100% { transform: scale(1); opacity: .7; } 50% { transform: scale(.8); opacity: .42; } }
+@keyframes cameraScan { from { top: 8%; } to { top: 92%; } }
+@keyframes trackingPulse { 50% { opacity: .55; } }
+@keyframes fingerFocus { to { transform: scale(1.32); } }
 
 @media (pointer: coarse) {
   body, button, a { cursor: auto; }
