@@ -10,6 +10,7 @@ const choiceButtons = [...document.querySelectorAll("#choiceGrid button")];
 const prompt = document.querySelector("#drawPrompt");
 const blindBoxStage = document.querySelector("#blindBoxStage");
 const boxModel = document.querySelector("#boxModel");
+const hubToast = document.querySelector("#hubToast");
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -33,6 +34,7 @@ let audioContext;
 
 const sceneRatios = {
   home: 1586 / 992,
+  hub: 1609 / 977,
   draw: 1536 / 1024,
   result: 1609 / 977
 };
@@ -50,8 +52,15 @@ function goTo(name) {
   setTimeout(() => veil.classList.remove("is-running"), 1380);
 }
 
-document.querySelector("#enterJourney").addEventListener("click", () => goTo("draw"));
+document.querySelector("#enterJourney").addEventListener("click", () => goTo("hub"));
 document.querySelectorAll("[data-go]").forEach(button => button.addEventListener("click", () => goTo(button.dataset.go)));
+document.querySelectorAll("[data-hub-action='draw']").forEach(button => button.addEventListener("click", () => goTo("draw")));
+document.querySelectorAll("[data-hub-label]").forEach(button => button.addEventListener("click", () => {
+  hubToast.textContent = `「${button.dataset.hubLabel}」内容正在筹备中`;
+  hubToast.classList.add("is-visible");
+  clearTimeout(hubToast.hideTimer);
+  hubToast.hideTimer = setTimeout(() => hubToast.classList.remove("is-visible"), 1800);
+}));
 
 blindBoxStage.addEventListener("pointermove", event => {
   const rect = blindBoxStage.getBoundingClientRect();
@@ -175,6 +184,10 @@ document.querySelector("#soundToggle").addEventListener("click", async event => 
 });
 
 window.addEventListener("keydown", event => {
-  if (event.key === "Escape") goTo(currentScene === "result" ? "draw" : "home");
-  if (event.key === "Enter" && currentScene === "home") goTo("draw");
+  if (event.key === "Escape") {
+    if (currentScene === "result") goTo("draw");
+    else if (currentScene === "draw") goTo("hub");
+    else if (currentScene === "hub") goTo("home");
+  }
+  if (event.key === "Enter" && currentScene === "home") goTo("hub");
 });

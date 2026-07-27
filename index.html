@@ -22,6 +22,24 @@
         <p class="home-hint">移动灵珠，照见小镇深处</p>
       </section>
 
+      <section class="scene scene-hub" data-scene="hub" aria-label="非遗漫游功能导航">
+        <img class="scene-art" src="./assets/hub.png" alt="默默非遗漫游功能导航大厅" />
+        <button class="hub-back icon-button" data-go="home" type="button" aria-label="返回首页">←</button>
+        <nav class="hub-hotspots" aria-label="功能导航">
+          <button class="hub-area hub-story" data-hub-label="系列故事" type="button" aria-label="系列故事"></button>
+          <button class="hub-area hub-heritage" data-hub-label="九大非遗" type="button" aria-label="九大非遗"></button>
+          <button class="hub-area hub-blindbox" data-hub-action="draw" type="button" aria-label="进入潮玩盲盒"></button>
+          <button class="hub-area hub-card" data-hub-label="收藏卡" type="button" aria-label="收藏卡"></button>
+          <button class="hub-area hub-about" data-hub-label="关于我们" type="button" aria-label="关于我们"></button>
+          <button class="hub-area hub-enter" data-hub-label="非遗展览" type="button" aria-label="进入展览"></button>
+          <button class="hub-area hub-journey" data-hub-action="draw" type="button" aria-label="开始盲盒漫游"></button>
+          <button class="hub-area hub-explore" data-hub-label="九大非遗" type="button" aria-label="探索九大非遗"></button>
+          <button class="hub-area hub-more" data-hub-label="更多内容" type="button" aria-label="查看更多"></button>
+          <button class="hub-area hub-product" data-hub-action="draw" type="button" aria-label="进入盲盒产品"></button>
+        </nav>
+        <div class="hub-toast" id="hubToast" role="status">点击功能区域，开启非遗漫游</div>
+      </section>
+
       <section class="scene scene-draw" data-scene="draw" aria-label="抽取非遗盲盒">
         <img class="scene-art" src="./assets/draw.jpg" alt="九款非遗角色陈列在水乡夜景中" />
         <div class="blind-box-stage" id="blindBoxStage" aria-label="3D盲盒模型预览">
@@ -46,7 +64,7 @@
           <p class="model-note">模型占位 · MODEL PREVIEW</p>
         </div>
         <header class="draw-nav">
-          <button class="icon-button" data-go="home" type="button" aria-label="返回首页">←</button>
+          <button class="icon-button" data-go="hub" type="button" aria-label="返回功能导航">←</button>
           <span>九大非遗 · 一盏一遇</span>
           <button class="text-button" id="quickDraw" type="button">随机一抽</button>
         </header>
@@ -72,7 +90,7 @@
         <header class="result-nav">
           <button class="icon-button" data-go="draw" type="button" aria-label="返回抽取页面">←</button>
           <span>本次结缘</span>
-          <button class="text-button" data-go="home" type="button">回到首页</button>
+          <button class="text-button" data-go="hub" type="button">功能导航</button>
         </header>
         <div class="reveal-card" id="revealCard">
           <div class="reveal-halo"></div>
