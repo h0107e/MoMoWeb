@@ -93,7 +93,8 @@
       </section>
 
       <section class="scene scene-result" data-scene="result" aria-label="盲盒抽取结果">
-        <img class="scene-art" src="./assets/result.jpg" alt="非遗盲盒与九款角色的收藏展示" />
+        <img class="scene-art result-default-art" src="./assets/result.jpg" alt="非遗盲盒与九款角色的收藏展示" />
+        <img class="scene-art fish-result-art" src="./assets/fish-result-bg.png" alt="星空云海之间的中式楼阁夜景" />
         <header class="result-nav">
           <button class="icon-button" data-go="draw" type="button" aria-label="返回抽取页面">←</button>
           <span>本次结缘</span>
@@ -101,11 +102,6 @@
         </header>
         <div class="result-model-stage" id="resultModelStage" aria-label="鱼灯玩偶三维模型">
           <div class="model-aura" aria-hidden="true"></div>
-          <div class="model-title-plaque">
-            <span>本次结缘</span>
-            <strong>鱼灯</strong>
-            <small>FISH LANTERN</small>
-          </div>
           <model-viewer
             id="fishLanternModel"
             data-src="./assets/YUDeng.glb"
