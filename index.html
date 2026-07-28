@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0b0a10" />
   <title>MOMO 默默 · 非遗漫游</title>
   <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./assets/model-viewer.min.js"></script>
 </head>
 <body>
   <main id="app" aria-live="polite">
@@ -98,6 +99,37 @@
           <span>本次结缘</span>
           <button class="text-button" data-go="hub" type="button">功能导航</button>
         </header>
+        <div class="result-model-stage" id="resultModelStage" aria-label="鱼灯玩偶三维模型">
+          <div class="model-aura" aria-hidden="true"></div>
+          <div class="model-title-plaque">
+            <span>本次结缘</span>
+            <strong>鱼灯</strong>
+            <small>FISH LANTERN</small>
+          </div>
+          <model-viewer
+            id="fishLanternModel"
+            data-src="./assets/YUDeng.glb"
+            alt="鱼灯非遗玩偶三维模型"
+            camera-controls
+            auto-rotate
+            rotation-per-second="10deg"
+            interaction-prompt="none"
+            disable-pan
+            shadow-intensity="1.2"
+            shadow-softness=".8"
+            exposure="1.05"
+            environment-image="neutral"
+            camera-orbit="22deg 78deg auto"
+            min-field-of-view="24deg"
+            max-field-of-view="48deg">
+            <div class="model-progress" slot="progress-bar">
+              <span></span>
+              <small>鱼灯灵影显现中</small>
+            </div>
+          </model-viewer>
+          <div class="model-pedestal" aria-hidden="true"><i></i></div>
+          <p class="model-control-hint">拖动旋转 · 滚轮缩放</p>
+        </div>
         <div class="reveal-card" id="revealCard">
           <div class="reveal-halo"></div>
           <span class="reveal-kicker">MOMO · 非遗结缘签</span>
