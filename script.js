@@ -11,6 +11,8 @@ const prompt = document.querySelector("#drawPrompt");
 const blindBoxStage = document.querySelector("#blindBoxStage");
 const boxModel = document.querySelector("#boxModel");
 const hubToast = document.querySelector("#hubToast");
+const resultScene = document.querySelector(".scene-result");
+const fishLanternModel = document.querySelector("#fishLanternModel");
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -24,7 +26,7 @@ const figures = [
   { name: "敦煌飞天", story: "飘带凌空，千年一瞬。愿你无拘无束，心游万仞。" }
 ];
 
-let selected = null;
+let selected = 7;
 let currentScene = "home";
 let drawing = false;
 let pointer = { x: 800, y: 500 };
@@ -82,11 +84,24 @@ choiceButtons.forEach((button, index) => {
   });
 });
 
+choiceButtons[7].classList.add("is-selected");
+prompt.textContent = `已与「${figures[7].name}」的灵灯相应`;
+
 document.querySelector("#quickDraw").addEventListener("click", () => {
   selected = Math.floor(Math.random() * figures.length);
   choiceButtons[selected].click();
   runDraw();
 });
+
+function presentResult(result) {
+  const isFishLantern = result === 7;
+  resultScene.classList.toggle("has-3d-model", isFishLantern);
+  if (isFishLantern && !fishLanternModel.src) {
+    fishLanternModel.src = fishLanternModel.dataset.src;
+  }
+  document.querySelector("#resultName").textContent = figures[result].name;
+  document.querySelector("#resultStory").textContent = figures[result].story;
+}
 
 function runDraw() {
   if (drawing) return;
@@ -95,8 +110,7 @@ function runDraw() {
   drawButton.querySelector("span").textContent = "灵灯寻缘中";
   const result = selected ?? Math.floor(Math.random() * figures.length);
   setTimeout(() => {
-    document.querySelector("#resultName").textContent = figures[result].name;
-    document.querySelector("#resultStory").textContent = figures[result].story;
+    presentResult(result);
     goTo("result");
     drawButton.classList.remove("is-drawing");
     drawButton.querySelector("span").textContent = "抽取盲盒";
@@ -104,6 +118,17 @@ function runDraw() {
   }, 820);
 }
 drawButton.addEventListener("click", runDraw);
+
+fishLanternModel.addEventListener("load", () => {
+  fishLanternModel.classList.add("loaded");
+});
+
+if (new URLSearchParams(window.location.search).get("result") === "fish") {
+  presentResult(7);
+  stage.style.setProperty("--ratio", sceneRatios.result);
+  scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
+  currentScene = "result";
+}
 
 document.querySelector("#collectButton").addEventListener("click", event => {
   const label = event.currentTarget.querySelector("span");
