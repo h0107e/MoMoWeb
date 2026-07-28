@@ -532,10 +532,10 @@ button { font: inherit; color: inherit; }
 }
 .result-model-stage {
   position: absolute;
-  left: 34%;
-  top: 12%;
-  width: 41%;
-  height: 63%;
+  left: 51%;
+  top: 9%;
+  width: 45%;
+  height: 68%;
   translate: -50% 18px;
   z-index: 4;
   opacity: 0;
@@ -693,30 +693,45 @@ button { font: inherit; color: inherit; }
 .is-active .result-actions { opacity: 1; }
 
 .scene-result.has-3d-model .reveal-card {
-  left: 72%;
-  top: 31%;
-  width: 24%;
-  min-height: 31%;
-  padding: 24px 25px;
-  background: linear-gradient(135deg, rgba(10,20,42,.82), rgba(44,20,23,.7));
-  border-left: 2px solid rgba(244,193,103,.72);
-  box-shadow: 0 22px 55px rgba(3,7,18,.36), inset 0 1px rgba(255,225,159,.08);
-  backdrop-filter: blur(8px);
+  left: 7%;
+  top: 32%;
+  width: 23%;
+  min-height: 30%;
+  place-items: start;
+  align-content: center;
+  padding: 8px 18px;
+  text-align: left;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: translate(0, 25px) scale(.94);
+}
+.scene-result.has-3d-model.is-active .reveal-card {
+  transform: translate(0, 0) scale(1);
+}
+.scene-result.has-3d-model .reveal-card::before,
+.scene-result.has-3d-model .reveal-card::after,
+.scene-result.has-3d-model .reveal-halo {
+  display: none;
 }
 .scene-result.has-3d-model .reveal-card h1 {
-  margin: 10px 0 12px;
-  font-size: clamp(28px, 3vw, 48px);
+  margin: 11px 0 13px;
+  font-size: clamp(30px, 3.4vw, 54px);
+  letter-spacing: .18em;
+  text-shadow: 0 3px 22px rgba(7,14,31,.88);
 }
 .scene-result.has-3d-model .reveal-card p {
-  width: 94%;
-  margin-bottom: 15px;
-  font-size: clamp(8px, .74vw, 12px);
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: clamp(9px, .78vw, 13px);
   line-height: 2;
+  text-shadow: 0 2px 13px rgba(5,10,26,.95);
 }
 .scene-result.has-3d-model .result-actions {
-  left: 34%;
-  top: 77%;
-  gap: 16px;
+  left: 51%;
+  top: 79%;
+  gap: 14px;
 }
 .scene-result.has-3d-model .result-actions button {
   font-size: clamp(9px, .72vw, 12px);
