@@ -134,6 +134,98 @@ const particles = Array.from({ length: 72 }, () => ({
   phase: Math.random() * Math.PI * 2
 }));
 
+const petals = Array.from({ length: 24 }, (_, index) => ({
+  x: Math.random() * 1600,
+  y: Math.random() * 1080 - 80,
+  size: Math.random() * 7 + 5,
+  depth: Math.random() * .72 + .28,
+  vx: (Math.random() - .5) * .22,
+  vy: Math.random() * .42 + .22,
+  angle: Math.random() * Math.PI * 2,
+  spin: (Math.random() - .5) * .009,
+  phase: Math.random() * Math.PI * 2,
+  sway: Math.random() * 1.25 + .45,
+  tint: index % 3
+}));
+
+function drawWater(time) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(640, 720);
+  ctx.lineTo(960, 720);
+  ctx.lineTo(1420, 1000);
+  ctx.lineTo(180, 1000);
+  ctx.closePath();
+  ctx.clip();
+  ctx.globalCompositeOperation = "lighter";
+
+  for (let row = 0; row < 18; row += 1) {
+    const y = 748 + row * 14.5;
+    const depth = row / 17;
+    const halfWidth = 105 + depth * 535;
+    const wave = Math.sin(time * .00115 + row * .67);
+    const center = 800 + wave * (5 + depth * 13);
+    const alpha = .055 + depth * .085;
+    const lineWidth = .75 + depth * 1.55;
+    const segments = 6 + Math.floor(depth * 7);
+
+    for (let segment = 0; segment < segments; segment += 1) {
+      const progress = (segment + .18) / segments;
+      const startX = center - halfWidth + progress * halfWidth * 2;
+      const length = (22 + depth * 58) * (.72 + .28 * Math.sin(segment * 2.1 + time * .001));
+      const wobble = Math.sin(time * .0017 + row * .8 + segment) * (1.2 + depth * 2.8);
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(255, 210, 125, ${alpha})`;
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = "round";
+      ctx.moveTo(startX, y + wobble);
+      ctx.bezierCurveTo(
+        startX + length * .3, y - 2.4 - wobble,
+        startX + length * .72, y + 2.2 + wobble,
+        startX + length, y - wobble * .35
+      );
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function paintPetal(petal, time) {
+  const sway = Math.sin(time * .0011 * petal.sway + petal.phase);
+  petal.y += petal.vy * (.65 + petal.depth);
+  petal.x += petal.vx + sway * .18;
+  petal.angle += petal.spin;
+
+  if (petal.y > 1040 || petal.x < -50 || petal.x > 1650) {
+    petal.x = Math.random() * 1600;
+    petal.y = -30 - Math.random() * 160;
+  }
+
+  const palette = [
+    ["rgba(255,176,145,.68)", "rgba(224,86,76,.2)"],
+    ["rgba(255,211,168,.66)", "rgba(240,133,91,.2)"],
+    ["rgba(246,148,142,.58)", "rgba(193,62,69,.18)"]
+  ][petal.tint];
+  const size = petal.size * (.7 + petal.depth * .6);
+
+  ctx.save();
+  ctx.translate(petal.x, petal.y);
+  ctx.rotate(petal.angle + sway * .38);
+  ctx.scale(1, .72 + Math.abs(sway) * .32);
+  const gradient = ctx.createLinearGradient(-size, -size, size, size);
+  gradient.addColorStop(0, palette[0]);
+  gradient.addColorStop(1, palette[1]);
+  ctx.fillStyle = gradient;
+  ctx.shadowColor = "rgba(255,157,102,.28)";
+  ctx.shadowBlur = 5 * petal.depth;
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.bezierCurveTo(size * .92, -size * .45, size * .82, size * .45, 0, size);
+  ctx.bezierCurveTo(-size * .7, size * .38, -size * .88, -size * .4, 0, -size);
+  ctx.fill();
+  ctx.restore();
+}
+
 function drawFx(time) {
   ctx.clearRect(0, 0, 1600, 1000);
   pointer.x += (targetPointer.x - pointer.x) * .16;
@@ -143,18 +235,21 @@ function drawFx(time) {
   light.style.left = `${(pointer.x / 1600) * 100}%`;
   light.style.top = `${(pointer.y / 1000) * 100}%`;
 
+  if (currentScene === "home") {
+    drawWater(time);
+    petals.forEach(petal => paintPetal(petal, time));
+  }
+
   particles.forEach(p => {
     p.y -= p.vy;
     p.x += p.vx + Math.sin(time * .0004 + p.phase) * .09;
     if (p.y < -8) { p.y = 1008; p.x = Math.random() * 1600; }
     const twinkle = p.a * (.62 + Math.sin(time * .002 + p.phase) * .38);
-    const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
-    const glow = distance < 190 ? (1 - distance / 190) * .8 : 0;
     ctx.beginPath();
-    ctx.fillStyle = `rgba(255, 202, 112, ${Math.max(.05, twinkle + glow)})`;
+    ctx.fillStyle = `rgba(255, 202, 112, ${Math.max(.05, twinkle)})`;
     ctx.shadowColor = "#ffbd5f";
-    ctx.shadowBlur = 6 + glow * 12;
-    ctx.arc(p.x, p.y, p.r + glow, 0, Math.PI * 2);
+    ctx.shadowBlur = 6;
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fill();
   });
   ctx.shadowBlur = 0;

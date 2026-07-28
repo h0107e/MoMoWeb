@@ -96,7 +96,6 @@ button { font: inherit; color: inherit; }
   user-select: none;
   -webkit-user-drag: none;
 }
-}
 
 .water-shimmer {
   position: absolute;
@@ -104,7 +103,7 @@ button { font: inherit; color: inherit; }
   top: 74%;
   width: 45%;
   height: 25%;
-  opacity: .35;
+  opacity: .17;
   transform-origin: 50% 0;
   background:
     repeating-radial-gradient(ellipse at 50% 0%, transparent 0 14px, rgba(255,195,105,.55) 15px, transparent 17px 31px);
@@ -113,6 +112,52 @@ button { font: inherit; color: inherit; }
   animation: ripple 5s linear infinite;
   -webkit-mask-image: linear-gradient(#000, transparent 95%);
   mask-image: linear-gradient(#000, transparent 95%);
+}
+
+.cloud-gold-light {
+  position: absolute;
+  inset: 60% 0 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.cloud-glow {
+  position: absolute;
+  bottom: -16%;
+  width: 43%;
+  height: 76%;
+  border-radius: 50%;
+  opacity: .42;
+  filter: blur(12px);
+  background:
+    radial-gradient(ellipse at 50% 78%, rgba(255,224,143,.82) 0 6%, rgba(255,173,61,.35) 25%, transparent 68%);
+}
+
+.cloud-glow-left {
+  left: -10%;
+  transform: rotate(-7deg);
+  animation: cloudGlowLeft 6.8s ease-in-out infinite alternate;
+}
+
+.cloud-glow-right {
+  right: -10%;
+  transform: rotate(7deg);
+  animation: cloudGlowRight 8.2s ease-in-out infinite alternate;
+}
+
+.cloud-light-sweep {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -11%;
+  height: 42%;
+  opacity: .34;
+  filter: blur(9px);
+  background: linear-gradient(100deg, transparent 7%, rgba(255,181,66,.32) 29%, rgba(255,235,169,.5) 50%, rgba(255,175,56,.3) 72%, transparent 94%);
+  transform: translateX(-16%) skewX(-10deg);
+  animation: cloudLightSweep 9s ease-in-out infinite alternate;
 }
 
 .journey-gate {
@@ -786,6 +831,18 @@ button.gesture-hover, a.gesture-hover {
 @keyframes codeSheen { 0%, 22% { opacity: 0; transform: translateX(0) skewX(-14deg); } 34% { opacity: .85; } 58%, 100% { opacity: 0; transform: translateX(1340px) skewX(-14deg); } }
 @keyframes titleBreath { 50% { opacity: .78; transform: scale(1.06); } }
 @keyframes ripple { 0% { transform: perspective(300px) rotateX(60deg) scale(.8, .6); opacity: .22; } 50% { opacity: .46; } 100% { transform: perspective(300px) rotateX(60deg) scale(1.35, 1); opacity: .1; } }
+@keyframes cloudGlowLeft {
+  from { opacity: .25; transform: translate(-2%, 3%) rotate(-7deg) scale(.94); }
+  to { opacity: .52; transform: translate(4%, -2%) rotate(-3deg) scale(1.08); }
+}
+@keyframes cloudGlowRight {
+  from { opacity: .46; transform: translate(2%, -1%) rotate(7deg) scale(1.06); }
+  to { opacity: .24; transform: translate(-4%, 3%) rotate(3deg) scale(.93); }
+}
+@keyframes cloudLightSweep {
+  from { opacity: .16; transform: translateX(-18%) skewX(-10deg); }
+  to { opacity: .42; transform: translateX(18%) skewX(-4deg); }
+}
 @keyframes gateIn { to { opacity: 1; translate: -50% 0; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes halo { 50% { transform: scale(1.08); opacity: .65; } }
