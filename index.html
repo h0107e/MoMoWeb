@@ -102,6 +102,20 @@
         </header>
         <div class="result-model-stage" id="resultModelStage" aria-label="鱼灯玩偶三维模型">
           <div class="model-aura" aria-hidden="true"></div>
+          <div class="model-light-rays" aria-hidden="true"></div>
+          <div class="model-orbit-ring model-orbit-ring-a" aria-hidden="true"></div>
+          <div class="model-orbit-ring model-orbit-ring-b" aria-hidden="true"></div>
+          <div class="model-uplight" aria-hidden="true"></div>
+          <div class="model-sparkles" aria-hidden="true">
+            <i style="--x:20%;--y:26%;--s:3px;--d:.2s"></i>
+            <i style="--x:76%;--y:22%;--s:2px;--d:1.1s"></i>
+            <i style="--x:84%;--y:48%;--s:4px;--d:2.2s"></i>
+            <i style="--x:14%;--y:56%;--s:2px;--d:1.7s"></i>
+            <i style="--x:25%;--y:74%;--s:3px;--d:2.8s"></i>
+            <i style="--x:72%;--y:72%;--s:2px;--d:.8s"></i>
+            <i style="--x:52%;--y:13%;--s:3px;--d:3.2s"></i>
+            <i style="--x:90%;--y:63%;--s:2px;--d:2.5s"></i>
+          </div>
           <model-viewer
             id="fishLanternModel"
             data-src="./assets/YUDeng.glb"
@@ -123,6 +137,7 @@
               <small>鱼灯灵影显现中</small>
             </div>
           </model-viewer>
+          <div class="model-light-sweep" aria-hidden="true"></div>
           <div class="model-pedestal" aria-hidden="true"><i></i></div>
           <p class="model-control-hint">拖动旋转 · 滚轮缩放</p>
         </div>

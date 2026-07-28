@@ -562,6 +562,7 @@ button { font: inherit; color: inherit; }
 }
 .result-model-stage model-viewer {
   position: relative;
+  z-index: 2;
   display: block;
   width: 100%;
   height: 91%;
@@ -569,7 +570,9 @@ button { font: inherit; color: inherit; }
   --progress-bar-color: #f2be68;
   --progress-bar-height: 2px;
   outline: none;
-  filter: drop-shadow(0 20px 17px rgba(20,3,2,.48));
+  filter:
+    drop-shadow(0 0 12px rgba(255,205,113,.2))
+    drop-shadow(0 20px 17px rgba(20,3,2,.48));
 }
 .model-aura {
   position: absolute;
@@ -578,9 +581,103 @@ button { font: inherit; color: inherit; }
   top: 17%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,207,113,.33), rgba(207,72,30,.1) 43%, transparent 70%);
-  filter: blur(8px);
+  z-index: 0;
+  background: radial-gradient(circle, rgba(255,224,156,.4), rgba(215,103,44,.13) 42%, transparent 70%);
+  filter: blur(10px);
   animation: halo 3.8s ease-in-out infinite;
+}
+.model-light-rays {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  z-index: 0;
+  width: 73%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  opacity: .28;
+  background: repeating-conic-gradient(
+    from 8deg,
+    rgba(255,205,117,.28) 0 1.8deg,
+    transparent 2.2deg 18deg
+  );
+  filter: blur(1px);
+  -webkit-mask-image: radial-gradient(circle, transparent 0 35%, #000 58%, transparent 73%);
+  mask-image: radial-gradient(circle, transparent 0 35%, #000 58%, transparent 73%);
+  animation: modelRayTurn 28s linear infinite;
+  pointer-events: none;
+}
+.model-orbit-ring {
+  position: absolute;
+  left: 50%;
+  z-index: 1;
+  translate: -50%;
+  border: 1px solid rgba(255,211,126,.34);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(255,170,69,.12), inset 0 0 12px rgba(255,213,132,.08);
+  pointer-events: none;
+}
+.model-orbit-ring-a {
+  top: 38%;
+  width: 81%;
+  height: 29%;
+  rotate: -8deg;
+  animation: modelRingA 7s ease-in-out infinite alternate;
+}
+.model-orbit-ring-b {
+  top: 44%;
+  width: 70%;
+  height: 22%;
+  rotate: 9deg;
+  opacity: .58;
+  animation: modelRingB 8.5s ease-in-out infinite alternate;
+}
+.model-uplight {
+  position: absolute;
+  left: 24%;
+  right: 24%;
+  bottom: 10%;
+  z-index: 1;
+  height: 46%;
+  opacity: .44;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255,224,157,.65), rgba(226,119,52,.18) 37%, transparent 70%);
+  filter: blur(10px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: modelUplight 4.2s ease-in-out infinite alternate;
+}
+.model-light-sweep {
+  position: absolute;
+  top: 9%;
+  bottom: 15%;
+  left: 17%;
+  z-index: 3;
+  width: 14%;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,242,202,.34), transparent);
+  filter: blur(8px);
+  mix-blend-mode: screen;
+  transform: translateX(-180%) skewX(-16deg);
+  pointer-events: none;
+  animation: modelLightSweep 7s ease-in-out infinite;
+}
+.model-sparkles {
+  position: absolute;
+  inset: 6% 7% 13%;
+  z-index: 4;
+  pointer-events: none;
+}
+.model-sparkles i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  opacity: .2;
+  background: #fff0b5;
+  box-shadow: 0 0 5px #ffd06e, 0 0 13px rgba(255,174,65,.72);
+  animation: modelSparkle 3.6s var(--d) ease-in-out infinite;
 }
 .model-pedestal {
   position: absolute;
@@ -1030,6 +1127,29 @@ button.gesture-hover, a.gesture-hover {
 @keyframes trackingPulse { 50% { opacity: .55; } }
 @keyframes fingerFocus { to { transform: scale(1.32); } }
 @keyframes modelLoading { from { translate: 0; } to { translate: 120%; } }
+@keyframes modelRayTurn { to { transform: rotate(360deg); } }
+@keyframes modelRingA {
+  from { opacity: .24; transform: translateY(2px) scale(.98); }
+  to { opacity: .5; transform: translateY(-4px) scale(1.03); }
+}
+@keyframes modelRingB {
+  from { opacity: .42; transform: translateY(-2px) scale(1.02); }
+  to { opacity: .68; transform: translateY(4px) scale(.97); }
+}
+@keyframes modelUplight {
+  from { opacity: .27; transform: scale(.94, .9); }
+  to { opacity: .52; transform: scale(1.06, 1.03); }
+}
+@keyframes modelLightSweep {
+  0%, 14% { opacity: 0; transform: translateX(-180%) skewX(-16deg); }
+  27% { opacity: .46; }
+  46%, 100% { opacity: 0; transform: translateX(520%) skewX(-16deg); }
+}
+@keyframes modelSparkle {
+  0%, 100% { opacity: .12; transform: translateY(5px) scale(.65); }
+  45% { opacity: .92; transform: translateY(-6px) scale(1.25); }
+  62% { opacity: .42; transform: translateY(-10px) scale(.82); }
+}
 
 @media (pointer: coarse) {
   body, button, a { cursor: auto; }
