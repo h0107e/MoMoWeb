@@ -30,6 +30,7 @@ const figures = [
 let selected = 7;
 let currentScene = "home";
 let drawing = false;
+let fishModelRetries = 0;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
 let soundOn = false;
@@ -51,6 +52,14 @@ function goTo(name) {
     stage.style.setProperty("--ratio", sceneRatios[name]);
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
+    if (name === "draw") {
+      const prepare = () => prepareFishViewer().catch(console.error);
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(prepare, { timeout: 1200 });
+      } else {
+        setTimeout(prepare, 350);
+      }
+    }
   }, 585);
   setTimeout(() => veil.classList.remove("is-running"), 1380);
 }
@@ -101,11 +110,15 @@ function presentResult(result) {
   document.querySelector("#resultStory").textContent = figures[result].story;
 }
 
-async function loadFishModel() {
+async function prepareFishViewer() {
   if (!customElements.get("model-viewer")) {
     fishModelLoader ??= import("./assets/model-viewer.min.js");
     await fishModelLoader;
   }
+}
+
+async function loadFishModel() {
+  await prepareFishViewer();
   if (!fishLanternModel.hasAttribute("src")) {
     fishLanternModel.setAttribute("src", fishLanternModel.dataset.src);
   }
@@ -117,13 +130,14 @@ function runDraw() {
   drawButton.classList.add("is-drawing");
   drawButton.querySelector("span").textContent = "灵灯寻缘中";
   const result = selected ?? Math.floor(Math.random() * figures.length);
+  if (result === 7) prepareFishViewer().catch(console.error);
   setTimeout(() => {
     presentResult(result);
     goTo("result");
     if (result === 7) {
       setTimeout(() => {
         if (currentScene === "result") loadFishModel().catch(console.error);
-      }, 1450);
+      }, 900);
     }
     drawButton.classList.remove("is-drawing");
     drawButton.querySelector("span").textContent = "抽取盲盒";
@@ -133,7 +147,16 @@ function runDraw() {
 drawButton.addEventListener("click", runDraw);
 
 fishLanternModel.addEventListener("load", () => {
+  fishModelRetries = 0;
   fishLanternModel.classList.add("loaded");
+});
+
+fishLanternModel.addEventListener("error", () => {
+  if (currentScene !== "result" || fishModelRetries >= 2) return;
+  fishModelRetries += 1;
+  fishLanternModel.classList.remove("loaded");
+  fishLanternModel.removeAttribute("src");
+  setTimeout(() => loadFishModel().catch(console.error), 700 * fishModelRetries);
 });
 
 if (new URLSearchParams(window.location.search).get("result") === "fish") {
