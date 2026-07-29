@@ -125,7 +125,25 @@
         </header>
         <div class="result-model-stage" id="resultModelStage" aria-label="盲盒三维模型展示区域">
           <div class="model-aura" aria-hidden="true"></div>
-          <div class="model-slot" id="blindBoxModelSlot" aria-hidden="true"></div>
+          <div class="model-slot" id="blindBoxModelSlot">
+            <model-viewer
+              id="resultModelViewer"
+              alt="抽取到的非遗玩偶三维模型"
+              camera-controls
+              auto-rotate
+              auto-rotate-delay="350"
+              rotation-per-second="16deg"
+              interaction-prompt="none"
+              shadow-intensity="1.15"
+              shadow-softness=".85"
+              exposure=".82"
+              camera-orbit="0deg 82deg 2.55m"
+              min-camera-orbit="auto 60deg 1.9m"
+              max-camera-orbit="auto 100deg 3.4m"
+              field-of-view="28deg"
+            ></model-viewer>
+            <p class="model-loading" id="resultModelLoading">布老虎灵影呈现中</p>
+          </div>
           <div class="model-pedestal" aria-hidden="true"><i></i></div>
         </div>
         <div class="reveal-card" id="revealCard">

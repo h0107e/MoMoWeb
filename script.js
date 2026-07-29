@@ -14,6 +14,8 @@ const boxModel = document.querySelector("#boxModel");
 const hubToast = document.querySelector("#hubToast");
 const resultScene = document.querySelector(".scene-result");
 const hubBoxViewer = document.querySelector("#hubBoxViewer");
+const resultModelViewer = document.querySelector("#resultModelViewer");
+const resultModelLoading = document.querySelector("#resultModelLoading");
 let modelViewerLoader = null;
 
 const figures = [
@@ -21,7 +23,12 @@ const figures = [
   { name: "京剧戏迷", story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。" },
   { name: "景德镇", story: "入窑一色，出窑万彩。愿你经受淬炼，终见澄澈。" },
   { name: "皮影戏", story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。" },
-  { name: "布老虎", story: "虎头纳福，守护长安。愿你勇敢温柔，所行皆坦途。" },
+  {
+    name: "布老虎",
+    story: "虎头纳福，守护长安。愿你勇敢温柔，所行皆坦途。",
+    model: "./assets/BuLaoHu.glb",
+    modelAlt: "布老虎非遗玩偶三维模型"
+  },
   { name: "苗绣蝴蝶", story: "一针一线，绣出故乡。愿你破茧振翅，心有所归。" },
   { name: "纸鸢高手", story: "借一缕风，扶摇云上。愿你自在舒展，志在青空。" },
   { name: "鱼灯", story: "鱼跃灯明，岁岁有余。愿你循光而游，好事将近。" },
@@ -123,6 +130,42 @@ async function loadHubBoxModel() {
 }
 
 hubBoxViewer.addEventListener("load", () => hubBoxViewer.classList.add("loaded"));
+resultModelViewer.addEventListener("load", () => {
+  resultModelViewer.classList.add("loaded");
+  resultModelLoading.classList.add("is-hidden");
+});
+resultModelViewer.addEventListener("error", () => {
+  resultModelLoading.textContent = "灵影暂未显现";
+});
+
+async function presentResultModel(figure) {
+  resultModelViewer.classList.remove("loaded");
+  resultModelLoading.classList.remove("is-hidden");
+
+  if (!figure.model) {
+    resultModelViewer.removeAttribute("src");
+    resultModelViewer.setAttribute("aria-hidden", "true");
+    resultModelLoading.classList.add("is-hidden");
+    resultScene.classList.remove("has-result-model");
+    return;
+  }
+
+  resultScene.classList.add("has-result-model");
+  resultModelViewer.removeAttribute("aria-hidden");
+  resultModelViewer.alt = figure.modelAlt || `${figure.name}三维模型`;
+  resultModelLoading.textContent = `${figure.name}灵影呈现中`;
+
+  if (!customElements.get("model-viewer")) {
+    modelViewerLoader ??= import("./assets/model-viewer.min.js");
+    await modelViewerLoader;
+  }
+  if (resultModelViewer.getAttribute("src") !== figure.model) {
+    resultModelViewer.setAttribute("src", figure.model);
+  } else if (resultModelViewer.loaded) {
+    resultModelViewer.classList.add("loaded");
+    resultModelLoading.classList.add("is-hidden");
+  }
+}
 
 blindBoxStage.addEventListener("pointermove", event => {
   const rect = blindBoxStage.getBoundingClientRect();
@@ -157,6 +200,10 @@ function presentResult(result) {
   resultScene.classList.add("is-showcase");
   document.querySelector("#resultName").textContent = figures[result].name;
   document.querySelector("#resultStory").textContent = figures[result].story;
+  presentResultModel(figures[result]).catch(error => {
+    console.error(error);
+    resultModelLoading.textContent = "灵影暂未显现";
+  });
 }
 
 function runDraw() {
@@ -175,8 +222,10 @@ function runDraw() {
 }
 drawButton.addEventListener("click", runDraw);
 
-if (new URLSearchParams(window.location.search).get("result") === "fish") {
-  presentResult(7);
+const directResult = new URLSearchParams(window.location.search).get("result");
+const directResultIndex = { fish: 7, tiger: 4 }[directResult];
+if (Number.isInteger(directResultIndex)) {
+  presentResult(directResultIndex);
   stage.style.setProperty("--ratio", sceneRatios.result);
   scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
   currentScene = "result";
