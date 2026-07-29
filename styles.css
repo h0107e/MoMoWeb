@@ -1042,24 +1042,6 @@ button.gesture-hover, a.gesture-hover {
 }
 .transition-veil.is-fallback video { display: none; }
 .transition-veil.is-fallback span { display: grid; }
-.sound-toggle {
-  position: absolute;
-  left: 1.6%; bottom: 2%;
-  z-index: 12;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 10px;
-  border: 0;
-  color: #f4ce81;
-  background: transparent;
-  font-size: 11px;
-  opacity: .78;
-}
-.sound-toggle span { display: grid; place-items: center; width: 20px; height: 20px; border: 1px solid currentColor; border-radius: 50%; }
-.sound-toggle small { letter-spacing: .15em; }
-.sound-toggle.is-on span { animation: pulse 1.8s infinite; }
-
 @keyframes breathe { from { transform: scale(1); } to { transform: scale(1.018); } }
 @keyframes titleReveal { from { opacity: 0; transform: translateY(22px) scale(.965); filter: blur(7px); } to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
 @keyframes codeSheen { 0%, 22% { opacity: 0; transform: translateX(0) skewX(-14deg); } 34% { opacity: .85; } 58%, 100% { opacity: 0; transform: translateX(1340px) skewX(-14deg); } }
@@ -1081,7 +1063,6 @@ button.gesture-hover, a.gesture-hover {
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes halo { 50% { transform: scale(1.08); opacity: .65; } }
 @keyframes veilFallback { 0%, 100% { opacity: 0; } 35%, 70% { opacity: 1; } }
-@keyframes pulse { 50% { box-shadow: 0 0 14px #f6b34e; } }
 @keyframes boxFloat { 0%, 100% { transform: translateY(3px); } 50% { transform: translateY(-8px); } }
 @keyframes hubBoxFloat { from { transform: translateY(0); } to { transform: translateY(-4px); } }
 @keyframes boxTurn { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }

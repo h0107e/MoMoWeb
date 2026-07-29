@@ -31,18 +31,21 @@ const figures = [
   },
   { name: "苗绣蝴蝶", story: "一针一线，绣出故乡。愿你破茧振翅，心有所归。" },
   { name: "纸鸢高手", story: "借一缕风，扶摇云上。愿你自在舒展，志在青空。" },
-  { name: "鱼灯", story: "鱼跃灯明，岁岁有余。愿你循光而游，好事将近。" },
+  {
+    name: "鱼灯",
+    story: "鱼跃灯明，岁岁有余。愿你循光而游，好事将近。",
+    model: "./assets/YUDeng.glb",
+    modelAlt: "鱼灯非遗玩偶三维模型"
+  },
   { name: "敦煌飞天", story: "飘带凌空，千年一瞬。愿你无拘无束，心游万仞。" }
 ];
 
-let selected = 7;
+let selected = null;
 let currentScene = "home";
 let drawing = false;
 let transitioning = false;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
-let soundOn = false;
-let audioContext;
 
 const sceneRatios = {
   home: 1586 / 992,
@@ -186,9 +189,6 @@ choiceButtons.forEach((button, index) => {
     prompt.textContent = `已与「${figures[index].name}」的灵灯相应`;
   });
 });
-
-choiceButtons[7].classList.add("is-selected");
-prompt.textContent = `已与「${figures[7].name}」的灵灯相应`;
 
 document.querySelector("#quickDraw").addEventListener("click", () => {
   selected = Math.floor(Math.random() * figures.length);
@@ -381,27 +381,6 @@ function drawFx(time) {
   requestAnimationFrame(drawFx);
 }
 requestAnimationFrame(drawFx);
-
-document.querySelector("#soundToggle").addEventListener("click", async event => {
-  soundOn = !soundOn;
-  event.currentTarget.classList.toggle("is-on", soundOn);
-  event.currentTarget.querySelector("small").textContent = soundOn ? "水巷" : "静谧";
-  if (!soundOn) {
-    audioContext?.close();
-    audioContext = null;
-    return;
-  }
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const gain = audioContext.createGain();
-  gain.gain.value = .025;
-  gain.connect(audioContext.destination);
-  const osc = audioContext.createOscillator();
-  const osc2 = audioContext.createOscillator();
-  osc.type = "sine"; osc.frequency.value = 174;
-  osc2.type = "sine"; osc2.frequency.value = 261;
-  osc.connect(gain); osc2.connect(gain);
-  osc.start(); osc2.start();
-});
 
 window.addEventListener("keydown", event => {
   if (event.key === "Escape") {
