@@ -37,7 +37,24 @@
           data-model-top="257"
           data-model-width="320"
           data-model-height="412"
-          aria-hidden="true"></div>
+          aria-label="临时盲盒三维模型">
+          <model-viewer
+            id="hubBoxViewer"
+            data-src="./assets/sample-blind-box.glb"
+            alt="红漆鎏金临时盲盒三维模型"
+            auto-rotate
+            rotation-per-second="9deg"
+            interaction-prompt="none"
+            disable-pan
+            shadow-intensity="1.25"
+            shadow-softness=".8"
+            exposure="1.18"
+            environment-image="neutral"
+            camera-orbit="25deg 72deg 3.7m"
+            camera-target="0m 1m 0m"
+            field-of-view="24deg">
+          </model-viewer>
+        </div>
         <button class="hub-back icon-button" data-go="home" type="button" aria-label="返回首页">←</button>
         <nav class="hub-hotspots" aria-label="功能导航">
           <button class="hub-area hub-story" data-hub-label="系列故事" type="button" aria-label="系列故事"></button>
@@ -100,8 +117,7 @@
       </section>
 
       <section class="scene scene-result" data-scene="result" aria-label="盲盒抽取结果">
-        <img class="scene-art result-default-art" src="./assets/result.jpg" alt="非遗盲盒与九款角色的收藏展示" />
-        <img class="scene-art fish-result-art" src="./assets/fish-result-bg.png" alt="星空云海之间的中式楼阁夜景" />
+        <img class="scene-art result-showcase-art" src="./assets/result-showcase-bg.png" alt="金色天光照耀非遗水乡圆形展示台" />
         <header class="result-nav">
           <button class="icon-button" data-go="draw" type="button" aria-label="返回抽取页面">←</button>
           <span>本次结缘</span>
