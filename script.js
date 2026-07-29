@@ -12,8 +12,6 @@ const blindBoxStage = document.querySelector("#blindBoxStage");
 const boxModel = document.querySelector("#boxModel");
 const hubToast = document.querySelector("#hubToast");
 const resultScene = document.querySelector(".scene-result");
-const fishLanternModel = document.querySelector("#fishLanternModel");
-let fishModelLoader = null;
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -30,7 +28,6 @@ const figures = [
 let selected = 7;
 let currentScene = "home";
 let drawing = false;
-let fishModelRetries = 0;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
 let soundOn = false;
@@ -52,14 +49,6 @@ function goTo(name) {
     stage.style.setProperty("--ratio", sceneRatios[name]);
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
-    if (name === "draw") {
-      const prepare = () => prepareFishViewer().catch(console.error);
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(prepare, { timeout: 1200 });
-      } else {
-        setTimeout(prepare, 350);
-      }
-    }
   }, 585);
   setTimeout(() => veil.classList.remove("is-running"), 1380);
 }
@@ -104,24 +93,9 @@ document.querySelector("#quickDraw").addEventListener("click", () => {
 });
 
 function presentResult(result) {
-  const isFishLantern = result === 7;
-  resultScene.classList.toggle("has-3d-model", isFishLantern);
+  resultScene.classList.add("is-showcase");
   document.querySelector("#resultName").textContent = figures[result].name;
   document.querySelector("#resultStory").textContent = figures[result].story;
-}
-
-async function prepareFishViewer() {
-  if (!customElements.get("model-viewer")) {
-    fishModelLoader ??= import("./assets/model-viewer.min.js");
-    await fishModelLoader;
-  }
-}
-
-async function loadFishModel() {
-  await prepareFishViewer();
-  if (!fishLanternModel.hasAttribute("src")) {
-    fishLanternModel.setAttribute("src", fishLanternModel.dataset.src);
-  }
 }
 
 function runDraw() {
@@ -130,15 +104,9 @@ function runDraw() {
   drawButton.classList.add("is-drawing");
   drawButton.querySelector("span").textContent = "灵灯寻缘中";
   const result = selected ?? Math.floor(Math.random() * figures.length);
-  if (result === 7) prepareFishViewer().catch(console.error);
   setTimeout(() => {
     presentResult(result);
     goTo("result");
-    if (result === 7) {
-      setTimeout(() => {
-        if (currentScene === "result") loadFishModel().catch(console.error);
-      }, 900);
-    }
     drawButton.classList.remove("is-drawing");
     drawButton.querySelector("span").textContent = "抽取盲盒";
     drawing = false;
@@ -146,25 +114,11 @@ function runDraw() {
 }
 drawButton.addEventListener("click", runDraw);
 
-fishLanternModel.addEventListener("load", () => {
-  fishModelRetries = 0;
-  fishLanternModel.classList.add("loaded");
-});
-
-fishLanternModel.addEventListener("error", () => {
-  if (currentScene !== "result" || fishModelRetries >= 2) return;
-  fishModelRetries += 1;
-  fishLanternModel.classList.remove("loaded");
-  fishLanternModel.removeAttribute("src");
-  setTimeout(() => loadFishModel().catch(console.error), 700 * fishModelRetries);
-});
-
 if (new URLSearchParams(window.location.search).get("result") === "fish") {
   presentResult(7);
   stage.style.setProperty("--ratio", sceneRatios.result);
   scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
   currentScene = "result";
-  setTimeout(() => loadFishModel().catch(console.error), 120);
 }
 
 document.querySelector("#collectButton").addEventListener("click", event => {

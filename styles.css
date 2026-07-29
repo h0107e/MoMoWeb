@@ -525,8 +525,8 @@ button { font: inherit; color: inherit; }
   opacity: 0;
   transition: opacity .8s ease;
 }
-.scene-result.has-3d-model .result-default-art { opacity: 0; }
-.scene-result.has-3d-model .fish-result-art {
+.scene-result.is-showcase .result-default-art { opacity: 0; }
+.scene-result.is-showcase .fish-result-art {
   opacity: 1;
   filter: saturate(.9) brightness(.82);
 }
@@ -543,7 +543,7 @@ button { font: inherit; color: inherit; }
   transition: opacity .7s .35s ease, translate .9s .3s cubic-bezier(.2,.8,.2,1), visibility 0s 1s;
   pointer-events: none;
 }
-.scene-result.has-3d-model .result-model-stage {
+.scene-result.is-showcase .result-model-stage {
   opacity: 1;
   visibility: visible;
   translate: -50% 0;
@@ -560,19 +560,13 @@ button { font: inherit; color: inherit; }
   box-shadow: none;
   pointer-events: none;
 }
-.result-model-stage model-viewer {
+.result-model-stage .model-slot {
   position: relative;
   z-index: 2;
   display: block;
   width: 100%;
   height: 91%;
-  --poster-color: transparent;
-  --progress-bar-color: #f2be68;
-  --progress-bar-height: 2px;
   outline: none;
-  filter:
-    drop-shadow(0 0 16px rgba(255,199,95,.16))
-    drop-shadow(0 20px 17px rgba(20,3,2,.48));
 }
 .model-aura {
   position: absolute;
@@ -614,44 +608,6 @@ button { font: inherit; color: inherit; }
   border: 1px solid rgba(255,214,128,.26);
   border-radius: 50%;
 }
-.model-control-hint {
-  position: absolute;
-  left: 50%;
-  bottom: 1.5%;
-  translate: -50%;
-  margin: 0;
-  color: rgba(255,226,170,.62);
-  font-size: clamp(6px, .5vw, 9px);
-  letter-spacing: .22em;
-  white-space: nowrap;
-}
-.model-progress {
-  position: absolute;
-  left: 31%;
-  right: 31%;
-  bottom: 12%;
-  display: grid;
-  gap: 7px;
-  text-align: center;
-  color: rgba(255,229,176,.76);
-  font-size: 8px;
-  letter-spacing: .18em;
-}
-.model-progress span {
-  height: 1px;
-  overflow: hidden;
-  background: rgba(255,220,150,.18);
-}
-.model-progress span::after {
-  content: "";
-  display: block;
-  width: 45%;
-  height: 100%;
-  background: #f2be68;
-  box-shadow: 0 0 9px #ef9c3c;
-  animation: modelLoading 1.15s ease-in-out infinite alternate;
-}
-.result-model-stage model-viewer.loaded .model-progress { display: none; }
 .reveal-card {
   position: absolute;
   left: 51%;
@@ -705,7 +661,7 @@ button { font: inherit; color: inherit; }
 }
 .is-active .result-actions { opacity: 1; }
 
-.scene-result.has-3d-model .reveal-card {
+.scene-result.is-showcase .reveal-card {
   left: 7%;
   top: 32%;
   width: 23%;
@@ -720,43 +676,43 @@ button { font: inherit; color: inherit; }
   backdrop-filter: none;
   transform: translate(0, 25px) scale(.94);
 }
-.scene-result.has-3d-model.is-active .reveal-card {
+.scene-result.is-showcase.is-active .reveal-card {
   transform: translate(0, 0) scale(1);
 }
-.scene-result.has-3d-model .reveal-card::before,
-.scene-result.has-3d-model .reveal-card::after,
-.scene-result.has-3d-model .reveal-halo {
+.scene-result.is-showcase .reveal-card::before,
+.scene-result.is-showcase .reveal-card::after,
+.scene-result.is-showcase .reveal-halo {
   display: none;
 }
-.scene-result.has-3d-model .reveal-card h1 {
+.scene-result.is-showcase .reveal-card h1 {
   margin: 11px 0 13px;
   font-size: clamp(30px, 3.4vw, 54px);
   letter-spacing: .18em;
   text-shadow: 0 3px 22px rgba(7,14,31,.88);
 }
-.scene-result.has-3d-model .reveal-card p {
+.scene-result.is-showcase .reveal-card p {
   width: 100%;
   margin-bottom: 16px;
   font-size: clamp(9px, .78vw, 13px);
   line-height: 2;
   text-shadow: 0 2px 13px rgba(5,10,26,.95);
 }
-.scene-result.has-3d-model .result-actions {
+.scene-result.is-showcase .result-actions {
   left: 51%;
   top: 79%;
   gap: 14px;
 }
-.scene-result.has-3d-model .result-actions button {
+.scene-result.is-showcase .result-actions button {
   font-size: clamp(9px, .72vw, 12px);
 }
-.scene-result.has-3d-model .result-actions .secondary-button {
+.scene-result.is-showcase .result-actions .secondary-button {
   padding: 10px 20px;
 }
-.scene-result.has-3d-model .result-actions .primary-button {
+.scene-result.is-showcase .result-actions .primary-button {
   gap: 10px;
   padding: 7px 8px 7px 18px;
 }
-.scene-result.has-3d-model .result-actions .primary-button i {
+.scene-result.is-showcase .result-actions .primary-button i {
   width: 31px;
   height: 31px;
   font-size: 8px;
