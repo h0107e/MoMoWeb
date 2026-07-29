@@ -1,6 +1,7 @@
 const stage = document.querySelector("#stage");
 const scenes = [...document.querySelectorAll(".scene")];
 const veil = document.querySelector(".transition-veil");
+const transitionVideo = document.querySelector("#transitionVideo");
 const cursor = document.querySelector("#lanternCursor");
 const light = document.querySelector("#lightSource");
 const canvas = document.querySelector("#fxCanvas");
@@ -30,6 +31,7 @@ const figures = [
 let selected = 7;
 let currentScene = "home";
 let drawing = false;
+let transitioning = false;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
 let soundOn = false;
@@ -43,11 +45,15 @@ const sceneRatios = {
 };
 
 function goTo(name) {
-  if (name === currentScene) return;
-  veil.classList.remove("is-running");
-  void veil.offsetWidth;
-  veil.classList.add("is-running");
-  setTimeout(() => {
+  if (name === currentScene || transitioning) return;
+  transitioning = true;
+  let sceneChanged = false;
+  let sceneTimer;
+  let finishTimer;
+
+  const changeScene = () => {
+    if (sceneChanged) return;
+    sceneChanged = true;
     stage.style.setProperty("--ratio", sceneRatios[name]);
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
@@ -59,8 +65,41 @@ function goTo(name) {
         setTimeout(loadModel, 300);
       }
     }
-  }, 585);
-  setTimeout(() => veil.classList.remove("is-running"), 1380);
+  };
+
+  const finishTransition = () => {
+    changeScene();
+    clearTimeout(sceneTimer);
+    clearTimeout(finishTimer);
+    transitionVideo.removeEventListener("ended", finishTransition);
+    transitionVideo.pause();
+    veil.classList.remove("is-running", "is-fallback");
+    transitioning = false;
+  };
+
+  const useFallback = () => {
+    veil.classList.add("is-fallback");
+    clearTimeout(sceneTimer);
+    clearTimeout(finishTimer);
+    sceneTimer = setTimeout(changeScene, 585);
+    finishTimer = setTimeout(finishTransition, 1380);
+  };
+
+  veil.classList.remove("is-running", "is-fallback");
+  void veil.offsetWidth;
+  veil.classList.add("is-running");
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    useFallback();
+    return;
+  }
+
+  transitionVideo.pause();
+  transitionVideo.currentTime = 0;
+  sceneTimer = setTimeout(changeScene, 1450);
+  finishTimer = setTimeout(finishTransition, 3600);
+  transitionVideo.addEventListener("ended", finishTransition, { once: true });
+  transitionVideo.play().catch(useFallback);
 }
 
 document.querySelector("#enterJourney").addEventListener("click", () => goTo("hub"));
