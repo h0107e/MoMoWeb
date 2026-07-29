@@ -12,6 +12,8 @@ const blindBoxStage = document.querySelector("#blindBoxStage");
 const boxModel = document.querySelector("#boxModel");
 const hubToast = document.querySelector("#hubToast");
 const resultScene = document.querySelector(".scene-result");
+const hubBoxViewer = document.querySelector("#hubBoxViewer");
+let modelViewerLoader = null;
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -49,6 +51,14 @@ function goTo(name) {
     stage.style.setProperty("--ratio", sceneRatios[name]);
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
+    if (name === "hub") {
+      const loadModel = () => loadHubBoxModel().catch(console.error);
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadModel, { timeout: 900 });
+      } else {
+        setTimeout(loadModel, 300);
+      }
+    }
   }, 585);
   setTimeout(() => veil.classList.remove("is-running"), 1380);
 }
@@ -62,6 +72,18 @@ document.querySelectorAll("[data-hub-label]").forEach(button => button.addEventL
   clearTimeout(hubToast.hideTimer);
   hubToast.hideTimer = setTimeout(() => hubToast.classList.remove("is-visible"), 1800);
 }));
+
+async function loadHubBoxModel() {
+  if (!customElements.get("model-viewer")) {
+    modelViewerLoader ??= import("./assets/model-viewer.min.js");
+    await modelViewerLoader;
+  }
+  if (!hubBoxViewer.hasAttribute("src")) {
+    hubBoxViewer.setAttribute("src", hubBoxViewer.dataset.src);
+  }
+}
+
+hubBoxViewer.addEventListener("load", () => hubBoxViewer.classList.add("loaded"));
 
 blindBoxStage.addEventListener("pointermove", event => {
   const rect = blindBoxStage.getBoundingClientRect();

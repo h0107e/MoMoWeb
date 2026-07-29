@@ -1,71 +1,66 @@
-# Design QA — 第二页功能导航
+# Design QA — 第二页临时 GLB 与成果页新背景
 
-- Source visual truth: `C:\Users\HE\AppData\Local\Temp\codex-clipboard-b8bb9e5c-ffed-4530-b160-f25dd1c723cb.png`
-- Implementation screenshot: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\hub-implementation.png`
-- Combined comparison: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\hub-comparison.png`
-- Viewport: 1610 × 977 CSS px
-- Source pixels: 1610 × 977
-- Implementation pixels: 1610 × 977
+## Evidence
+
+- Second-page source: `C:\Users\HE\AppData\Local\Temp\codex-clipboard-b8bb9e5c-ffed-4530-b160-f25dd1c723cb.png`
+- Second-page implementation: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\hub-model-implementation.png`
+- Second-page comparison: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\hub-model-comparison.png`
+- Result-page source: `C:\Users\HE\AppData\Local\Temp\codex-clipboard-649c8800-501c-4d7b-bd15-5b6f2917a67d.png`
+- Result-page implementation: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\result-bg-implementation.png`
+- Result-page comparison: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\result-bg-comparison.png`
+- Viewports: second page 1610 × 977; result page 1609 × 977
 - Device scale factor: 1
 - Density normalization: none required
-- State: homepage → second-page functional navigation
-- Primary interaction tested: enter second page
+- Tested flow: homepage → functional-navigation page → blind-box page → fish-lantern result
 - Console errors: none
 
-## Full-view comparison evidence
+## Full-view comparison
 
-The implementation uses the supplied image at its native 1610 × 977 ratio. The image crop, typography, palette, illustration detail, bottom navigation, character row, central pedestal and surrounding architecture match pixel-for-pixel because the supplied raster is used directly as the page artwork.
+The second page continues to use the supplied 1610 × 977 raster at native size. A real temporary GLB model is layered only within the designated model area. The result page uses the newly supplied 1609 × 977 raster at its native aspect ratio, with the existing result navigation, text, circular model frame and action buttons retained.
 
-The model anchor measured in the rendered browser at:
+## Focused evidence
 
-- X: 637.96 px
-- Y: 256.95 px
-- Width: 320.04 px
-- Height: 412.04 px
+The temporary GLB slot measured in the browser at:
 
-This matches the requested X 638, Y 257, 320 × 412 px placement within sub-pixel rendering tolerance. Its horizontal center is 797.98 px, aligned with the circular pedestal.
+- X: 637.98 px
+- Y: 256.98 px
+- Width: 320 px
+- Height: 411.98 px
+- Horizontal center: 797.98 px
 
-## Focused-region comparison evidence
-
-No separate crop was required. The model slot has no visible content in this iteration, and its exact browser bounding box was measured directly. The supplied background image contains all visible type, icons, illustrations and decorative details, so the full-resolution combined comparison is sufficient for those surfaces.
+The GLB loaded successfully from `./assets/sample-blind-box.glb`, faded in and auto-rotated. Its ground point visually meets the center of the supplied circular pedestal.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: supplied raster typography is unchanged.
-- Spacing and layout rhythm: native image ratio preserved; model anchor matches requested coordinates and dimensions.
-- Colors and visual tokens: supplied raster colors are unchanged.
-- Image quality and asset fidelity: original 24-bit PNG is used directly without stretching or recompression.
-- Copy and content: supplied raster copy is unchanged; existing invisible navigation hotspots remain functional.
-
-## Comparison history
-
-### Pass 1
-
-- [P2] A visible circular back control appeared over the upper-left artwork but was not present in the source.
-- Fix: converted the top-left brand area into an invisible home-return hotspot; keyboard focus still receives a visible outline.
-
-### Pass 2
-
-- The extra visible back control is gone.
-- The only remaining overlays are the product's existing lantern cursor, sound control and gesture control. These are intentional global interaction features and do not change the underlying second-page composition.
-- No actionable P0, P1 or P2 differences remain.
+- Fonts and typography: background-embedded typography remains unchanged; existing overlay typography is preserved.
+- Spacing and layout rhythm: both source images use their native ratios; the GLB slot stays within the previously approved anchor.
+- Colors and visual tokens: the sample GLB uses temporary red-lacquer and warm-gold materials aligned with the page palette.
+- Image quality and asset fidelity: both supplied PNG files are used directly without recompression or stretching.
+- Copy and content: existing functional navigation, result name, story and actions remain unchanged.
 
 ## Findings
 
-No blocking or moderate fidelity issues remain.
+No actionable P0, P1 or P2 issues remain.
+
+The temporary GLB is intentionally simple and is not treated as final packaging artwork. Its purpose is to validate scale, camera angle, lighting, rotation and ground alignment before the user supplies the production GLB.
+
+## Comparison history
+
+- Pass 1: confirmed that the GLB occupied the requested 320 × 412 px area and did not overlap the title, character row or navigation.
+- Pass 2: confirmed that the new result background fills the 1609 × 977 result canvas, the duplicated CSS pedestal is removed, and the result buttons remain usable.
 
 ## Implementation checklist
 
-- [x] Replace second-page artwork.
-- [x] Preserve the 1610 × 977 ratio.
-- [x] Keep navigation hotspots functional.
-- [x] Add an empty, non-interactive future model slot.
-- [x] Anchor the slot to X 638, Y 257, 320 × 412 px.
-- [x] Confirm the model slot center aligns at X ≈ 798.
-- [x] Verify console output.
+- [x] Add a real temporary GLB model to the second page.
+- [x] Lazy-load the 3D viewer only after entering the second page.
+- [x] Auto-rotate and fade the model in after loading.
+- [x] Preserve the model anchor and pedestal alignment.
+- [x] Replace the result-page background.
+- [x] Remove the duplicated CSS pedestal.
+- [x] Test the full draw flow and browser console.
 
 ## Follow-up polish
 
-- When a GLB is supplied, place its viewer inside `#hubModelSlot` and normalize the model's ground point to the slot's bottom center.
+- Replace `sample-blind-box.glb` with the production box GLB while retaining the same viewer and anchor.
 
 final result: passed

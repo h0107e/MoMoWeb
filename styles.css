@@ -256,6 +256,19 @@ button { font: inherit; color: inherit; }
   pointer-events: none;
   transform-origin: 50% 100%;
 }
+.hub-model-slot model-viewer {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  --poster-color: transparent;
+  outline: none;
+  filter:
+    drop-shadow(0 10px 12px rgba(37, 7, 2, .72))
+    drop-shadow(0 0 13px rgba(255, 181, 68, .24));
+  transition: opacity .8s ease;
+}
+.hub-model-slot model-viewer.loaded { opacity: 1; }
 .hub-hotspots {
   position: absolute;
   inset: 0;
@@ -540,14 +553,8 @@ button { font: inherit; color: inherit; }
 .secondary-button:hover { background: rgba(91,28,20,.84); }
 
 .result-nav { z-index: 5; }
-.fish-result-art {
-  opacity: 0;
-  transition: opacity .8s ease;
-}
-.scene-result.is-showcase .result-default-art { opacity: 0; }
-.scene-result.is-showcase .fish-result-art {
-  opacity: 1;
-  filter: saturate(.9) brightness(.82);
+.result-showcase-art {
+  filter: saturate(.92) brightness(.82);
 }
 .result-model-stage {
   position: absolute;
@@ -620,6 +627,7 @@ button { font: inherit; color: inherit; }
   box-shadow: inset 0 2px rgba(255,226,152,.34), 0 10px 23px rgba(9,2,2,.65), 0 0 26px rgba(232,115,42,.22);
   transform: perspective(260px) rotateX(64deg);
   pointer-events: none;
+  display: none;
 }
 .model-pedestal i {
   position: absolute;
