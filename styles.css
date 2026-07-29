@@ -554,9 +554,11 @@ button { font: inherit; color: inherit; }
   content: "";
   position: absolute;
   inset: 4% 7% 8%;
-  border: 0;
+  border: 1px solid rgba(255,214,139,.28);
+  border-radius: 50%;
   background: none;
   box-shadow: none;
+  pointer-events: none;
 }
 .result-model-stage model-viewer {
   position: relative;
