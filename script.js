@@ -1,4 +1,5 @@
 const stage = document.querySelector("#stage");
+const app = document.querySelector("#app");
 const scenes = [...document.querySelectorAll(".scene")];
 const veil = document.querySelector(".transition-veil");
 const transitionVideo = document.querySelector("#transitionVideo");
@@ -47,13 +48,6 @@ let transitioning = false;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
 
-const sceneRatios = {
-  home: 1586 / 992,
-  hub: 1610 / 977,
-  draw: 1536 / 1024,
-  result: 1609 / 977
-};
-
 function goTo(name) {
   if (name === currentScene || transitioning) return;
   transitioning = true;
@@ -64,7 +58,7 @@ function goTo(name) {
   const changeScene = () => {
     if (sceneChanged) return;
     sceneChanged = true;
-    stage.style.setProperty("--ratio", sceneRatios[name]);
+    app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
     if (name === "hub") {
@@ -226,7 +220,7 @@ const directResult = new URLSearchParams(window.location.search).get("result");
 const directResultIndex = { fish: 7, tiger: 4 }[directResult];
 if (Number.isInteger(directResultIndex)) {
   presentResult(directResultIndex);
-  stage.style.setProperty("--ratio", sceneRatios.result);
+  app.dataset.scene = "result";
   scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
   currentScene = "result";
 }
