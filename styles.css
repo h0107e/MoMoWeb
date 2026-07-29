@@ -232,10 +232,29 @@ button { font: inherit; color: inherit; }
 
 .hub-back {
   position: absolute;
-  left: 1.5%;
-  top: 11%;
+  left: 1.4%;
+  top: 1.4%;
+  width: 14%;
+  height: 9%;
   z-index: 5;
-  background: rgba(32,10,10,.48);
+  opacity: 0;
+  border: 0;
+  background: transparent;
+}
+.hub-back:focus-visible {
+  opacity: 1;
+  outline: 1px solid rgba(255,219,143,.72);
+  outline-offset: -4px;
+}
+.hub-model-slot {
+  position: absolute;
+  left: 39.6273%;
+  top: 26.305%;
+  width: 19.8758%;
+  height: 42.1699%;
+  z-index: 3;
+  pointer-events: none;
+  transform-origin: 50% 100%;
 }
 .hub-hotspots {
   position: absolute;
