@@ -35,7 +35,7 @@ let audioContext;
 
 const sceneRatios = {
   home: 1586 / 992,
-  hub: 1609 / 977,
+  hub: 1610 / 977,
   draw: 1536 / 1024,
   result: 1609 / 977
 };
