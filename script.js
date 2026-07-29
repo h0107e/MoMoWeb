@@ -13,6 +13,7 @@ const boxModel = document.querySelector("#boxModel");
 const hubToast = document.querySelector("#hubToast");
 const resultScene = document.querySelector(".scene-result");
 const fishLanternModel = document.querySelector("#fishLanternModel");
+let fishModelLoader = null;
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -96,11 +97,18 @@ document.querySelector("#quickDraw").addEventListener("click", () => {
 function presentResult(result) {
   const isFishLantern = result === 7;
   resultScene.classList.toggle("has-3d-model", isFishLantern);
-  if (isFishLantern && !fishLanternModel.src) {
-    fishLanternModel.src = fishLanternModel.dataset.src;
-  }
   document.querySelector("#resultName").textContent = figures[result].name;
   document.querySelector("#resultStory").textContent = figures[result].story;
+}
+
+async function loadFishModel() {
+  if (!customElements.get("model-viewer")) {
+    fishModelLoader ??= import("./assets/model-viewer.min.js");
+    await fishModelLoader;
+  }
+  if (!fishLanternModel.hasAttribute("src")) {
+    fishLanternModel.setAttribute("src", fishLanternModel.dataset.src);
+  }
 }
 
 function runDraw() {
@@ -112,6 +120,11 @@ function runDraw() {
   setTimeout(() => {
     presentResult(result);
     goTo("result");
+    if (result === 7) {
+      setTimeout(() => {
+        if (currentScene === "result") loadFishModel().catch(console.error);
+      }, 1450);
+    }
     drawButton.classList.remove("is-drawing");
     drawButton.querySelector("span").textContent = "抽取盲盒";
     drawing = false;
@@ -128,6 +141,7 @@ if (new URLSearchParams(window.location.search).get("result") === "fish") {
   stage.style.setProperty("--ratio", sceneRatios.result);
   scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
   currentScene = "result";
+  setTimeout(() => loadFishModel().catch(console.error), 120);
 }
 
 document.querySelector("#collectButton").addEventListener("click", event => {
@@ -263,20 +277,19 @@ function drawFx(time) {
   if (currentScene === "home") {
     drawWater(time);
     petals.forEach(petal => paintPetal(petal, time));
+    particles.forEach(p => {
+      p.y -= p.vy;
+      p.x += p.vx + Math.sin(time * .0004 + p.phase) * .09;
+      if (p.y < -8) { p.y = 1008; p.x = Math.random() * 1600; }
+      const twinkle = p.a * (.62 + Math.sin(time * .002 + p.phase) * .38);
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255, 202, 112, ${Math.max(.05, twinkle)})`;
+      ctx.shadowColor = "#ffbd5f";
+      ctx.shadowBlur = 6;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
   }
-
-  particles.forEach(p => {
-    p.y -= p.vy;
-    p.x += p.vx + Math.sin(time * .0004 + p.phase) * .09;
-    if (p.y < -8) { p.y = 1008; p.x = Math.random() * 1600; }
-    const twinkle = p.a * (.62 + Math.sin(time * .002 + p.phase) * .38);
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(255, 202, 112, ${Math.max(.05, twinkle)})`;
-    ctx.shadowColor = "#ffbd5f";
-    ctx.shadowBlur = 6;
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fill();
-  });
   ctx.shadowBlur = 0;
   requestAnimationFrame(drawFx);
 }
