@@ -594,6 +594,38 @@ button { font: inherit; color: inherit; }
   height: 91%;
   outline: none;
 }
+.result-model-stage model-viewer {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  filter: saturate(1.14) contrast(1.13)
+          drop-shadow(0 22px 18px rgba(4, 6, 16, .7))
+          drop-shadow(0 0 20px rgba(255, 195, 93, .2));
+  transition: opacity .65s ease, filter .8s ease;
+  --poster-color: transparent;
+  --progress-bar-color: rgba(255, 214, 130, .82);
+  --progress-bar-height: 0;
+}
+.result-model-stage model-viewer.loaded {
+  opacity: 1;
+}
+.model-loading {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  translate: -50%;
+  margin: 0;
+  color: rgba(255, 226, 166, .8);
+  font-size: clamp(8px, .65vw, 11px);
+  letter-spacing: .18em;
+  text-shadow: 0 2px 12px #170605;
+  transition: opacity .35s ease;
+  white-space: nowrap;
+}
+.model-loading.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 .model-aura {
   position: absolute;
   left: 17%;
@@ -602,7 +634,7 @@ button { font: inherit; color: inherit; }
   aspect-ratio: 1;
   border-radius: 50%;
   z-index: 0;
-  opacity: .54;
+  opacity: .32;
   background: radial-gradient(
     circle at 50% 48%,
     rgba(255,225,154,.7) 0,
@@ -614,6 +646,10 @@ button { font: inherit; color: inherit; }
   mix-blend-mode: screen;
   pointer-events: none;
   animation: modelGaussianBreath 4.8s ease-in-out infinite alternate;
+}
+.scene-result:not(.has-result-model) .model-aura,
+.scene-result:not(.has-result-model) .result-model-stage::before {
+  opacity: 0;
 }
 .model-pedestal {
   position: absolute;
