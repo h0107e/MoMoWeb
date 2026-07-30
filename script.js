@@ -34,7 +34,13 @@ const figures = [
     model: "./assets/JingDeZhen.glb",
     modelAlt: "景德镇非遗玩偶三维模型"
   },
-  { name: "皮影戏", story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。" },
+  {
+    name: "皮影戏",
+    story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。",
+    model: "./assets/PiYingXi.glb",
+    modelAlt: "皮影戏非遗玩偶三维模型",
+    cameraOrbit: "180deg 82deg 2.55m"
+  },
   {
     name: "布老虎",
     story: "虎头纳福，守护长安。愿你勇敢温柔，所行皆坦途。",
@@ -229,7 +235,7 @@ function runDraw() {
 drawButton.addEventListener("click", runDraw);
 
 const directResult = new URLSearchParams(window.location.search).get("result");
-const directResultIndex = { opera: 1, porcelain: 2, fish: 7, tiger: 4 }[directResult];
+const directResultIndex = { opera: 1, porcelain: 2, shadow: 3, fish: 7, tiger: 4 }[directResult];
 if (Number.isInteger(directResultIndex)) {
   presentResult(directResultIndex);
   app.dataset.scene = "result";
