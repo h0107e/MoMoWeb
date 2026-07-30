@@ -21,7 +21,13 @@ let modelViewerLoader = null;
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
-  { name: "京剧戏迷", story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。" },
+  {
+    name: "京剧戏迷",
+    story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。",
+    model: "./assets/JingJu.glb",
+    modelAlt: "京剧戏迷非遗玩偶三维模型",
+    cameraOrbit: "180deg 82deg 2.55m"
+  },
   { name: "景德镇", story: "入窑一色，出窑万彩。愿你经受淬炼，终见澄澈。" },
   { name: "皮影戏", story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。" },
   {
@@ -151,6 +157,7 @@ async function presentResultModel(figure) {
   resultModelViewer.removeAttribute("aria-hidden");
   resultModelViewer.alt = figure.modelAlt || `${figure.name}三维模型`;
   resultModelLoading.textContent = `${figure.name}灵影呈现中`;
+  resultModelViewer.setAttribute("camera-orbit", figure.cameraOrbit || "0deg 82deg 2.55m");
 
   if (!customElements.get("model-viewer")) {
     modelViewerLoader ??= import("./assets/model-viewer.min.js");
@@ -217,7 +224,7 @@ function runDraw() {
 drawButton.addEventListener("click", runDraw);
 
 const directResult = new URLSearchParams(window.location.search).get("result");
-const directResultIndex = { fish: 7, tiger: 4 }[directResult];
+const directResultIndex = { opera: 1, fish: 7, tiger: 4 }[directResult];
 if (Number.isInteger(directResultIndex)) {
   presentResult(directResultIndex);
   app.dataset.scene = "result";
