@@ -17,8 +17,12 @@ const resultScene = document.querySelector(".scene-result");
 const hubBoxViewer = document.querySelector("#hubBoxViewer");
 const resultModelViewer = document.querySelector("#resultModelViewer");
 const resultModelLoading = document.querySelector("#resultModelLoading");
+const resultCollectCard = document.querySelector("#resultCollectCard");
+const resultCollectCardImage = document.querySelector("#resultCollectCardImage");
 let modelViewerLoader = null;
 let resultRotationTimer = null;
+let resultCardDockTimer = null;
+let resultModelRevealTimer = null;
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -48,7 +52,9 @@ const figures = [
     story: "虎头纳福，守护长安。愿你勇敢温柔，所行皆坦途。",
     model: "./assets/BuLaoHu.glb",
     modelAlt: "布老虎非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/BuLaoHu-card.png",
+    cardAlt: "MOMO 布老虎 SSR 非遗收藏卡"
   },
   { name: "苗绣蝴蝶", story: "一针一线，绣出故乡。愿你破茧振翅，心有所归。" },
   { name: "纸鸢高手", story: "借一缕风，扶摇云上。愿你自在舒展，志在青空。" },
@@ -104,8 +110,8 @@ function goTo(name) {
     veil.classList.remove("is-running", "is-fallback");
     veil.style.removeProperty("pointer-events");
     transitioning = false;
-    if (currentScene === "result" && resultModelViewer.loaded) {
-      holdResultModelFront();
+    if (currentScene === "result") {
+      startResultRevealSequence();
     }
     if (queuedDraw && currentScene === "draw") {
       queuedDraw = false;
@@ -166,7 +172,7 @@ function holdResultModelFront() {
   resultModelViewer.removeAttribute("camera-orbit");
   resultModelViewer.setAttribute("camera-orbit", resultFrontOrbit);
   resultModelViewer.jumpCameraToGoal?.();
-  if (currentScene !== "result" || transitioning) return;
+  if (currentScene !== "result" || transitioning || resultScene.classList.contains("is-model-concealed")) return;
   resultRotationTimer = setTimeout(() => {
     if (currentScene === "result" && resultModelViewer.hasAttribute("src")) {
       resultModelViewer.setAttribute("auto-rotate", "");
@@ -218,6 +224,56 @@ async function presentResultModel(figure) {
   }
 }
 
+function clearResultRevealTimers() {
+  clearTimeout(resultCardDockTimer);
+  clearTimeout(resultModelRevealTimer);
+}
+
+function prepareResultReveal(figure) {
+  clearResultRevealTimers();
+  resultScene.classList.remove("has-result-card", "is-card-intro", "is-card-docked", "is-model-concealed", "is-model-revealed");
+
+  if (!figure.card) {
+    resultCollectCard.hidden = true;
+    resultCollectCardImage.removeAttribute("src");
+    resultCollectCardImage.alt = "";
+    resultScene.classList.add("is-model-revealed");
+    return;
+  }
+
+  resultCollectCard.hidden = false;
+  resultCollectCardImage.src = figure.card;
+  resultCollectCardImage.alt = figure.cardAlt || `${figure.name}非遗收藏卡`;
+  resultScene.classList.add("has-result-card", "is-model-concealed");
+}
+
+function revealResultModel() {
+  resultScene.classList.remove("is-model-concealed");
+  resultScene.classList.add("is-model-revealed");
+  if (resultModelViewer.loaded) holdResultModelFront();
+}
+
+function startResultRevealSequence() {
+  clearResultRevealTimers();
+
+  if (!resultScene.classList.contains("has-result-card")) {
+    revealResultModel();
+    return;
+  }
+
+  resultScene.classList.add("is-card-intro");
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    resultScene.classList.add("is-card-docked");
+    revealResultModel();
+    return;
+  }
+
+  resultCardDockTimer = setTimeout(() => {
+    resultScene.classList.add("is-card-docked");
+  }, 1450);
+  resultModelRevealTimer = setTimeout(revealResultModel, 2350);
+}
+
 blindBoxStage.addEventListener("pointermove", event => {
   const rect = blindBoxStage.getBoundingClientRect();
   const x = (event.clientX - rect.left) / rect.width - .5;
@@ -245,6 +301,7 @@ document.querySelector("#quickDraw").addEventListener("click", () => {
 });
 
 function presentResult(result) {
+  prepareResultReveal(figures[result]);
   resultScene.classList.add("is-showcase");
   document.querySelector("#resultName").textContent = figures[result].name;
   document.querySelector("#resultStory").textContent = figures[result].story;
@@ -256,8 +313,10 @@ function presentResult(result) {
 
 function resetDrawState() {
   clearTimeout(resultRotationTimer);
+  clearResultRevealTimers();
   resultModelViewer.removeAttribute("auto-rotate");
-  resultScene.classList.remove("is-showcase");
+  resultScene.classList.remove("is-showcase", "has-result-card", "is-card-intro", "is-card-docked", "is-model-concealed", "is-model-revealed");
+  resultCollectCard.hidden = true;
   selected = null;
   drawing = false;
   queuedDraw = false;
@@ -294,6 +353,7 @@ if (Number.isInteger(directResultIndex)) {
   app.dataset.scene = "result";
   scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
   currentScene = "result";
+  requestAnimationFrame(startResultRevealSequence);
 }
 
 document.querySelector("#collectButton").addEventListener("click", event => {
