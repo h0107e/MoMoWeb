@@ -27,26 +27,28 @@ const figures = [
     story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。",
     model: "./assets/JingJu.glb",
     modelAlt: "京剧戏迷非遗玩偶三维模型",
-    cameraOrbit: "180deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m"
   },
   {
     name: "景德镇",
     story: "入窑一色，出窑万彩。愿你经受淬炼，终见澄澈。",
     model: "./assets/JingDeZhen.glb",
-    modelAlt: "景德镇非遗玩偶三维模型"
+    modelAlt: "景德镇非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m"
   },
   {
     name: "皮影戏",
     story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。",
     model: "./assets/PiYingXi.glb",
     modelAlt: "皮影戏非遗玩偶三维模型",
-    cameraOrbit: "180deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m"
   },
   {
     name: "布老虎",
     story: "虎头纳福，守护长安。愿你勇敢温柔，所行皆坦途。",
     model: "./assets/BuLaoHu.glb",
-    modelAlt: "布老虎非遗玩偶三维模型"
+    modelAlt: "布老虎非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m"
   },
   { name: "苗绣蝴蝶", story: "一针一线，绣出故乡。愿你破茧振翅，心有所归。" },
   { name: "纸鸢高手", story: "借一缕风，扶摇云上。愿你自在舒展，志在青空。" },
@@ -66,6 +68,7 @@ let transitioning = false;
 let queuedDraw = false;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
+let resultFrontOrbit = "0deg 82deg 2.25m";
 
 function goTo(name) {
   if (name === currentScene || transitioning) return;
@@ -157,6 +160,9 @@ hubBoxViewer.addEventListener("load", () => hubBoxViewer.classList.add("loaded")
 function holdResultModelFront() {
   clearTimeout(resultRotationTimer);
   resultModelViewer.removeAttribute("auto-rotate");
+  resultModelViewer.removeAttribute("camera-orbit");
+  resultModelViewer.setAttribute("camera-orbit", resultFrontOrbit);
+  resultModelViewer.jumpCameraToGoal?.();
   resultRotationTimer = setTimeout(() => {
     if (currentScene === "result" && resultModelViewer.hasAttribute("src")) {
       resultModelViewer.setAttribute("auto-rotate", "");
@@ -191,7 +197,9 @@ async function presentResultModel(figure) {
   resultModelViewer.removeAttribute("aria-hidden");
   resultModelViewer.alt = figure.modelAlt || `${figure.name}三维模型`;
   resultModelLoading.textContent = `${figure.name}灵影呈现中`;
-  resultModelViewer.setAttribute("camera-orbit", figure.cameraOrbit || "0deg 82deg 2.25m");
+  resultFrontOrbit = figure.cameraOrbit || "0deg 82deg 2.25m";
+  resultModelViewer.removeAttribute("camera-orbit");
+  resultModelViewer.setAttribute("camera-orbit", resultFrontOrbit);
 
   if (!customElements.get("model-viewer")) {
     modelViewerLoader ??= import("./assets/model-viewer.min.js");
