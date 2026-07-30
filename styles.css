@@ -821,12 +821,14 @@ button { font: inherit; color: inherit; }
   min-height: 30%;
   place-items: start;
   align-content: center;
-  padding: 8px 18px;
+  padding: 20px 22px;
   text-align: left;
-  background: none;
+  background: rgba(7, 9, 15, .4);
+  border-radius: 16px;
   border: 0;
-  box-shadow: none;
-  backdrop-filter: none;
+  box-shadow: 0 16px 36px rgba(2, 4, 10, .18);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   transform: translate(0, 25px) scale(.94);
 }
 .scene-result.is-showcase.is-active .reveal-card {
