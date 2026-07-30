@@ -270,8 +270,8 @@ function startResultRevealSequence() {
 
   resultCardDockTimer = setTimeout(() => {
     resultScene.classList.add("is-card-docked");
-  }, 1450);
-  resultModelRevealTimer = setTimeout(revealResultModel, 2350);
+  }, 1150);
+  resultModelRevealTimer = setTimeout(revealResultModel, 1550);
 }
 
 blindBoxStage.addEventListener("pointermove", event => {
