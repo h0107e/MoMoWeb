@@ -695,6 +695,64 @@ button { font: inherit; color: inherit; }
   border: 1px solid rgba(255,214,128,.26);
   border-radius: 50%;
 }
+.result-collect-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24%;
+  aspect-ratio: 848 / 1200;
+  margin: 0;
+  z-index: 7;
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% -50%;
+  transform: scale(.72) rotateY(-12deg) rotateZ(-1.5deg);
+  transform-origin: 50% 50%;
+  filter:
+    drop-shadow(0 24px 28px rgba(5, 2, 7, .82))
+    drop-shadow(0 0 24px rgba(255, 185, 61, .28));
+  pointer-events: none;
+  transition:
+    left .9s cubic-bezier(.2,.78,.22,1),
+    top .9s cubic-bezier(.2,.78,.22,1),
+    width .9s cubic-bezier(.2,.78,.22,1),
+    transform .9s cubic-bezier(.2,.78,.22,1),
+    filter .9s ease;
+}
+.result-collect-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 3.2%;
+}
+.scene-result.has-result-card.is-card-intro .result-collect-card {
+  opacity: 1;
+  visibility: visible;
+  animation: cardSummon .78s cubic-bezier(.16,.86,.28,1) both;
+}
+.scene-result.has-result-card.is-card-docked .result-collect-card {
+  left: 87%;
+  top: 49%;
+  width: 15.5%;
+  opacity: 1;
+  visibility: visible;
+  animation: none;
+  transform: scale(1) rotateY(-5deg) rotateZ(.8deg);
+  filter:
+    drop-shadow(0 18px 18px rgba(3, 2, 7, .76))
+    drop-shadow(0 0 15px rgba(255, 192, 74, .24));
+}
+.scene-result.is-showcase.is-model-concealed .result-model-stage {
+  opacity: 0;
+  translate: -50% 22px;
+  pointer-events: none;
+}
+.scene-result.is-model-concealed .reveal-card,
+.scene-result.is-model-concealed .result-actions {
+  opacity: 0;
+  pointer-events: none;
+}
 .reveal-card {
   position: absolute;
   left: 51%;
@@ -1095,6 +1153,21 @@ button.gesture-hover, a.gesture-hover {
 @keyframes modelGaussianBreath {
   from { opacity: .38; transform: scale(.92); }
   to { opacity: .66; transform: scale(1.07); }
+}
+@keyframes cardSummon {
+  0% {
+    opacity: 0;
+    transform: scale(.58) rotateY(-18deg) rotateZ(-2.5deg);
+    filter: blur(9px) drop-shadow(0 0 8px rgba(255, 196, 80, .12));
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.035) rotateY(-5deg) rotateZ(.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0) rotateZ(0);
+  }
 }
 
 @media (pointer: coarse) {
