@@ -104,6 +104,9 @@ function goTo(name) {
     veil.classList.remove("is-running", "is-fallback");
     veil.style.removeProperty("pointer-events");
     transitioning = false;
+    if (currentScene === "result" && resultModelViewer.loaded) {
+      holdResultModelFront();
+    }
     if (queuedDraw && currentScene === "draw") {
       queuedDraw = false;
       runDraw();
@@ -163,6 +166,7 @@ function holdResultModelFront() {
   resultModelViewer.removeAttribute("camera-orbit");
   resultModelViewer.setAttribute("camera-orbit", resultFrontOrbit);
   resultModelViewer.jumpCameraToGoal?.();
+  if (currentScene !== "result" || transitioning) return;
   resultRotationTimer = setTimeout(() => {
     if (currentScene === "result" && resultModelViewer.hasAttribute("src")) {
       resultModelViewer.setAttribute("auto-rotate", "");
