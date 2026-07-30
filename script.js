@@ -18,6 +18,7 @@ const hubBoxViewer = document.querySelector("#hubBoxViewer");
 const resultModelViewer = document.querySelector("#resultModelViewer");
 const resultModelLoading = document.querySelector("#resultModelLoading");
 let modelViewerLoader = null;
+let resultRotationTimer = null;
 
 const figures = [
   { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
@@ -26,7 +27,7 @@ const figures = [
     story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。",
     model: "./assets/JingJu.glb",
     modelAlt: "京剧戏迷非遗玩偶三维模型",
-    cameraOrbit: "180deg 82deg 2.55m"
+    cameraOrbit: "180deg 82deg 2.25m"
   },
   {
     name: "景德镇",
@@ -39,7 +40,7 @@ const figures = [
     story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。",
     model: "./assets/PiYingXi.glb",
     modelAlt: "皮影戏非遗玩偶三维模型",
-    cameraOrbit: "180deg 82deg 2.55m"
+    cameraOrbit: "180deg 82deg 2.25m"
   },
   {
     name: "布老虎",
@@ -62,6 +63,7 @@ let selected = null;
 let currentScene = "home";
 let drawing = false;
 let transitioning = false;
+let queuedDraw = false;
 let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
 
@@ -75,9 +77,11 @@ function goTo(name) {
   const changeScene = () => {
     if (sceneChanged) return;
     sceneChanged = true;
+    if (name === "draw" && currentScene === "result") resetDrawState();
     app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
+    if (name === "draw") veil.style.pointerEvents = "none";
     if (name === "hub") {
       const loadModel = () => loadHubBoxModel().catch(console.error);
       if ("requestIdleCallback" in window) {
@@ -95,7 +99,12 @@ function goTo(name) {
     transitionVideo.removeEventListener("ended", finishTransition);
     transitionVideo.pause();
     veil.classList.remove("is-running", "is-fallback");
+    veil.style.removeProperty("pointer-events");
     transitioning = false;
+    if (queuedDraw && currentScene === "draw") {
+      queuedDraw = false;
+      runDraw();
+    }
   };
 
   const useFallback = () => {
@@ -144,15 +153,29 @@ async function loadHubBoxModel() {
 }
 
 hubBoxViewer.addEventListener("load", () => hubBoxViewer.classList.add("loaded"));
+
+function holdResultModelFront() {
+  clearTimeout(resultRotationTimer);
+  resultModelViewer.removeAttribute("auto-rotate");
+  resultRotationTimer = setTimeout(() => {
+    if (currentScene === "result" && resultModelViewer.hasAttribute("src")) {
+      resultModelViewer.setAttribute("auto-rotate", "");
+    }
+  }, 3000);
+}
+
 resultModelViewer.addEventListener("load", () => {
   resultModelViewer.classList.add("loaded");
   resultModelLoading.classList.add("is-hidden");
+  holdResultModelFront();
 });
 resultModelViewer.addEventListener("error", () => {
   resultModelLoading.textContent = "灵影暂未显现";
 });
 
 async function presentResultModel(figure) {
+  clearTimeout(resultRotationTimer);
+  resultModelViewer.removeAttribute("auto-rotate");
   resultModelViewer.classList.remove("loaded");
   resultModelLoading.classList.remove("is-hidden");
 
@@ -168,7 +191,7 @@ async function presentResultModel(figure) {
   resultModelViewer.removeAttribute("aria-hidden");
   resultModelViewer.alt = figure.modelAlt || `${figure.name}三维模型`;
   resultModelLoading.textContent = `${figure.name}灵影呈现中`;
-  resultModelViewer.setAttribute("camera-orbit", figure.cameraOrbit || "0deg 82deg 2.55m");
+  resultModelViewer.setAttribute("camera-orbit", figure.cameraOrbit || "0deg 82deg 2.25m");
 
   if (!customElements.get("model-viewer")) {
     modelViewerLoader ??= import("./assets/model-viewer.min.js");
@@ -179,6 +202,7 @@ async function presentResultModel(figure) {
   } else if (resultModelViewer.loaded) {
     resultModelViewer.classList.add("loaded");
     resultModelLoading.classList.add("is-hidden");
+    holdResultModelFront();
   }
 }
 
@@ -218,8 +242,25 @@ function presentResult(result) {
   });
 }
 
+function resetDrawState() {
+  clearTimeout(resultRotationTimer);
+  resultModelViewer.removeAttribute("auto-rotate");
+  resultScene.classList.remove("is-showcase");
+  selected = null;
+  drawing = false;
+  queuedDraw = false;
+  choiceButtons.forEach(item => item.classList.remove("is-selected"));
+  prompt.textContent = "九盏灵灯，藏着九段非遗故事";
+  drawButton.classList.remove("is-drawing");
+  drawButton.querySelector("span").textContent = "抽取盲盒";
+}
+
 function runDraw() {
   if (drawing) return;
+  if (transitioning) {
+    queuedDraw = true;
+    return;
+  }
   drawing = true;
   drawButton.classList.add("is-drawing");
   drawButton.querySelector("span").textContent = "灵灯寻缘中";
