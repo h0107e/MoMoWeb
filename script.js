@@ -25,7 +25,13 @@ let resultCardDockTimer = null;
 let resultModelRevealTimer = null;
 
 const figures = [
-  { name: "醒狮少年", story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。" },
+  {
+    name: "醒狮少年",
+    story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。",
+    model: "./assets/XingShi.glb",
+    modelAlt: "醒狮少年非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m"
+  },
   {
     name: "京剧戏迷",
     story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。",
@@ -347,7 +353,7 @@ function runDraw() {
 drawButton.addEventListener("click", runDraw);
 
 const directResult = new URLSearchParams(window.location.search).get("result");
-const directResultIndex = { opera: 1, porcelain: 2, shadow: 3, fish: 7, tiger: 4 }[directResult];
+const directResultIndex = { lion: 0, opera: 1, porcelain: 2, shadow: 3, fish: 7, tiger: 4 }[directResult];
 if (Number.isInteger(directResultIndex)) {
   presentResult(directResultIndex);
   app.dataset.scene = "result";
