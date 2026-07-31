@@ -67,8 +67,9 @@ const figures = [
   {
     name: "鱼灯",
     story: "鱼跃灯明，岁岁有余。愿你循光而游，好事将近。",
-    model: "./assets/YUDeng.glb",
-    modelAlt: "鱼灯非遗玩偶三维模型"
+    model: "./assets/YUDengV2.glb",
+    modelAlt: "鱼灯2.0非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m"
   },
   { name: "敦煌飞天", story: "飘带凌空，千年一瞬。愿你无拘无束，心游万仞。" }
 ];
