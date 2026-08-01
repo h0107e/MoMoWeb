@@ -30,28 +30,36 @@ const figures = [
     story: "鼓点一响，百厄皆退。愿你心有热望，步步生风。",
     model: "./assets/XingShi.glb",
     modelAlt: "醒狮少年非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-XingShi.webp",
+    cardAlt: "MOMO 醒狮 SSR 非遗收藏卡"
   },
   {
     name: "京剧戏迷",
     story: "一腔一式，皆有乾坤。愿你从容登场，自成风骨。",
     model: "./assets/JingJu.glb",
     modelAlt: "京剧戏迷非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-JingJu.webp",
+    cardAlt: "MOMO 京剧 SSR 非遗收藏卡"
   },
   {
     name: "景德镇",
     story: "入窑一色，出窑万彩。愿你经受淬炼，终见澄澈。",
     model: "./assets/JingDeZhen.glb",
     modelAlt: "景德镇非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-JingDeZhen.webp",
+    cardAlt: "MOMO 景德镇 SSR 非遗收藏卡"
   },
   {
     name: "皮影戏",
     story: "一灯一幕，演尽古今。愿你身后有光，眼中有戏。",
     model: "./assets/PiYingXi.glb",
     modelAlt: "皮影戏非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-PiYingXi.webp",
+    cardAlt: "MOMO 皮影戏 SSR 非遗收藏卡"
   },
   {
     name: "布老虎",
@@ -59,7 +67,7 @@ const figures = [
     model: "./assets/BuLaoHu.glb",
     modelAlt: "布老虎非遗玩偶三维模型",
     cameraOrbit: "90deg 82deg 2.25m",
-    card: "./assets/BuLaoHu-card.png",
+    card: "./assets/Card-BuLaoHu.webp",
     cardAlt: "MOMO 布老虎 SSR 非遗收藏卡"
   },
   { name: "苗绣蝴蝶", story: "一针一线，绣出故乡。愿你破茧振翅，心有所归。" },
@@ -69,7 +77,9 @@ const figures = [
     story: "鱼跃灯明，岁岁有余。愿你循光而游，好事将近。",
     model: "./assets/YUDengV2.glb",
     modelAlt: "鱼灯2.0非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m"
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-YuDeng.webp",
+    cardAlt: "MOMO 鱼灯 SSR 非遗收藏卡"
   },
   { name: "敦煌飞天", story: "飘带凌空，千年一瞬。愿你无拘无束，心游万仞。" }
 ];
