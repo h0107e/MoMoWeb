@@ -84,6 +84,30 @@ const figures = [
   { name: "敦煌飞天", story: "飘带凌空，千年一瞬。愿你无拘无束，心游万仞。" }
 ];
 
+const heritageDescriptions = [
+  "锣鼓唤醒狮魂，以腾跃、采青与礼俗寄托驱邪纳福的愿望。",
+  "一腔一式皆有程法，脸谱、唱腔与身段共同讲述东方舞台故事。",
+  "泥与火在窑中相遇，千年制瓷技艺凝成温润清透的东方器物。",
+  "一灯一幕，雕刻镂空的影偶在光中演绎民间故事与百态人生。",
+  "以布为形、以纹纳福，憨拙虎形承载长辈对孩童平安成长的守护。",
+  "彩线沿布面生长，把山川、花鸟与族群记忆绣进可以穿戴的史诗。",
+  "竹骨承风、纸面绘愿，放飞的不只是纸鸢，也是向往与祝福。",
+  "鱼形灯彩循光游动，寄托年年有余、灯火相伴的生活愿景。",
+  "飞天衣带凌空，将壁画中的乐舞、想象与千年审美带到今天。"
+];
+const heritageListButtons = [...document.querySelectorAll("#heritageList button")];
+const heritageCardImage = document.querySelector("#heritageCardImage");
+const heritageCardPlaceholder = document.querySelector("#heritageCardPlaceholder");
+const heritageNumber = document.querySelector("#heritageNumber");
+const heritageName = document.querySelector("#heritageName");
+const heritageDescription = document.querySelector("#heritageDescription");
+const heritageStatus = document.querySelector("#heritageStatus");
+const heritageDrawButton = document.querySelector("#heritageDrawButton");
+const cardViewer = document.querySelector("#cardViewer");
+const cardViewerImage = document.querySelector("#cardViewerImage");
+const cardViewerName = document.querySelector("#cardViewerName");
+let heritageSelection = 0;
+
 let selected = null;
 let currentScene = "home";
 let drawing = false;
@@ -107,6 +131,7 @@ function goTo(name) {
     app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
+    if (name !== "cards") closeCardViewer();
     if (name === "draw") veil.style.pointerEvents = "none";
     if (name === "hub") {
       const loadModel = () => loadHubBoxModel().catch(console.error);
@@ -170,6 +195,61 @@ document.querySelectorAll("[data-hub-label]").forEach(button => button.addEventL
   clearTimeout(hubToast.hideTimer);
   hubToast.hideTimer = setTimeout(() => hubToast.classList.remove("is-visible"), 1800);
 }));
+
+function updateHeritageDetail(index) {
+  const figure = figures[index];
+  heritageSelection = index;
+  heritageListButtons.forEach((button, buttonIndex) => button.classList.toggle("is-active", buttonIndex === index));
+  heritageNumber.textContent = `HERITAGE · ${String(index + 1).padStart(2, "0")}`;
+  heritageName.textContent = figure.name;
+  heritageDescription.textContent = heritageDescriptions[index];
+  if (figure.card) {
+    heritageCardImage.src = figure.card;
+    heritageCardImage.alt = figure.cardAlt || `${figure.name}非遗收藏卡`;
+    heritageCardImage.hidden = false;
+    heritageCardPlaceholder.hidden = true;
+  } else {
+    heritageCardImage.hidden = true;
+    heritageCardPlaceholder.hidden = false;
+  }
+  heritageStatus.textContent = figure.model
+    ? "卡牌与三维模型已收录"
+    : figure.card
+      ? "收藏卡已收录 · 三维模型待补充"
+      : "卡牌与三维模型正在共创中";
+}
+
+heritageListButtons.forEach(button => {
+  button.addEventListener("click", () => updateHeritageDetail(Number(button.dataset.index)));
+});
+
+heritageDrawButton.addEventListener("click", () => {
+  selected = heritageSelection;
+  choiceButtons.forEach((button, index) => button.classList.toggle("is-selected", index === selected));
+  prompt.textContent = `已与「${figures[selected].name}」的灵灯相应`;
+  goTo("draw");
+});
+
+function closeCardViewer() {
+  cardViewer.hidden = true;
+  cardViewer.setAttribute("aria-hidden", "true");
+  cardViewer.classList.remove("is-open");
+}
+
+document.querySelectorAll("#cardGallery [data-card]").forEach(button => {
+  button.addEventListener("click", () => {
+    cardViewerImage.src = button.dataset.card;
+    cardViewerImage.alt = `${button.dataset.name}非遗收藏卡大图`;
+    cardViewerName.textContent = `${button.dataset.name} · HERITAGE CARD`;
+    cardViewer.hidden = false;
+    cardViewer.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(() => cardViewer.classList.add("is-open"));
+  });
+});
+document.querySelector("#cardViewerClose").addEventListener("click", closeCardViewer);
+cardViewer.addEventListener("click", event => {
+  if (event.target === cardViewer) closeCardViewer();
+});
 
 async function loadHubBoxModel() {
   if (!customElements.get("model-viewer")) {
@@ -371,6 +451,14 @@ if (Number.isInteger(directResultIndex)) {
   scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === "result"));
   currentScene = "result";
   requestAnimationFrame(startResultRevealSequence);
+} else {
+  const directScene = new URLSearchParams(window.location.search).get("scene");
+  if (["home", "hub", "story", "heritage", "cards", "draw"].includes(directScene)) {
+    app.dataset.scene = directScene;
+    scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === directScene));
+    currentScene = directScene;
+    if (directScene === "hub") loadHubBoxModel().catch(console.error);
+  }
 }
 
 document.querySelector("#collectButton").addEventListener("click", event => {
