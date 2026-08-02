@@ -1069,15 +1069,20 @@ button { font: inherit; color: inherit; }
 }
 .gesture-cursor.is-targeting > span { animation: fingerFocus .7s ease-in-out infinite alternate; }
 .gesture-cursor.is-complete { filter: drop-shadow(0 0 16px #ffe4a0); }
-button.gesture-hover, a.gesture-hover {
+button.gesture-hover:not(.hub-area), a.gesture-hover {
   outline: 1px solid rgba(255,227,164,.82);
   outline-offset: 4px;
   filter: brightness(1.13);
 }
 .hub-area.gesture-hover {
-  border-color: rgba(255,219,143,.82);
-  background: radial-gradient(circle, rgba(255,191,74,.16), transparent 70%);
-  box-shadow: 0 0 25px rgba(255,170,51,.32), inset 0 0 18px rgba(255,191,74,.11);
+  outline: none;
+  border-color: rgba(255,219,143,.48);
+  background: radial-gradient(ellipse at center, rgba(255,191,74,.2), rgba(255,173,48,.06) 58%, transparent 76%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,226,158,.22),
+    inset 0 0 20px rgba(255,177,49,.16),
+    0 0 13px rgba(255,170,51,.2);
+  transform: none;
 }
 .choice-grid button.gesture-hover {
   transform: translateY(-3.5%);
