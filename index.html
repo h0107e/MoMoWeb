@@ -55,18 +55,118 @@
         </div>
         <button class="hub-back icon-button" data-go="home" type="button" aria-label="返回首页">←</button>
         <nav class="hub-hotspots" aria-label="功能导航">
-          <button class="hub-area hub-story" data-hub-label="系列故事" type="button" aria-label="系列故事"></button>
-          <button class="hub-area hub-heritage" data-hub-label="九大非遗" type="button" aria-label="九大非遗"></button>
+          <button class="hub-area hub-story" data-go="story" type="button" aria-label="系列故事"></button>
+          <button class="hub-area hub-heritage" data-go="heritage" type="button" aria-label="九大非遗"></button>
           <button class="hub-area hub-blindbox" data-hub-action="draw" type="button" aria-label="进入潮玩盲盒"></button>
-          <button class="hub-area hub-card" data-hub-label="收藏卡" type="button" aria-label="收藏卡"></button>
-          <button class="hub-area hub-about" data-hub-label="关于我们" type="button" aria-label="关于我们"></button>
-          <button class="hub-area hub-enter" data-hub-label="非遗展览" type="button" aria-label="进入展览"></button>
+          <button class="hub-area hub-card" data-go="cards" type="button" aria-label="收藏卡"></button>
+          <button class="hub-area hub-about" data-go="story" type="button" aria-label="关于我们"></button>
+          <button class="hub-area hub-enter" data-go="heritage" type="button" aria-label="进入展览"></button>
           <button class="hub-area hub-journey" data-hub-action="draw" type="button" aria-label="开始盲盒漫游"></button>
-          <button class="hub-area hub-explore" data-hub-label="九大非遗" type="button" aria-label="探索九大非遗"></button>
-          <button class="hub-area hub-more" data-hub-label="更多内容" type="button" aria-label="查看更多"></button>
+          <button class="hub-area hub-explore" data-go="heritage" type="button" aria-label="探索九大非遗"></button>
+          <button class="hub-area hub-more" data-go="cards" type="button" aria-label="查看更多收藏"></button>
           <button class="hub-area hub-product" data-hub-action="draw" type="button" aria-label="进入盲盒产品"></button>
         </nav>
         <div class="hub-toast" id="hubToast" role="status">点击功能区域，开启非遗漫游</div>
+      </section>
+
+      <section class="scene scene-story archive-scene" data-scene="story" aria-label="默默系列故事与项目介绍">
+        <img class="scene-art archive-art" src="./assets/home-bg.png" alt="灯火映照的非遗小镇" />
+        <div class="archive-shade" aria-hidden="true"></div>
+        <header class="archive-nav">
+          <button class="icon-button" data-go="hub" type="button" aria-label="返回功能导航">←</button>
+          <span>系列故事 · ABOUT MOMO</span>
+          <button class="text-button" data-go="heritage" type="button">探索九艺</button>
+        </header>
+        <div class="story-mark" aria-hidden="true">默</div>
+        <article class="story-copy">
+          <span class="archive-kicker">MOMO · 无声绘卷</span>
+          <h1>一盏灯，照见<br />九种守艺人生</h1>
+          <p>默默来自天津理工大学聋人工学院。它循着小镇灯火，与九位非遗伙伴相遇，把传统技艺记录成可以阅读、触摸和收藏的盲盒故事。</p>
+          <ol class="story-chapters">
+            <li><b>入镇</b><span>沿灯火进入非遗小镇，认识默默与九艺世界。</span></li>
+            <li><b>遇艺</b><span>通过卡牌、文字与三维模型，安静地观察每一种技艺。</span></li>
+            <li><b>共融</b><span>让听障创作者成为文化内容的设计者、讲述者与共创者。</span></li>
+          </ol>
+          <div class="story-actions">
+            <button class="primary-button compact-action" data-go="heritage" type="button"><span>翻开九艺图鉴</span><i>阅</i></button>
+            <button class="secondary-button compact-action" data-go="cards" type="button">进入非遗藏阁</button>
+          </div>
+        </article>
+        <aside class="project-manifesto">
+          <span>项目初心</span>
+          <strong>文化 × 科技 × 残健共融</strong>
+          <p>让非遗活在当下，<br />让共融见于细节。</p>
+          <small>所有核心信息均以文字呈现，并支持鼠标、触摸与食指停留操作。</small>
+        </aside>
+      </section>
+
+      <section class="scene scene-heritage archive-scene" data-scene="heritage" aria-label="九大非遗数字图鉴">
+        <img class="scene-art archive-art heritage-art" src="./assets/result-showcase-bg.png" alt="金色天光下的非遗小镇展示台" />
+        <div class="archive-shade heritage-shade" aria-hidden="true"></div>
+        <header class="archive-nav">
+          <button class="icon-button" data-go="hub" type="button" aria-label="返回功能导航">←</button>
+          <span>九灯非遗图鉴 · HERITAGE ARCHIVE</span>
+          <button class="text-button" data-go="cards" type="button">查看藏阁</button>
+        </header>
+        <div class="heritage-heading">
+          <span class="archive-kicker">九盏灵灯 · 九段技艺</span>
+          <h1>探索九大非遗</h1>
+          <p>选择一盏灯，阅读它的技艺线索。</p>
+        </div>
+        <div class="heritage-list" id="heritageList" aria-label="非遗角色列表">
+          <button class="is-active" data-index="0" type="button"><b>醒狮</b><small>LION DANCE</small></button>
+          <button data-index="1" type="button"><b>京剧</b><small>PEKING OPERA</small></button>
+          <button data-index="2" type="button"><b>景德镇</b><small>PORCELAIN</small></button>
+          <button data-index="3" type="button"><b>皮影戏</b><small>SHADOW PLAY</small></button>
+          <button data-index="4" type="button"><b>布老虎</b><small>CLOTH TIGER</small></button>
+          <button data-index="5" type="button"><b>苗绣</b><small>MIAO EMBROIDERY</small></button>
+          <button data-index="6" type="button"><b>纸鸢</b><small>KITE</small></button>
+          <button data-index="7" type="button"><b>鱼灯</b><small>FISH LANTERN</small></button>
+          <button data-index="8" type="button"><b>敦煌飞天</b><small>DUNHUANG</small></button>
+        </div>
+        <article class="heritage-detail">
+          <div class="heritage-card-preview" id="heritageCardPreview">
+            <img id="heritageCardImage" src="./assets/Card-XingShi.webp" alt="醒狮非遗收藏卡" />
+            <span id="heritageCardPlaceholder" hidden>卡牌待解锁</span>
+          </div>
+          <div class="heritage-detail-copy">
+            <span class="archive-kicker" id="heritageNumber">HERITAGE · 01</span>
+            <h2 id="heritageName">醒狮少年</h2>
+            <p id="heritageDescription">锣鼓唤醒狮魂，以腾跃、采青与礼俗寄托驱邪纳福的愿望。</p>
+            <small id="heritageStatus">卡牌与三维模型已收录</small>
+            <button class="primary-button compact-action" id="heritageDrawButton" type="button"><span>抽取此款盲盒</span><i>启</i></button>
+          </div>
+        </article>
+      </section>
+
+      <section class="scene scene-cards archive-scene" data-scene="cards" aria-label="非遗收藏卡藏阁">
+        <img class="scene-art archive-art cards-art" src="./assets/fish-result-bg.png" alt="星空云海中的非遗藏阁" />
+        <div class="archive-shade cards-shade" aria-hidden="true"></div>
+        <header class="archive-nav">
+          <button class="icon-button" data-go="hub" type="button" aria-label="返回功能导航">←</button>
+          <span>非遗藏阁 · COLLECTION</span>
+          <button class="text-button" data-go="heritage" type="button">九艺图鉴</button>
+        </header>
+        <div class="cards-heading">
+          <span class="archive-kicker">MOMO · 非遗收藏卡</span>
+          <h1>七张卡牌，七种守艺光芒</h1>
+          <p>点击卡牌放大阅读；未完成的系列将随项目持续补充。</p>
+        </div>
+        <div class="card-gallery" id="cardGallery" aria-label="收藏卡列表">
+          <button data-card="./assets/Card-XingShi.webp" data-name="醒狮" type="button"><img src="./assets/Card-XingShi.webp" alt="醒狮收藏卡" /></button>
+          <button data-card="./assets/Card-JingJu.webp" data-name="京剧" type="button"><img src="./assets/Card-JingJu.webp" alt="京剧收藏卡" /></button>
+          <button data-card="./assets/Card-BuLaoHu.webp" data-name="布老虎" type="button"><img src="./assets/Card-BuLaoHu.webp" alt="布老虎收藏卡" /></button>
+          <button data-card="./assets/Card-JingDeZhen.webp" data-name="景德镇" type="button"><img src="./assets/Card-JingDeZhen.webp" alt="景德镇收藏卡" /></button>
+          <button data-card="./assets/Card-PiYingXi.webp" data-name="皮影戏" type="button"><img src="./assets/Card-PiYingXi.webp" alt="皮影戏收藏卡" /></button>
+          <button data-card="./assets/Card-QingHuaCi.webp" data-name="青花瓷" type="button"><img src="./assets/Card-QingHuaCi.webp" alt="青花瓷收藏卡" /></button>
+          <button data-card="./assets/Card-YuDeng.webp" data-name="鱼灯" type="button"><img src="./assets/Card-YuDeng.webp" alt="鱼灯收藏卡" /></button>
+          <span class="card-future" aria-label="待补充收藏卡">未完待续<br /><small>TO BE CONTINUED</small></span>
+        </div>
+        <div class="card-viewer" id="cardViewer" hidden aria-hidden="true">
+          <button class="card-viewer-close" id="cardViewerClose" type="button" aria-label="关闭卡牌大图">×</button>
+          <img id="cardViewerImage" alt="" />
+          <p id="cardViewerName"></p>
+        </div>
       </section>
 
       <section class="scene scene-draw" data-scene="draw" aria-label="抽取非遗盲盒">
