@@ -308,12 +308,18 @@ button { font: inherit; color: inherit; }
   background: transparent;
   transition: border-color .25s, background .25s, box-shadow .25s, transform .25s;
 }
-.hub-area:hover, .hub-area:focus-visible {
-  border-color: rgba(255,219,143,.7);
-  background: radial-gradient(circle, rgba(255,191,74,.12), transparent 70%);
-  box-shadow: 0 0 22px rgba(255,170,51,.24), inset 0 0 18px rgba(255,191,74,.09);
+.hub-area:hover {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
   outline: none;
-  transform: translateY(-2px);
+  transform: none;
+}
+.hub-area:focus-visible {
+  border-color: rgba(255,219,143,.42);
+  background: radial-gradient(circle, rgba(255,191,74,.1), transparent 72%);
+  box-shadow: inset 0 0 0 1px rgba(255,226,158,.2);
+  outline: none;
 }
 .hub-story { left: 64.2%; top: 1.5%; width: 7.2%; height: 6.5%; }
 .hub-heritage { left: 71.2%; top: 1.5%; width: 7.3%; height: 6.5%; }
@@ -1076,12 +1082,10 @@ button.gesture-hover:not(.hub-area), a.gesture-hover {
 }
 .hub-area.gesture-hover {
   outline: none;
-  border-color: rgba(255,219,143,.48);
-  background: radial-gradient(ellipse at center, rgba(255,191,74,.2), rgba(255,173,48,.06) 58%, transparent 76%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,226,158,.22),
-    inset 0 0 20px rgba(255,177,49,.16),
-    0 0 13px rgba(255,170,51,.2);
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  filter: none;
   transform: none;
 }
 .choice-grid button.gesture-hover {
