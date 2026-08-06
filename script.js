@@ -266,9 +266,9 @@ function layoutCardOrbit() {
     if (relativeIndex > count / 2) relativeIndex -= count;
     const angle = relativeIndex * Math.PI * 2 / count;
     const depth = (Math.cos(angle) + 1) / 2;
-    const x = Math.sin(angle) * 42;
+    const x = Math.sin(angle) * 34;
     const y = -(1 - depth) * 17;
-    const scale = .58 + depth * .62;
+    const scale = .56 + depth * .76;
     const rotateY = -Math.sin(angle) * 28;
 
     card.style.left = `${50 + x}%`;
@@ -350,7 +350,7 @@ cardGallery.addEventListener("keydown", event => {
   orbitCards[cardOrbitIndex].focus();
 });
 
-window.addEventListener("momo-gesture-pointer", event => {
+window.addEventListener("momo-gesture-palm", event => {
   const { active, clientX, clientY, now } = event.detail;
   if (!active || currentScene !== "cards" || cardViewer.classList.contains("is-open")) {
     gestureOrbitX = null;
@@ -358,12 +358,6 @@ window.addEventListener("momo-gesture-pointer", event => {
     return;
   }
   const rect = cardOrbitShell.getBoundingClientRect();
-  const inside = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
-  if (!inside) {
-    gestureOrbitX = null;
-    gestureOrbitDistance = 0;
-    return;
-  }
   if (gestureOrbitX == null) {
     gestureOrbitX = clientX;
     return;
