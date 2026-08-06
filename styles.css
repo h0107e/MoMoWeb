@@ -640,9 +640,12 @@ button { font: inherit; color: inherit; }
 }
 .cards-heading {
   position: absolute;
-  left: 6%;
-  top: 13%;
+  left: 50%;
+  top: 10.5%;
   z-index: 4;
+  width: min(78%, 920px);
+  translate: -50% 0;
+  text-align: center;
 }
 .cards-heading h1 {
   margin: 8px 0 6px;
@@ -655,8 +658,8 @@ button { font: inherit; color: inherit; }
   position: absolute;
   left: 3.5%;
   right: 3.5%;
-  top: 20%;
-  bottom: 3%;
+  top: 16%;
+  bottom: 8%;
   z-index: 5;
   overflow: hidden;
   perspective: 1000px;
@@ -833,20 +836,6 @@ button { font: inherit; color: inherit; }
 }
 .is-future-center .orbit-caption span {
   visibility: hidden;
-}
-.orbit-hint {
-  position: absolute;
-  right: 2%;
-  bottom: 3.5%;
-  z-index: 112;
-  margin: 0;
-  color: rgba(255,222,163,.54);
-  font-size: clamp(6px, .48vw, 8px);
-  letter-spacing: .15em;
-  pointer-events: none;
-}
-.is-dragging .orbit-hint {
-  color: #ffe3a4;
 }
 .card-viewer {
   position: absolute;

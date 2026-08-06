@@ -314,10 +314,9 @@ cardGallery.addEventListener("pointerdown", event => {
   if (event.button !== 0) return;
   orbitPointerId = event.pointerId;
   orbitLastX = event.clientX;
-  cardGallery.setPointerCapture?.(event.pointerId);
   cardOrbitShell.classList.add("is-dragging");
 });
-cardGallery.addEventListener("pointermove", event => {
+window.addEventListener("pointermove", event => {
   if (event.pointerId !== orbitPointerId) return;
   const delta = event.clientX - orbitLastX;
   orbitLastX = event.clientX;
@@ -328,13 +327,12 @@ cardGallery.addEventListener("pointermove", event => {
 });
 function finishOrbitDrag(event) {
   if (event.pointerId !== orbitPointerId) return;
-  cardGallery.releasePointerCapture?.(event.pointerId);
   orbitPointerId = null;
   cardOrbitShell.classList.remove("is-dragging");
   snapCardOrbit();
 }
-cardGallery.addEventListener("pointerup", finishOrbitDrag);
-cardGallery.addEventListener("pointercancel", finishOrbitDrag);
+window.addEventListener("pointerup", finishOrbitDrag);
+window.addEventListener("pointercancel", finishOrbitDrag);
 cardGallery.addEventListener("wheel", event => {
   event.preventDefault();
   const now = performance.now();
