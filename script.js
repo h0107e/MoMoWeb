@@ -79,7 +79,15 @@ const figures = [
     card: "./assets/Card-QingHuaCi.webp",
     cardAlt: "MOMO 青花瓷 SSR 非遗收藏卡"
   },
-  { name: "纸鸢高手", story: "借一缕风，扶摇云上。愿你自在舒展，志在青空。" },
+  {
+    name: "泥塑",
+    story: "泥土有形，匠心有温。愿你守住本真，塑成心中所愿。",
+    model: "./assets/NiSu.glb",
+    modelAlt: "泥塑非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-NiSu.jpg",
+    cardAlt: "MOMO 泥塑 SSR 非遗收藏卡"
+  },
   {
     name: "鱼灯",
     story: "鱼跃灯明，岁岁有余。愿你循光而游，好事将近。",
@@ -89,7 +97,15 @@ const figures = [
     card: "./assets/Card-YuDeng.webp",
     cardAlt: "MOMO 鱼灯 SSR 非遗收藏卡"
   },
-  { name: "敦煌飞天", story: "飘带凌空，千年一瞬。愿你无拘无束，心游万仞。" }
+  {
+    name: "傩戏",
+    story: "戴面起舞，逐疫纳福。愿你无惧前路，心怀正气与光明。",
+    model: "./assets/NuoXi.glb",
+    modelAlt: "傩戏非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-NuoXi.png",
+    cardAlt: "MOMO 傩戏 SSR 非遗收藏卡"
+  }
 ];
 
 const heritageDescriptions = [
@@ -99,9 +115,9 @@ const heritageDescriptions = [
   "一灯一幕，雕刻镂空的影偶在光中演绎民间故事与百态人生。",
   "以布为形、以纹纳福，憨拙虎形承载长辈对孩童平安成长的守护。",
   "青花料在素坯上勾勒纹样，经高温烧制凝成清雅含蓄的东方瓷韵。",
-  "竹骨承风、纸面绘愿，放飞的不只是纸鸢，也是向往与祝福。",
+  "一抔泥土经捏塑、刻画与彩绘化作鲜活形象，承载民间生活与乡土记忆。",
   "鱼形灯彩循光游动，寄托年年有余、灯火相伴的生活愿景。",
-  "飞天衣带凌空，将壁画中的乐舞、想象与千年审美带到今天。"
+  "面具、祭仪与舞步共同构成古老傩戏，以驱疫纳福寄托平安愿望。"
 ];
 const heritageListButtons = [...document.querySelectorAll("#heritageList button")];
 const heritageCardImage = document.querySelector("#heritageCardImage");
@@ -577,7 +593,7 @@ function runDraw() {
 drawButton.addEventListener("click", runDraw);
 
 const directResult = new URLSearchParams(window.location.search).get("result");
-const directResultIndex = { lion: 0, opera: 1, porcelain: 2, shadow: 3, qinghua: 5, fish: 7, tiger: 4 }[directResult];
+const directResultIndex = { lion: 0, opera: 1, porcelain: 2, shadow: 3, qinghua: 5, nisu: 6, fish: 7, tiger: 4, nuoxi: 8 }[directResult];
 if (Number.isInteger(directResultIndex)) {
   presentResult(directResultIndex);
   app.dataset.scene = "result";
