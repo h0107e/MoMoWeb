@@ -106,7 +106,20 @@ const heritageDrawButton = document.querySelector("#heritageDrawButton");
 const cardViewer = document.querySelector("#cardViewer");
 const cardViewerImage = document.querySelector("#cardViewerImage");
 const cardViewerName = document.querySelector("#cardViewerName");
+const cardGallery = document.querySelector("#cardGallery");
+const orbitCards = [...document.querySelectorAll("#cardGallery .orbit-card")];
+const cardOrbitName = document.querySelector("#cardOrbitName");
+const cardOrbitShell = document.querySelector(".card-orbit-shell");
 let heritageSelection = 0;
+let cardOrbitIndex = 0;
+let orbitPointerId = null;
+let orbitLastX = 0;
+let orbitDragDistance = 0;
+let suppressCardClickUntil = 0;
+let orbitWheelLockedUntil = 0;
+let gestureOrbitX = null;
+let gestureOrbitDistance = 0;
+let gestureOrbitLastStep = 0;
 
 let selected = null;
 let currentScene = "home";
@@ -236,20 +249,140 @@ function closeCardViewer() {
   cardViewer.classList.remove("is-open");
 }
 
-document.querySelectorAll("#cardGallery [data-card]").forEach(button => {
+function openCardViewer(button) {
+  if (!button.dataset.card) return;
+  cardViewerImage.src = button.dataset.card;
+  cardViewerImage.alt = `${button.dataset.name}非遗收藏卡大图`;
+  cardViewerName.textContent = `${button.dataset.name} · HERITAGE CARD`;
+  cardViewer.hidden = false;
+  cardViewer.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => cardViewer.classList.add("is-open"));
+}
+
+function layoutCardOrbit() {
+  const count = orbitCards.length;
+  orbitCards.forEach((card, index) => {
+    let relativeIndex = (index - cardOrbitIndex + count) % count;
+    if (relativeIndex > count / 2) relativeIndex -= count;
+    const angle = relativeIndex * Math.PI * 2 / count;
+    const depth = (Math.cos(angle) + 1) / 2;
+    const x = Math.sin(angle) * 42;
+    const y = -(1 - depth) * 17;
+    const scale = .58 + depth * .62;
+    const rotateY = -Math.sin(angle) * 28;
+
+    card.style.left = `${50 + x}%`;
+    card.style.top = `${55 + y}%`;
+    card.style.zIndex = `${10 + Math.round(depth * 90)}`;
+    card.style.opacity = `${.28 + depth * .72}`;
+    card.style.filter = `brightness(${.62 + depth * .45}) blur(${(1 - depth) * .7}px)`;
+    card.style.transform = `translate(-50%, -50%) perspective(900px) rotateY(${rotateY}deg) scale(${scale})`;
+    card.classList.toggle("is-center", relativeIndex === 0);
+    card.setAttribute("aria-selected", relativeIndex === 0 ? "true" : "false");
+    card.tabIndex = relativeIndex === 0 ? 0 : -1;
+  });
+  const activeCard = orbitCards[cardOrbitIndex];
+  cardOrbitName.textContent = activeCard.dataset.name;
+  cardOrbitShell.classList.toggle("is-future-center", !activeCard.dataset.card);
+}
+
+function rotateCardOrbit(step) {
+  cardOrbitIndex = (cardOrbitIndex + step + orbitCards.length) % orbitCards.length;
+  layoutCardOrbit();
+}
+
+orbitCards.forEach((button, index) => {
   button.addEventListener("click", () => {
-    cardViewerImage.src = button.dataset.card;
-    cardViewerImage.alt = `${button.dataset.name}非遗收藏卡大图`;
-    cardViewerName.textContent = `${button.dataset.name} · HERITAGE CARD`;
-    cardViewer.hidden = false;
-    cardViewer.setAttribute("aria-hidden", "false");
-    requestAnimationFrame(() => cardViewer.classList.add("is-open"));
+    if (performance.now() < suppressCardClickUntil) return;
+    if (index !== cardOrbitIndex) {
+      cardOrbitIndex = index;
+      layoutCardOrbit();
+      return;
+    }
+    openCardViewer(button);
   });
 });
+document.querySelector("#cardOrbitPrev").addEventListener("click", () => rotateCardOrbit(-1));
+document.querySelector("#cardOrbitNext").addEventListener("click", () => rotateCardOrbit(1));
+
+cardGallery.addEventListener("pointerdown", event => {
+  if (event.button !== 0) return;
+  orbitPointerId = event.pointerId;
+  orbitLastX = event.clientX;
+  orbitDragDistance = 0;
+  cardGallery.setPointerCapture?.(event.pointerId);
+  cardOrbitShell.classList.add("is-dragging");
+});
+cardGallery.addEventListener("pointermove", event => {
+  if (event.pointerId !== orbitPointerId) return;
+  const delta = event.clientX - orbitLastX;
+  orbitLastX = event.clientX;
+  orbitDragDistance += delta;
+  const threshold = Math.max(38, cardOrbitShell.getBoundingClientRect().width * .035);
+  while (Math.abs(orbitDragDistance) >= threshold) {
+    rotateCardOrbit(orbitDragDistance < 0 ? 1 : -1);
+    orbitDragDistance += orbitDragDistance < 0 ? threshold : -threshold;
+    suppressCardClickUntil = performance.now() + 260;
+  }
+});
+function finishOrbitDrag(event) {
+  if (event.pointerId !== orbitPointerId) return;
+  cardGallery.releasePointerCapture?.(event.pointerId);
+  orbitPointerId = null;
+  orbitDragDistance = 0;
+  cardOrbitShell.classList.remove("is-dragging");
+}
+cardGallery.addEventListener("pointerup", finishOrbitDrag);
+cardGallery.addEventListener("pointercancel", finishOrbitDrag);
+cardGallery.addEventListener("wheel", event => {
+  event.preventDefault();
+  const now = performance.now();
+  if (now < orbitWheelLockedUntil) return;
+  const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+  if (Math.abs(delta) < 2) return;
+  rotateCardOrbit(delta > 0 ? 1 : -1);
+  orbitWheelLockedUntil = now + 220;
+}, { passive: false });
+cardGallery.addEventListener("keydown", event => {
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  rotateCardOrbit(event.key === "ArrowRight" ? 1 : -1);
+  orbitCards[cardOrbitIndex].focus();
+});
+
+window.addEventListener("momo-gesture-pointer", event => {
+  const { active, clientX, clientY, now } = event.detail;
+  if (!active || currentScene !== "cards" || cardViewer.classList.contains("is-open")) {
+    gestureOrbitX = null;
+    gestureOrbitDistance = 0;
+    return;
+  }
+  const rect = cardOrbitShell.getBoundingClientRect();
+  const inside = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+  if (!inside) {
+    gestureOrbitX = null;
+    gestureOrbitDistance = 0;
+    return;
+  }
+  if (gestureOrbitX == null) {
+    gestureOrbitX = clientX;
+    return;
+  }
+  gestureOrbitDistance += clientX - gestureOrbitX;
+  gestureOrbitX = clientX;
+  const threshold = Math.max(48, rect.width * .045);
+  if (Math.abs(gestureOrbitDistance) >= threshold && now - gestureOrbitLastStep > 260) {
+    rotateCardOrbit(gestureOrbitDistance < 0 ? 1 : -1);
+    gestureOrbitDistance = 0;
+    gestureOrbitLastStep = now;
+  }
+});
+
 document.querySelector("#cardViewerClose").addEventListener("click", closeCardViewer);
 cardViewer.addEventListener("click", event => {
   if (event.target === cardViewer) closeCardViewer();
 });
+layoutCardOrbit();
 
 async function loadHubBoxModel() {
   if (!customElements.get("model-viewer")) {

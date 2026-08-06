@@ -48,6 +48,9 @@ function resetDwell() {
 function hideGestureCursor() {
   cursor.classList.remove("is-visible");
   resetDwell();
+  window.dispatchEvent(new CustomEvent("momo-gesture-pointer", {
+    detail: { active: false, clientX: 0, clientY: 0, now: performance.now() }
+  }));
 }
 
 function findInteractiveTarget(clientX, clientY) {
@@ -105,6 +108,9 @@ function mapIndexFinger(landmark, now) {
   cursor.classList.add("is-visible");
   lastHandAt = now;
 
+  window.dispatchEvent(new CustomEvent("momo-gesture-pointer", {
+    detail: { active: true, clientX: smoothX, clientY: smoothY, localX, localY, now }
+  }));
   updateDwell(findInteractiveTarget(smoothX, smoothY), now);
 }
 
@@ -122,7 +128,12 @@ function processFrame(now) {
     const result = handLandmarker.detectForVideo(video, now);
     const hand = result.landmarks?.[0];
     if (hand?.[INDEX_TIP]) {
-      setStatus("已识别食指 · 停留以确认", "tracking");
+      setStatus(
+        document.querySelector("#app")?.dataset.scene === "cards"
+          ? "食指左右移动 · 停留放大"
+          : "已识别食指 · 停留以确认",
+        "tracking"
+      );
       mapIndexFinger(hand[INDEX_TIP], now);
     } else if (now - lastHandAt > 220) {
       setStatus("请将一只手放入画面", "ready");
