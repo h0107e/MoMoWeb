@@ -488,11 +488,13 @@ button { font: inherit; color: inherit; }
 .compact-action i {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  font-size: 16px;
+  font-family: "Ma Shan Zheng", "STKaiti", "KaiTi", serif;
+  font-size: 24px;
   font-weight: 900;
+  line-height: 1;
   background: #f6cb78;
 }
 .project-manifesto {
