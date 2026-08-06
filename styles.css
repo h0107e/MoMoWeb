@@ -665,8 +665,8 @@ button { font: inherit; color: inherit; }
 }
 .card-orbit-track {
   position: absolute;
-  left: 8%;
-  right: 8%;
+  left: 12%;
+  right: 12%;
   top: 31%;
   height: 38%;
   border: 1px solid rgba(255,205,113,.18);
@@ -703,7 +703,7 @@ button { font: inherit; color: inherit; }
 }
 .card-gallery .orbit-card {
   position: absolute;
-  width: 13.4%;
+  width: 12.8%;
   aspect-ratio: 848 / 1200;
   padding: 0;
   border: 0;
