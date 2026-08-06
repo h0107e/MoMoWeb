@@ -404,14 +404,14 @@ button { font: inherit; color: inherit; }
 }
 .story-mark {
   position: absolute;
-  right: 13%;
-  top: 7%;
+  right: 9%;
+  top: 3%;
   z-index: 2;
   color: rgba(255,205,116,.1);
   font-family: "Liu Jian Mao Cao", "STKaiti", "KaiTi", serif;
   font-weight: 400;
   font-synthesis: none;
-  font-size: clamp(230px, 31vw, 500px);
+  font-size: clamp(280px, 37vw, 600px);
   line-height: .92;
   letter-spacing: -.08em;
   text-shadow:
@@ -438,49 +438,51 @@ button { font: inherit; color: inherit; }
   text-shadow: 0 4px 24px rgba(22,6,5,.9);
 }
 .story-copy > p {
-  width: 80%;
+  width: 88%;
   margin: 0;
   color: rgba(255,236,196,.82);
-  font-size: clamp(9px, .82vw, 14px);
-  line-height: 2;
+  font-size: clamp(11px, .96vw, 16px);
+  line-height: 1.8;
   letter-spacing: .08em;
 }
 .story-chapters {
-  width: 86%;
-  margin: 24px 0 0;
+  width: 92%;
+  margin: 15px 0 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 9px;
+  gap: 3px;
 }
 .story-chapters li {
   display: grid;
-  grid-template-columns: 65px 1fr;
+  grid-template-columns: 72px 1fr;
   align-items: baseline;
-  padding: 8px 0;
+  padding: 7px 0;
   border-top: 1px solid rgba(255,210,124,.22);
 }
 .story-chapters b {
   color: #f7ca76;
-  font-size: clamp(12px, 1.05vw, 17px);
+  font-size: clamp(14px, 1.18vw, 19px);
+  font-weight: 700;
   letter-spacing: .2em;
 }
 .story-chapters span {
   color: rgba(255,239,205,.72);
-  font-size: clamp(8px, .68vw, 11px);
-  line-height: 1.7;
+  font-size: clamp(10px, .82vw, 14px);
+  line-height: 1.55;
   letter-spacing: .05em;
 }
 .story-actions {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 14px;
 }
 .compact-action {
   min-height: 40px;
   padding: 7px 8px 7px 16px;
-  font-size: clamp(8px, .68vw, 11px);
+  font-size: clamp(10px, .82vw, 13px);
+  font-weight: 700;
 }
 .compact-action i {
   display: grid;
