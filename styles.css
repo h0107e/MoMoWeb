@@ -491,10 +491,11 @@ button { font: inherit; color: inherit; }
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  font-family: "Ma Shan Zheng", "STKaiti", "KaiTi", serif;
-  font-size: 24px;
+  font-family: "STKaiti", "KaiTi", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
   font-weight: 900;
   line-height: 1;
+  transform: scale(1.18);
   background: #f6cb78;
 }
 .project-manifesto {
@@ -1130,6 +1131,15 @@ button { font: inherit; color: inherit; }
   font-size: 10px;
   color: #6b1f15;
   background: #f5cb7a;
+}
+.story-actions .primary-button.compact-action i {
+  width: 44px;
+  height: 44px;
+  font-family: "STKaiti", "KaiTi", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  transform: scale(1.18);
 }
 .primary-button:hover { translate: 0 -3px; box-shadow: 0 0 28px rgba(242,157,54,.5); }
 .primary-button.is-drawing i { animation: spin 1s linear infinite; }
