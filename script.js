@@ -70,7 +70,15 @@ const figures = [
     card: "./assets/Card-BuLaoHu.webp",
     cardAlt: "MOMO 布老虎 SSR 非遗收藏卡"
   },
-  { name: "苗绣蝴蝶", story: "一针一线，绣出故乡。愿你破茧振翅，心有所归。" },
+  {
+    name: "青花瓷",
+    story: "青白相映，瓷韵天成。愿你心如澄瓷，温润坚定。",
+    model: "./assets/QingHuaCi.glb",
+    modelAlt: "青花瓷非遗玩偶三维模型",
+    cameraOrbit: "90deg 82deg 2.25m",
+    card: "./assets/Card-QingHuaCi.webp",
+    cardAlt: "MOMO 青花瓷 SSR 非遗收藏卡"
+  },
   { name: "纸鸢高手", story: "借一缕风，扶摇云上。愿你自在舒展，志在青空。" },
   {
     name: "鱼灯",
@@ -90,7 +98,7 @@ const heritageDescriptions = [
   "泥与火在窑中相遇，千年制瓷技艺凝成温润清透的东方器物。",
   "一灯一幕，雕刻镂空的影偶在光中演绎民间故事与百态人生。",
   "以布为形、以纹纳福，憨拙虎形承载长辈对孩童平安成长的守护。",
-  "彩线沿布面生长，把山川、花鸟与族群记忆绣进可以穿戴的史诗。",
+  "青花料在素坯上勾勒纹样，经高温烧制凝成清雅含蓄的东方瓷韵。",
   "竹骨承风、纸面绘愿，放飞的不只是纸鸢，也是向往与祝福。",
   "鱼形灯彩循光游动，寄托年年有余、灯火相伴的生活愿景。",
   "飞天衣带凌空，将壁画中的乐舞、想象与千年审美带到今天。"
@@ -569,7 +577,7 @@ function runDraw() {
 drawButton.addEventListener("click", runDraw);
 
 const directResult = new URLSearchParams(window.location.search).get("result");
-const directResultIndex = { lion: 0, opera: 1, porcelain: 2, shadow: 3, fish: 7, tiger: 4 }[directResult];
+const directResultIndex = { lion: 0, opera: 1, porcelain: 2, shadow: 3, qinghua: 5, fish: 7, tiger: 4 }[directResult];
 if (Number.isInteger(directResultIndex)) {
   presentResult(directResultIndex);
   app.dataset.scene = "result";
