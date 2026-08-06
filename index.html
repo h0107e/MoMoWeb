@@ -149,18 +149,28 @@
         </header>
         <div class="cards-heading">
           <span class="archive-kicker">MOMO · 非遗收藏卡</span>
-          <h1>七张卡牌，七种守艺光芒</h1>
-          <p>点击卡牌放大阅读；未完成的系列将随项目持续补充。</p>
+          <h1>环游非遗藏阁</h1>
+          <p>左右拖动、滚动鼠标，或用食指左右移动卡牌环。</p>
         </div>
-        <div class="card-gallery" id="cardGallery" aria-label="收藏卡列表">
-          <button data-card="./assets/Card-XingShi.webp" data-name="醒狮" type="button"><img src="./assets/Card-XingShi.webp" alt="醒狮收藏卡" /></button>
-          <button data-card="./assets/Card-JingJu.webp" data-name="京剧" type="button"><img src="./assets/Card-JingJu.webp" alt="京剧收藏卡" /></button>
-          <button data-card="./assets/Card-BuLaoHu.webp" data-name="布老虎" type="button"><img src="./assets/Card-BuLaoHu.webp" alt="布老虎收藏卡" /></button>
-          <button data-card="./assets/Card-JingDeZhen.webp" data-name="景德镇" type="button"><img src="./assets/Card-JingDeZhen.webp" alt="景德镇收藏卡" /></button>
-          <button data-card="./assets/Card-PiYingXi.webp" data-name="皮影戏" type="button"><img src="./assets/Card-PiYingXi.webp" alt="皮影戏收藏卡" /></button>
-          <button data-card="./assets/Card-QingHuaCi.webp" data-name="青花瓷" type="button"><img src="./assets/Card-QingHuaCi.webp" alt="青花瓷收藏卡" /></button>
-          <button data-card="./assets/Card-YuDeng.webp" data-name="鱼灯" type="button"><img src="./assets/Card-YuDeng.webp" alt="鱼灯收藏卡" /></button>
-          <span class="card-future" aria-label="待补充收藏卡">未完待续<br /><small>TO BE CONTINUED</small></span>
+        <div class="card-orbit-shell" aria-label="可旋转的非遗收藏卡环">
+          <div class="card-orbit-track" aria-hidden="true"></div>
+          <div class="card-gallery" id="cardGallery" role="listbox" aria-label="收藏卡环">
+            <button class="orbit-card" data-card="./assets/Card-XingShi.webp" data-name="醒狮" type="button" role="option"><img src="./assets/Card-XingShi.webp" alt="醒狮收藏卡" /></button>
+            <button class="orbit-card" data-card="./assets/Card-JingJu.webp" data-name="京剧" type="button" role="option"><img src="./assets/Card-JingJu.webp" alt="京剧收藏卡" /></button>
+            <button class="orbit-card" data-card="./assets/Card-BuLaoHu.webp" data-name="布老虎" type="button" role="option"><img src="./assets/Card-BuLaoHu.webp" alt="布老虎收藏卡" /></button>
+            <button class="orbit-card" data-card="./assets/Card-JingDeZhen.webp" data-name="景德镇" type="button" role="option"><img src="./assets/Card-JingDeZhen.webp" alt="景德镇收藏卡" /></button>
+            <button class="orbit-card" data-card="./assets/Card-PiYingXi.webp" data-name="皮影戏" type="button" role="option"><img src="./assets/Card-PiYingXi.webp" alt="皮影戏收藏卡" /></button>
+            <button class="orbit-card" data-card="./assets/Card-QingHuaCi.webp" data-name="青花瓷" type="button" role="option"><img src="./assets/Card-QingHuaCi.webp" alt="青花瓷收藏卡" /></button>
+            <button class="orbit-card" data-card="./assets/Card-YuDeng.webp" data-name="鱼灯" type="button" role="option"><img src="./assets/Card-YuDeng.webp" alt="鱼灯收藏卡" /></button>
+            <button class="orbit-card card-future" data-name="未完待续" type="button" role="option" aria-label="待补充收藏卡"><span>未完待续<br /><small>TO BE CONTINUED</small></span></button>
+          </div>
+          <button class="orbit-step orbit-prev" id="cardOrbitPrev" type="button" aria-label="逆时针旋转卡牌">‹</button>
+          <button class="orbit-step orbit-next" id="cardOrbitNext" type="button" aria-label="顺时针旋转卡牌">›</button>
+          <div class="orbit-caption">
+            <strong id="cardOrbitName">醒狮</strong>
+            <span>中心卡牌 · 点击放大</span>
+          </div>
+          <p class="orbit-hint">拖动 / 滚轮 / 食指左右平移</p>
         </div>
         <div class="card-viewer" id="cardViewer" hidden aria-hidden="true">
           <button class="card-viewer-close" id="cardViewerClose" type="button" aria-label="关闭卡牌大图">×</button>
