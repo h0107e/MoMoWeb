@@ -112,14 +112,12 @@ const cardOrbitName = document.querySelector("#cardOrbitName");
 const cardOrbitShell = document.querySelector(".card-orbit-shell");
 let heritageSelection = 0;
 let cardOrbitIndex = 0;
+let cardOrbitPosition = 0;
 let orbitPointerId = null;
 let orbitLastX = 0;
-let orbitDragDistance = 0;
 let suppressCardClickUntil = 0;
 let orbitWheelLockedUntil = 0;
 let gestureOrbitX = null;
-let gestureOrbitDistance = 0;
-let gestureOrbitLastStep = 0;
 
 let selected = null;
 let currentScene = "home";
@@ -261,8 +259,9 @@ function openCardViewer(button) {
 
 function layoutCardOrbit() {
   const count = orbitCards.length;
+  cardOrbitIndex = ((Math.round(cardOrbitPosition) % count) + count) % count;
   orbitCards.forEach((card, index) => {
-    let relativeIndex = (index - cardOrbitIndex + count) % count;
+    let relativeIndex = (index - cardOrbitPosition + count) % count;
     if (relativeIndex > count / 2) relativeIndex -= count;
     const angle = relativeIndex * Math.PI * 2 / count;
     const depth = (Math.cos(angle) + 1) / 2;
@@ -277,9 +276,10 @@ function layoutCardOrbit() {
     card.style.opacity = `${.28 + depth * .72}`;
     card.style.filter = `brightness(${.62 + depth * .45}) blur(${(1 - depth) * .7}px)`;
     card.style.transform = `translate(-50%, -50%) perspective(900px) rotateY(${rotateY}deg) scale(${scale})`;
-    card.classList.toggle("is-center", relativeIndex === 0);
-    card.setAttribute("aria-selected", relativeIndex === 0 ? "true" : "false");
-    card.tabIndex = relativeIndex === 0 ? 0 : -1;
+    const isCenter = index === cardOrbitIndex;
+    card.classList.toggle("is-center", isCenter);
+    card.setAttribute("aria-selected", isCenter ? "true" : "false");
+    card.tabIndex = isCenter ? 0 : -1;
   });
   const activeCard = orbitCards[cardOrbitIndex];
   cardOrbitName.textContent = activeCard.dataset.name;
@@ -287,7 +287,12 @@ function layoutCardOrbit() {
 }
 
 function rotateCardOrbit(step) {
-  cardOrbitIndex = (cardOrbitIndex + step + orbitCards.length) % orbitCards.length;
+  cardOrbitPosition = Math.round(cardOrbitPosition) + step;
+  layoutCardOrbit();
+}
+
+function snapCardOrbit() {
+  cardOrbitPosition = Math.round(cardOrbitPosition);
   layoutCardOrbit();
 }
 
@@ -295,7 +300,7 @@ orbitCards.forEach((button, index) => {
   button.addEventListener("click", () => {
     if (performance.now() < suppressCardClickUntil) return;
     if (index !== cardOrbitIndex) {
-      cardOrbitIndex = index;
+      cardOrbitPosition = index;
       layoutCardOrbit();
       return;
     }
@@ -309,7 +314,6 @@ cardGallery.addEventListener("pointerdown", event => {
   if (event.button !== 0) return;
   orbitPointerId = event.pointerId;
   orbitLastX = event.clientX;
-  orbitDragDistance = 0;
   cardGallery.setPointerCapture?.(event.pointerId);
   cardOrbitShell.classList.add("is-dragging");
 });
@@ -317,20 +321,17 @@ cardGallery.addEventListener("pointermove", event => {
   if (event.pointerId !== orbitPointerId) return;
   const delta = event.clientX - orbitLastX;
   orbitLastX = event.clientX;
-  orbitDragDistance += delta;
-  const threshold = Math.max(38, cardOrbitShell.getBoundingClientRect().width * .035);
-  while (Math.abs(orbitDragDistance) >= threshold) {
-    rotateCardOrbit(orbitDragDistance < 0 ? 1 : -1);
-    orbitDragDistance += orbitDragDistance < 0 ? threshold : -threshold;
-    suppressCardClickUntil = performance.now() + 260;
-  }
+  const dragPerCard = Math.max(190, cardOrbitShell.getBoundingClientRect().width * .14);
+  cardOrbitPosition -= delta / dragPerCard;
+  layoutCardOrbit();
+  if (Math.abs(delta) > 1) suppressCardClickUntil = performance.now() + 260;
 });
 function finishOrbitDrag(event) {
   if (event.pointerId !== orbitPointerId) return;
   cardGallery.releasePointerCapture?.(event.pointerId);
   orbitPointerId = null;
-  orbitDragDistance = 0;
   cardOrbitShell.classList.remove("is-dragging");
+  snapCardOrbit();
 }
 cardGallery.addEventListener("pointerup", finishOrbitDrag);
 cardGallery.addEventListener("pointercancel", finishOrbitDrag);
@@ -353,23 +354,22 @@ cardGallery.addEventListener("keydown", event => {
 window.addEventListener("momo-gesture-palm", event => {
   const { active, clientX, clientY, now } = event.detail;
   if (!active || currentScene !== "cards" || cardViewer.classList.contains("is-open")) {
+    if (gestureOrbitX != null) snapCardOrbit();
     gestureOrbitX = null;
-    gestureOrbitDistance = 0;
+    cardOrbitShell.classList.remove("is-palm-moving");
     return;
   }
   const rect = cardOrbitShell.getBoundingClientRect();
   if (gestureOrbitX == null) {
     gestureOrbitX = clientX;
+    cardOrbitShell.classList.add("is-palm-moving");
     return;
   }
-  gestureOrbitDistance += clientX - gestureOrbitX;
+  const delta = clientX - gestureOrbitX;
   gestureOrbitX = clientX;
-  const threshold = Math.max(48, rect.width * .045);
-  if (Math.abs(gestureOrbitDistance) >= threshold && now - gestureOrbitLastStep > 260) {
-    rotateCardOrbit(gestureOrbitDistance < 0 ? 1 : -1);
-    gestureOrbitDistance = 0;
-    gestureOrbitLastStep = now;
-  }
+  const palmTravelPerCard = Math.max(250, rect.width * .19);
+  cardOrbitPosition -= delta / palmTravelPerCard;
+  layoutCardOrbit();
 });
 
 document.querySelector("#cardViewerClose").addEventListener("click", closeCardViewer);
