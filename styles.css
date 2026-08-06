@@ -26,6 +26,14 @@ button { font: inherit; color: inherit; }
     #05060a;
 }
 
+@font-face {
+  font-family: "Ma Shan Zheng";
+  src: url("./assets/MaShanZheng-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 #app[data-scene="home"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="hub"] { --backdrop-image: url("./assets/hub.png"); }
 #app[data-scene="story"] { --backdrop-image: url("./assets/home-bg.png"); }
@@ -392,9 +400,17 @@ button { font: inherit; color: inherit; }
   top: 7%;
   z-index: 2;
   color: rgba(255,205,116,.1);
+  font-family: "Ma Shan Zheng", "STKaiti", "KaiTi", serif;
+  font-weight: 400;
+  font-synthesis: none;
   font-size: clamp(230px, 31vw, 500px);
-  line-height: 1;
-  text-shadow: 0 0 60px rgba(255,163,54,.14);
+  line-height: .92;
+  letter-spacing: -.08em;
+  text-shadow:
+    0 0 60px rgba(255,163,54,.16),
+    5px 12px 28px rgba(5,2,0,.25);
+  transform: rotate(-3deg) scaleY(1.04);
+  transform-origin: 50% 50%;
   user-select: none;
 }
 .story-copy {
