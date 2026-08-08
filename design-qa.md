@@ -1,9 +1,8 @@
 # Design QA — 关于我们 / 灯火人物志
 
-- Source visual truth: `C:\Users\HE\.codex\generated_images\019fa2f1-cb9c-7be0-b4d7-824f91c58f27\exec-8251ce71-7725-422e-bef2-4ed3cdc97691.png`
-- Implementation screenshot: `D:\MoMoGPT\about-page-v58-exact.png`
-- Combined comparison: `D:\MoMoGPT\about-design-comparison-v58.png`
-- State: `?scene=about&v=58`, 郭丙午 selected
+- Source visual truth: `D:\MoMoGPT\about-page-v59-no-labels.png` plus the requirement that all visible copy remain editable HTML text
+- Implementation screenshot: `D:\MoMoGPT\about-page-v60-interactive.png`
+- State: `?scene=about&v=60`, 郭丙午 selected
 - Viewport: 1920 × 1080 CSS px and 1366 × 768 CSS px
 - Source pixels: 1672 × 935; implementation pixels: 1920 × 1080; device scale factor: 1
 - Normalization: source and implementation were both fitted to 960 × 540 in the combined comparison; full-size originals were separately inspected for text clarity.
@@ -14,23 +13,23 @@
 - Typography: title, slogan, member names and roles preserve the source's warm-gold hierarchy; small copy remains readable at both tested viewports.
 - Spacing and layout: five member lanterns remain inside the orbit and do not overlap persistent navigation or the philosophy row. The selected member is visually dominant.
 - Colors and tokens: dark-blue/black night field, warm gold, amber glow and restrained cinnabar-brown match the selected direction.
-- Image quality: the selected high-resolution visual is used directly, preserving the original portraits, lantern structure, orbit light and philosophy stones without CSS approximation.
-- Copy: all five supplied names and responsibilities are exact and rendered as HTML text.
+- Image quality: the text-free high-resolution illustration preserves the portraits, lantern structure, orbit light and philosophy stones; no generated typography remains in the background.
+- Copy: title, slogan, central identity, all five supplied names and responsibilities, interaction hint and philosophy copy are exact editable HTML text.
 
 ## Interaction and runtime checks
 
 - Production build completed successfully.
 - `script.js` passed syntax validation.
 - Direct route `?scene=about` rendered successfully in Edge at both viewports.
-- Five semantic member buttons are present; selected state uses `aria-pressed` and updates through the shared click handler.
+- Five semantic member buttons are present; selected state uses `aria-pressed`, updates through the shared click handler and exposes hover/focus/gesture-dwell highlight states.
 - Back navigation and hub “关于我们” entry use the existing `data-go` navigation system.
 - No page-breaking browser output was observed during screenshot capture.
 
 ## Comparison history
 
-1. Initial implementation: source comparison showed the lantern portraits, light paths and proportions had been approximated in CSS (P1).
-2. Fix: replaced the approximation with the exact selected visual and retained semantic transparent interaction regions over the five members.
-3. Post-fix evidence: `about-design-comparison-v58.png` shows the source and implementation are visually aligned at the same normalized viewport.
+1. Initial implementation: the selected mockup was used as one flattened image, leaving generated text errors and only transparent hotspots (P1).
+2. Fix: created a text-free visual layer, moved every visible label into HTML, and made the five member regions real semantic controls with active states.
+3. Post-fix evidence: `about-page-v60-interactive.png` shows clean typography aligned to the five portraits and three philosophy stones, with no baked-in labels.
 
 ## Follow-up polish
 
