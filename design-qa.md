@@ -1,8 +1,10 @@
 # Design QA — 关于我们 / 灯火人物志
 
 - Source visual truth: `D:\MoMoGPT\about-page-v59-no-labels.png` plus the requirement that all visible copy remain editable HTML text
-- Implementation screenshot: `D:\MoMoGPT\about-page-v60-interactive.png`
-- State: `?scene=about&v=60`, 郭丙午 selected
+- Implementation screenshot: `D:\MoMoGPT\about-page-v61-reference-ratio.png`
+- Responsive screenshot: `D:\MoMoGPT\about-page-v61-ratio-fixed.png`
+- Combined comparison: `D:\MoMoGPT\about-design-comparison-v61.png`
+- State: `?scene=about&v=61`, default unselected state
 - Viewport: 1920 × 1080 CSS px and 1366 × 768 CSS px
 - Source pixels: 1672 × 935; implementation pixels: 1920 × 1080; device scale factor: 1
 - Normalization: source and implementation were both fitted to 960 × 540 in the combined comparison; full-size originals were separately inspected for text clarity.
@@ -29,7 +31,8 @@
 
 1. Initial implementation: the selected mockup was used as one flattened image, leaving generated text errors and only transparent hotspots (P1).
 2. Fix: created a text-free visual layer, moved every visible label into HTML, and made the five member regions real semantic controls with active states.
-3. Post-fix evidence: `about-page-v60-interactive.png` shows clean typography aligned to the five portraits and three philosophy stones, with no baked-in labels.
+3. A browser-ratio check found that the global 1.65:1 stage distorted the 1.79:1 reference composition (P1). The About scene now owns a 1.7882352941 ratio, the default selected glow was removed, and the full “返回首页” control was restored.
+4. Post-fix evidence: `about-design-comparison-v61.png` shows aligned composition; `about-page-v61-ratio-fixed.png` confirms the reference ratio remains intact in the user's taller browser viewport.
 
 ## Follow-up polish
 
