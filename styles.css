@@ -81,14 +81,13 @@ button { font: inherit; color: inherit; }
   visibility: hidden;
   opacity: 0;
   transform: scale(1.025);
-  transition: opacity 900ms ease, transform 1200ms cubic-bezier(.2,.8,.2,1), visibility 0s 900ms;
+  transition: none;
 }
 
 .scene.is-active {
   visibility: visible;
   opacity: 1;
   transform: scale(1);
-  transition-delay: 0s;
 }
 
 .scene-art {
