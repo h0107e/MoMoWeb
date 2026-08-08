@@ -234,6 +234,13 @@ function goTo(name) {
 document.querySelector("#enterJourney").addEventListener("click", () => goTo("hub"));
 document.querySelectorAll("[data-go]").forEach(button => button.addEventListener("click", () => goTo(button.dataset.go)));
 document.querySelectorAll("[data-hub-action='draw']").forEach(button => button.addEventListener("click", () => goTo("draw")));
+document.querySelectorAll(".member-lantern").forEach(button => button.addEventListener("click", () => {
+  document.querySelectorAll(".member-lantern").forEach(member => {
+    const active = member === button;
+    member.classList.toggle("is-current", active);
+    member.setAttribute("aria-pressed", String(active));
+  });
+}));
 document.querySelectorAll("[data-hub-label]").forEach(button => button.addEventListener("click", () => {
   hubToast.textContent = `「${button.dataset.hubLabel}」内容正在筹备中`;
   hubToast.classList.add("is-visible");
@@ -612,7 +619,7 @@ if (Number.isInteger(directResultIndex)) {
   requestAnimationFrame(startResultRevealSequence);
 } else {
   const directScene = new URLSearchParams(window.location.search).get("scene");
-  if (["home", "hub", "story", "heritage", "cards", "draw"].includes(directScene)) {
+  if (["home", "hub", "story", "about", "heritage", "cards", "draw"].includes(directScene)) {
     app.dataset.scene = directScene;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === directScene));
     currentScene = directScene;
