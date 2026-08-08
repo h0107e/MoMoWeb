@@ -167,7 +167,6 @@ function goTo(name) {
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
     if (name !== "cards") closeCardViewer();
-    if (name === "draw") veil.style.pointerEvents = "none";
     if (name === "hub") {
       const loadModel = () => loadHubBoxModel().catch(console.error);
       if ("requestIdleCallback" in window) {
@@ -177,6 +176,16 @@ function goTo(name) {
       }
     }
   };
+
+  if (name !== "result") {
+    changeScene();
+    transitioning = false;
+    if (queuedDraw && currentScene === "draw") {
+      queuedDraw = false;
+      runDraw();
+    }
+    return;
+  }
 
   const finishTransition = () => {
     changeScene();
@@ -204,6 +213,7 @@ function goTo(name) {
     finishTimer = setTimeout(finishTransition, 1380);
   };
 
+  veil.style.removeProperty("pointer-events");
   veil.classList.remove("is-running", "is-fallback");
   void veil.offsetWidth;
   veil.classList.add("is-running");
