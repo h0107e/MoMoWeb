@@ -610,16 +610,25 @@ button { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   left: 50%;
-  top: 47.2%;
-  width: 25%;
+  top: 48.1%;
+  width: 15.5%;
   aspect-ratio: auto;
   border: 0;
   background: transparent;
   box-shadow: none;
 }
 .scene-about .momo-core::after { display: none; }
-.scene-about .momo-core b { font-family: "Liu Jian Mao Cao", "STKaiti", "KaiTi", serif; font-size: clamp(36px, 4vw, 66px); }
-.scene-about .momo-core span { margin-top: .42em; font-size: clamp(10px, .9vw, 15px); }
+.scene-about .momo-core b {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3.64 / 1;
+  overflow: hidden;
+  color: transparent;
+  font-size: 0;
+  background: url("./assets/title-original.svg") center top / 100% auto no-repeat;
+  filter: drop-shadow(0 2px 5px rgba(96,45,8,.28));
+}
+.scene-about .momo-core span { margin-top: .16em; font-size: clamp(11px, .96vw, 16px); }
 .scene-about .orbit-line { display: none; }
 .scene-about .member-lantern {
   color: #f7d791;
@@ -638,13 +647,14 @@ button { font: inherit; color: inherit; }
   color: #f7d791;
   text-shadow: 0 3px 15px rgba(0,0,0,.95);
 }
-.scene-about .member-lantern b { bottom: 5%; font-size: clamp(14px, 1.45vw, 23px); }
-.scene-about .member-lantern small { bottom: -7%; color: rgba(255,226,170,.88); font-size: clamp(9px, .74vw, 13px); }
+.scene-about .member-lantern b { bottom: 9%; font-size: clamp(16px, 1.58vw, 26px); }
+.scene-about .member-lantern small { bottom: -1%; color: rgba(255,226,170,.9); font-size: clamp(10px, .82vw, 14px); }
 .scene-about .member-lantern:hover,
 .scene-about .member-lantern:focus-visible,
 .scene-about .member-lantern.is-current {
-  box-shadow: 0 0 22px rgba(255,190,77,.15), inset 0 0 28px rgba(255,201,103,.07);
-  background: radial-gradient(circle, rgba(255,205,116,.05), transparent 70%);
+  box-shadow: none;
+  background: transparent;
+  filter: none;
 }
 .scene-about .member-annie { left: 31%; top: 18%; width: 11%; height: 22%; }
 .scene-about .member-yang { left: 57.4%; top: 17%; width: 11%; height: 22%; }
@@ -653,15 +663,31 @@ button { font: inherit; color: inherit; }
 .scene-about .member-guo { left: 69.5%; top: 31%; width: 15.5%; height: 35%; }
 .scene-about .member-guo b,
 .scene-about .member-guo small { left: 105%; translate: 0 0; width: 95%; text-align: left; }
-.scene-about .member-guo b { bottom: 43%; }
-.scene-about .member-guo small { bottom: 33%; }
+.scene-about .member-guo b { bottom: 45%; }
+.scene-about .member-guo small { bottom: 36%; }
 .scene-about .about-philosophy {
   display: flex;
-  bottom: 6.4%;
+  bottom: 7.4%;
   width: 57%;
   gap: clamp(70px, 9vw, 150px);
 }
-.scene-about .about-hint { bottom: 27.4%; }
+.scene-about .about-philosophy article:nth-child(1) { transform: translateX(9%); }
+.scene-about .about-philosophy article:nth-child(3) { transform: translateX(-7%); }
+.scene-about .about-philosophy b { font-size: clamp(21px, 1.9vw, 31px); }
+.scene-about .about-philosophy span { margin-top: 3px; font-size: clamp(10px, .78vw, 14px); line-height: 1.42; }
+.scene-about .about-philosophy { display: none; }
+.scene-about .about-philosophy-art {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  bottom: 0;
+  translate: -50% 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, rgba(0,0,0,.72) 7%, #000 15%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0, rgba(0,0,0,.72) 7%, #000 15%, #000 100%);
+}
 
 .archive-scene {
   overflow: hidden;
