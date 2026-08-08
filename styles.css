@@ -662,9 +662,13 @@ button { font: inherit; color: inherit; }
 .scene-about .member-kang { left: 57.4%; top: 48%; width: 11.5%; height: 23%; }
 .scene-about .member-guo { left: 69.5%; top: 31%; width: 15.5%; height: 35%; }
 .scene-about .member-guo b,
-.scene-about .member-guo small { left: 105%; translate: 0 0; width: 95%; text-align: left; }
-.scene-about .member-guo b { bottom: 45%; }
-.scene-about .member-guo small { bottom: 36%; }
+.scene-about .member-guo small { left: 91%; translate: 0 0; width: 105%; text-align: left; }
+.scene-about .member-guo b { bottom: 45%; font-size: clamp(19px, 1.82vw, 30px); }
+.scene-about .member-guo small { bottom: 35%; font-size: clamp(12px, .94vw, 16px); }
+.scene-about .member-cheng b,
+.scene-about .member-kang b { bottom: 1%; }
+.scene-about .member-cheng small,
+.scene-about .member-kang small { bottom: -10%; }
 .scene-about .about-philosophy {
   display: flex;
   bottom: 7.4%;
