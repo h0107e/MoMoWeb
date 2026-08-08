@@ -46,6 +46,7 @@ button { font: inherit; color: inherit; }
 #app[data-scene="hub"] { --backdrop-image: url("./assets/hub.png"); }
 #app[data-scene="story"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="about"] { --backdrop-image: url("./assets/home-bg.png"); }
+#app[data-scene="about"] .stage { --stage-ratio: 1.7882352941; }
 #app[data-scene="heritage"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
 #app[data-scene="cards"] { --backdrop-image: url("./assets/fish-result-bg.png"); }
 #app[data-scene="draw"] { --backdrop-image: url("./assets/draw.jpg"); }
@@ -537,7 +538,7 @@ button { font: inherit; color: inherit; }
 
 /* 选定效果图忠实呈现：视觉由原稿承载，HTML 保留导航与无障碍交互热区。 */
 .scene-about .about-art {
-  filter: none;
+  filter: brightness(1.04) saturate(1.04);
   transform: none;
   object-fit: cover;
   object-position: center;
@@ -581,8 +582,22 @@ button { font: inherit; color: inherit; }
 .scene-about .member-guo { left: 69.5%; right: auto; top: 29%; width: 17%; height: 38%; }
 
 /* 交互版：插画只承载场景与人物，全部信息使用可校正的网页文字。 */
-.scene-about .about-shade { display: block; background: linear-gradient(180deg, rgba(2,6,14,.16), transparent 30% 82%, rgba(3,3,7,.16)); }
+.scene-about .about-shade { display: none; }
 .scene-about .about-nav { opacity: 1; }
+.scene-about .about-back {
+  width: auto;
+  min-width: 116px;
+  height: 44px;
+  padding: 0 18px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  border-radius: 999px;
+  background: rgba(16,11,12,.34);
+}
+.scene-about .about-back i { display: inline-grid; place-items: center; width: 25px; height: 25px; border: 1px solid rgba(247,208,131,.42); border-radius: 50%; font-style: normal; }
+.scene-about .about-back span { font-size: clamp(9px, .72vw, 12px); letter-spacing: .12em; }
 .scene-about .about-title,
 .scene-about .about-heading,
 .scene-about .about-philosophy,
@@ -628,10 +643,9 @@ button { font: inherit; color: inherit; }
 .scene-about .member-lantern:hover,
 .scene-about .member-lantern:focus-visible,
 .scene-about .member-lantern.is-current {
-  box-shadow: 0 0 26px rgba(255,190,77,.22), inset 0 0 34px rgba(255,201,103,.1);
-  background: radial-gradient(circle, rgba(255,205,116,.08), transparent 68%);
+  box-shadow: 0 0 22px rgba(255,190,77,.15), inset 0 0 28px rgba(255,201,103,.07);
+  background: radial-gradient(circle, rgba(255,205,116,.05), transparent 70%);
 }
-.scene-about .team-orbit:has(.member-lantern.is-current) .member-lantern:not(.is-current) { opacity: .76; filter: saturate(.78) brightness(.86); }
 .scene-about .member-annie { left: 31%; top: 18%; width: 11%; height: 22%; }
 .scene-about .member-yang { left: 57.4%; top: 17%; width: 11%; height: 22%; }
 .scene-about .member-cheng { left: 21.2%; top: 44%; width: 11.5%; height: 23%; }
