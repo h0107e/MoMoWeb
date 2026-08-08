@@ -45,6 +45,7 @@ button { font: inherit; color: inherit; }
 #app[data-scene="home"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="hub"] { --backdrop-image: url("./assets/hub.png"); }
 #app[data-scene="story"] { --backdrop-image: url("./assets/home-bg.png"); }
+#app[data-scene="about"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="heritage"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
 #app[data-scene="cards"] { --backdrop-image: url("./assets/fish-result-bg.png"); }
 #app[data-scene="draw"] { --backdrop-image: url("./assets/draw.jpg"); }
@@ -368,6 +369,216 @@ button { font: inherit; color: inherit; }
   pointer-events: none;
 }
 .scene-hub.is-active .hub-toast.is-visible { opacity: 1; translate: -50% 0; }
+
+/* 关于我们：灯火人物志 */
+.scene-about { color: #f8dfaa; }
+.scene-about .about-art { filter: saturate(.72) brightness(.42) contrast(1.08); transform: scale(1.025); }
+.about-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(112,55,17,.06) 0 24%, rgba(3,8,18,.44) 62%, rgba(2,4,11,.86) 100%),
+    linear-gradient(180deg, rgba(2,6,15,.72), rgba(3,6,13,.26) 42%, rgba(3,4,9,.74));
+}
+.about-nav { z-index: 12; }
+.about-team-label { padding: 9px 18px; border: 1px solid rgba(246,204,122,.44); border-radius: 999px; background: rgba(30,13,12,.4); }
+.about-title {
+  position: absolute;
+  z-index: 8;
+  left: 5.2%;
+  top: 9.2%;
+  text-shadow: 0 4px 24px rgba(0,0,0,.88);
+}
+.about-title h1 { margin: 0; color: #f7d48e; font: 600 clamp(28px, 3.2vw, 54px)/1.05 "STKaiti", "KaiTi", serif; letter-spacing: .14em; }
+.about-title span { display: block; margin-top: 8px; color: #ddb365; font: 500 clamp(8px, .75vw, 13px)/1 Georgia, serif; letter-spacing: .25em; }
+.about-heading {
+  position: absolute;
+  z-index: 7;
+  top: 8.2%;
+  left: 50%;
+  translate: -50% 0;
+  width: 62%;
+  text-align: center;
+  text-shadow: 0 3px 22px rgba(0,0,0,.88);
+}
+.about-heading span {
+  display: block;
+  color: #f7d58e;
+  font-family: "STKaiti", "KaiTi", serif;
+  font-size: clamp(19px, 2.05vw, 34px);
+  letter-spacing: .2em;
+}
+.about-heading strong {
+  display: block;
+  margin-top: .65em;
+  color: rgba(255,231,180,.78);
+  font-size: clamp(9px, .82vw, 14px);
+  font-weight: 500;
+  letter-spacing: .18em;
+}
+.team-orbit {
+  position: absolute;
+  z-index: 6;
+  inset: 17% 7% 20%;
+}
+.momo-core {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  translate: -50% -50%;
+  z-index: 4;
+  width: clamp(165px, 18vw, 290px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255,205,116,.52);
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: radial-gradient(circle, rgba(119,54,12,.72), rgba(37,16,11,.72) 52%, rgba(7,8,14,.5) 72%);
+  box-shadow: 0 0 22px rgba(255,166,63,.38), 0 0 80px rgba(255,148,33,.24), inset 0 0 45px rgba(255,204,106,.18);
+}
+.momo-core::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -18%;
+  translate: -50% 0;
+  width: 48%;
+  height: 28%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,190,73,.64), rgba(255,161,39,.13) 48%, transparent 72%);
+  filter: blur(8px);
+}
+.momo-core b { font: 700 clamp(38px, 4.3vw, 70px)/1 Georgia, serif; letter-spacing: .03em; color: #ffe2a4; }
+.momo-core span { margin-top: .65em; font-size: clamp(9px, .9vw, 15px); letter-spacing: .15em; color: #e7b960; }
+.orbit-line {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 48%;
+  translate: -50% -50%;
+  width: 73%;
+  height: 62%;
+  border: 1px solid rgba(239,179,78,.25);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.orbit-line-two { width: 52%; height: 84%; rotate: -9deg; border-color: rgba(239,179,78,.16); }
+.member-lantern {
+  position: absolute;
+  z-index: 5;
+  width: clamp(118px, 10vw, 175px);
+  padding: 0;
+  border: 0;
+  color: #f7d791;
+  background: transparent;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .55s cubic-bezier(.2,.8,.2,1), opacity .4s, filter .4s;
+  filter: saturate(.78) brightness(.8);
+}
+.member-lantern:hover,
+.member-lantern:focus-visible,
+.member-lantern.is-current { transform: scale(1.13); filter: saturate(1.05) brightness(1.1); z-index: 8; }
+.member-lantern:focus-visible { outline: 2px solid #ffd47e; outline-offset: 8px; border-radius: 12px; }
+.member-lantern b { display: block; margin-top: 8px; font: 600 clamp(14px, 1.5vw, 24px)/1.2 "STKaiti", "KaiTi", serif; letter-spacing: .12em; }
+.member-lantern small { display: block; margin-top: 5px; color: rgba(255,230,177,.8); font-size: clamp(9px, .74vw, 13px); letter-spacing: .12em; }
+.member-lantern em { display: none; margin: 8px auto 0; width: max-content; padding: 4px 12px; border: 1px solid rgba(255,210,124,.42); border-radius: 999px; color: #ffe6ae; font-size: clamp(8px, .65vw, 11px); font-style: normal; letter-spacing: .14em; background: rgba(48,22,14,.62); }
+.member-lantern.is-current em { display: block; }
+.lantern-portrait {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72%;
+  aspect-ratio: 1;
+  margin: auto;
+  border: 1px solid rgba(255,211,130,.7);
+  border-radius: 48% 48% 45% 45%;
+  background: radial-gradient(circle at 50% 42%, rgba(255,218,146,.5), rgba(151,76,24,.36) 54%, rgba(40,17,14,.7) 74%);
+  box-shadow: 0 0 18px rgba(255,175,66,.38), 0 0 45px rgba(255,143,32,.18), inset 0 0 20px rgba(255,222,159,.15);
+}
+.lantern-portrait::before,
+.lantern-portrait::after { content: ""; position: absolute; left: 50%; translate: -50% 0; width: 44%; height: 7px; border: 1px solid rgba(255,211,130,.75); border-radius: 50%; background: #49200f; }
+.lantern-portrait::before { top: -7px; }
+.lantern-portrait::after { bottom: -7px; }
+.lantern-portrait i { display: grid; place-items: center; width: 62%; aspect-ratio: 1; border-radius: 50%; color: rgba(255,224,164,.82); background: rgba(32,17,16,.62); font: 500 clamp(22px, 2.7vw, 44px)/1 "STKaiti", "KaiTi", serif; font-style: normal; text-shadow: 0 0 14px rgba(255,184,75,.5); }
+.member-annie { left: 28%; top: 2%; }
+.member-yang { right: 27%; top: 0; }
+.member-cheng { left: 15%; top: 48%; }
+.member-kang { right: 28%; top: 50%; }
+.member-guo { right: 7%; top: 26%; width: clamp(145px, 12vw, 205px); }
+.about-philosophy {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: 5.4%;
+  translate: -50% 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(58px, 8vw, 135px);
+  width: 62%;
+}
+.about-philosophy article { position: relative; min-width: 130px; text-align: center; text-shadow: 0 2px 14px #000; }
+.about-philosophy article::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 48%; translate: -50% -50%; width: 120%; height: 120%; border-radius: 50%; background: radial-gradient(ellipse, rgba(255,170,50,.22), transparent 68%); filter: blur(3px); }
+.about-philosophy b { display: block; color: #f5cc77; font: 600 clamp(18px, 1.7vw, 28px)/1.1 "STKaiti", "KaiTi", serif; letter-spacing: .16em; }
+.about-philosophy span { display: block; margin-top: 7px; color: rgba(255,232,187,.66); font-size: clamp(8px, .65vw, 11px); line-height: 1.55; letter-spacing: .08em; }
+.about-hint { position: absolute; z-index: 8; left: 50%; bottom: 18.2%; translate: -50% 0; margin: 0; color: #e8bd6c; font-size: clamp(9px, .8vw, 14px); letter-spacing: .24em; }
+.scene-about.is-active .momo-core { animation: aboutCoreBreath 4s ease-in-out infinite; }
+@keyframes aboutCoreBreath { 50% { box-shadow: 0 0 35px rgba(255,177,66,.52), 0 0 105px rgba(255,148,33,.3), inset 0 0 55px rgba(255,204,106,.23); } }
+@media (max-aspect-ratio: 4/3) {
+  .team-orbit { left: 2%; right: 2%; }
+  .member-cheng { left: 4%; }
+  .member-guo { right: 1%; }
+  .about-philosophy { width: 78%; gap: 7vw; }
+}
+@media (prefers-reduced-motion: reduce) { .scene-about.is-active .momo-core { animation: none; } }
+
+/* 选定效果图忠实呈现：视觉由原稿承载，HTML 保留导航与无障碍交互热区。 */
+.scene-about .about-art {
+  filter: none;
+  transform: none;
+  object-fit: cover;
+  object-position: center;
+}
+.scene-about .about-shade,
+.scene-about .about-title,
+.scene-about .about-heading,
+.scene-about .momo-core,
+.scene-about .orbit-line,
+.scene-about .about-philosophy,
+.scene-about .about-hint { display: none; }
+.scene-about .about-nav { opacity: 0; }
+.scene-about .team-orbit { inset: 0; }
+.scene-about .member-lantern {
+  width: 12%;
+  height: 24%;
+  padding: 0;
+  opacity: 1;
+  color: transparent;
+  filter: none;
+  border-radius: 50%;
+  background: transparent;
+  transition: background .25s, box-shadow .25s;
+}
+.scene-about .member-lantern > * { opacity: 0; }
+.scene-about .member-lantern:hover,
+.scene-about .member-lantern:focus-visible,
+.scene-about .member-lantern.is-current {
+  transform: none;
+  filter: none;
+}
+.scene-about .member-lantern:hover,
+.scene-about .member-lantern:focus-visible {
+  background: radial-gradient(circle, rgba(255,205,116,.12), transparent 66%);
+  box-shadow: 0 0 36px rgba(255,178,67,.22);
+}
+.scene-about .member-annie { left: 30.5%; top: 17%; }
+.scene-about .member-yang { left: 57%; right: auto; top: 16%; }
+.scene-about .member-cheng { left: 21%; top: 45%; }
+.scene-about .member-kang { left: 57%; right: auto; top: 48%; }
+.scene-about .member-guo { left: 69.5%; right: auto; top: 29%; width: 17%; height: 38%; }
 
 .archive-scene {
   overflow: hidden;

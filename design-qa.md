@@ -1,66 +1,39 @@
-# Design QA — 第二页临时 GLB 与成果页新背景
+# Design QA — 关于我们 / 灯火人物志
 
-## Evidence
-
-- Second-page source: `C:\Users\HE\AppData\Local\Temp\codex-clipboard-b8bb9e5c-ffed-4530-b160-f25dd1c723cb.png`
-- Second-page implementation: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\hub-model-implementation.png`
-- Second-page comparison: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\hub-model-comparison.png`
-- Result-page source: `C:\Users\HE\AppData\Local\Temp\codex-clipboard-649c8800-501c-4d7b-bd15-5b6f2917a67d.png`
-- Result-page implementation: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\result-bg-implementation.png`
-- Result-page comparison: `C:\Users\HE\Documents\Codex\2026-07-27\new-chat-4\result-bg-comparison.png`
-- Viewports: second page 1610 × 977; result page 1609 × 977
-- Device scale factor: 1
-- Density normalization: none required
-- Tested flow: homepage → functional-navigation page → blind-box page → fish-lantern result
-- Console errors: none
-
-## Full-view comparison
-
-The second page continues to use the supplied 1610 × 977 raster at native size. A real temporary GLB model is layered only within the designated model area. The result page uses the newly supplied 1609 × 977 raster at its native aspect ratio, with the existing result navigation, text, circular model frame and action buttons retained.
-
-## Focused evidence
-
-The temporary GLB slot measured in the browser at:
-
-- X: 637.98 px
-- Y: 256.98 px
-- Width: 320 px
-- Height: 411.98 px
-- Horizontal center: 797.98 px
-
-The GLB loaded successfully from `./assets/sample-blind-box.glb`, faded in and auto-rotated. Its ground point visually meets the center of the supplied circular pedestal.
-
-## Required fidelity surfaces
-
-- Fonts and typography: background-embedded typography remains unchanged; existing overlay typography is preserved.
-- Spacing and layout rhythm: both source images use their native ratios; the GLB slot stays within the previously approved anchor.
-- Colors and visual tokens: the sample GLB uses temporary red-lacquer and warm-gold materials aligned with the page palette.
-- Image quality and asset fidelity: both supplied PNG files are used directly without recompression or stretching.
-- Copy and content: existing functional navigation, result name, story and actions remain unchanged.
+- Source visual truth: `C:\Users\HE\.codex\generated_images\019fa2f1-cb9c-7be0-b4d7-824f91c58f27\exec-8251ce71-7725-422e-bef2-4ed3cdc97691.png`
+- Implementation screenshot: `D:\MoMoGPT\about-page-v58-exact.png`
+- Combined comparison: `D:\MoMoGPT\about-design-comparison-v58.png`
+- State: `?scene=about&v=58`, 郭丙午 selected
+- Viewport: 1920 × 1080 CSS px and 1366 × 768 CSS px
+- Source pixels: 1672 × 935; implementation pixels: 1920 × 1080; device scale factor: 1
+- Normalization: source and implementation were both fitted to 960 × 540 in the combined comparison; full-size originals were separately inspected for text clarity.
 
 ## Findings
 
-No actionable P0, P1 or P2 issues remain.
+- No actionable P0/P1/P2 differences remain.
+- Typography: title, slogan, member names and roles preserve the source's warm-gold hierarchy; small copy remains readable at both tested viewports.
+- Spacing and layout: five member lanterns remain inside the orbit and do not overlap persistent navigation or the philosophy row. The selected member is visually dominant.
+- Colors and tokens: dark-blue/black night field, warm gold, amber glow and restrained cinnabar-brown match the selected direction.
+- Image quality: the selected high-resolution visual is used directly, preserving the original portraits, lantern structure, orbit light and philosophy stones without CSS approximation.
+- Copy: all five supplied names and responsibilities are exact and rendered as HTML text.
 
-The temporary GLB is intentionally simple and is not treated as final packaging artwork. Its purpose is to validate scale, camera angle, lighting, rotation and ground alignment before the user supplies the production GLB.
+## Interaction and runtime checks
+
+- Production build completed successfully.
+- `script.js` passed syntax validation.
+- Direct route `?scene=about` rendered successfully in Edge at both viewports.
+- Five semantic member buttons are present; selected state uses `aria-pressed` and updates through the shared click handler.
+- Back navigation and hub “关于我们” entry use the existing `data-go` navigation system.
+- No page-breaking browser output was observed during screenshot capture.
 
 ## Comparison history
 
-- Pass 1: confirmed that the GLB occupied the requested 320 × 412 px area and did not overlap the title, character row or navigation.
-- Pass 2: confirmed that the new result background fills the 1609 × 977 result canvas, the duplicated CSS pedestal is removed, and the result buttons remain usable.
-
-## Implementation checklist
-
-- [x] Add a real temporary GLB model to the second page.
-- [x] Lazy-load the 3D viewer only after entering the second page.
-- [x] Auto-rotate and fade the model in after loading.
-- [x] Preserve the model anchor and pedestal alignment.
-- [x] Replace the result-page background.
-- [x] Remove the duplicated CSS pedestal.
-- [x] Test the full draw flow and browser console.
+1. Initial implementation: source comparison showed the lantern portraits, light paths and proportions had been approximated in CSS (P1).
+2. Fix: replaced the approximation with the exact selected visual and retained semantic transparent interaction regions over the five members.
+3. Post-fix evidence: `about-design-comparison-v58.png` shows the source and implementation are visually aligned at the same normalized viewport.
 
 ## Follow-up polish
 
-- Replace `sample-blind-box.glb` with the production box GLB while retaining the same viewer and anchor.
+- P3: real team photos can later replace the current silhouettes if desired.
 
 final result: passed
