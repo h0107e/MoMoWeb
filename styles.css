@@ -580,6 +580,75 @@ button { font: inherit; color: inherit; }
 .scene-about .member-kang { left: 57%; right: auto; top: 48%; }
 .scene-about .member-guo { left: 69.5%; right: auto; top: 29%; width: 17%; height: 38%; }
 
+/* 交互版：插画只承载场景与人物，全部信息使用可校正的网页文字。 */
+.scene-about .about-shade { display: block; background: linear-gradient(180deg, rgba(2,6,14,.16), transparent 30% 82%, rgba(3,3,7,.16)); }
+.scene-about .about-nav { opacity: 1; }
+.scene-about .about-title,
+.scene-about .about-heading,
+.scene-about .about-philosophy,
+.scene-about .about-hint { display: block; }
+.scene-about .about-title { left: 5.2%; top: 9.5%; }
+.scene-about .about-heading { top: 8.8%; }
+.scene-about .momo-core {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 50%;
+  top: 47.2%;
+  width: 25%;
+  aspect-ratio: auto;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.scene-about .momo-core::after { display: none; }
+.scene-about .momo-core b { font-family: "Liu Jian Mao Cao", "STKaiti", "KaiTi", serif; font-size: clamp(36px, 4vw, 66px); }
+.scene-about .momo-core span { margin-top: .42em; font-size: clamp(10px, .9vw, 15px); }
+.scene-about .orbit-line { display: none; }
+.scene-about .member-lantern {
+  color: #f7d791;
+  border-radius: 50%;
+  transition: opacity .35s, filter .35s, box-shadow .35s, transform .35s;
+}
+.scene-about .member-lantern > * { opacity: 1; }
+.scene-about .member-lantern .lantern-portrait { display: none; }
+.scene-about .member-lantern b,
+.scene-about .member-lantern small {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  width: 150%;
+  margin: 0;
+  color: #f7d791;
+  text-shadow: 0 3px 15px rgba(0,0,0,.95);
+}
+.scene-about .member-lantern b { bottom: 5%; font-size: clamp(14px, 1.45vw, 23px); }
+.scene-about .member-lantern small { bottom: -7%; color: rgba(255,226,170,.88); font-size: clamp(9px, .74vw, 13px); }
+.scene-about .member-lantern:hover,
+.scene-about .member-lantern:focus-visible,
+.scene-about .member-lantern.is-current {
+  box-shadow: 0 0 26px rgba(255,190,77,.22), inset 0 0 34px rgba(255,201,103,.1);
+  background: radial-gradient(circle, rgba(255,205,116,.08), transparent 68%);
+}
+.scene-about .team-orbit:has(.member-lantern.is-current) .member-lantern:not(.is-current) { opacity: .76; filter: saturate(.78) brightness(.86); }
+.scene-about .member-annie { left: 31%; top: 18%; width: 11%; height: 22%; }
+.scene-about .member-yang { left: 57.4%; top: 17%; width: 11%; height: 22%; }
+.scene-about .member-cheng { left: 21.2%; top: 44%; width: 11.5%; height: 23%; }
+.scene-about .member-kang { left: 57.4%; top: 48%; width: 11.5%; height: 23%; }
+.scene-about .member-guo { left: 69.5%; top: 31%; width: 15.5%; height: 35%; }
+.scene-about .member-guo b,
+.scene-about .member-guo small { left: 105%; translate: 0 0; width: 95%; text-align: left; }
+.scene-about .member-guo b { bottom: 43%; }
+.scene-about .member-guo small { bottom: 33%; }
+.scene-about .about-philosophy {
+  display: flex;
+  bottom: 6.4%;
+  width: 57%;
+  gap: clamp(70px, 9vw, 150px);
+}
+.scene-about .about-hint { bottom: 27.4%; }
+
 .archive-scene {
   overflow: hidden;
 }
