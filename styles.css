@@ -1814,6 +1814,31 @@ button { font: inherit; color: inherit; }
   background: #f7c868;
 }
 
+.gesture-onboarding { position:absolute; inset:0; z-index:42; display:grid; place-items:center; padding:4.5%; }
+.gesture-onboarding[hidden] { display:none; }
+.gesture-onboarding-backdrop { position:absolute; inset:0; background:radial-gradient(circle at 50% 42%,rgba(116,48,25,.22),transparent 38%),rgba(3,4,9,.72); backdrop-filter:blur(9px) saturate(.75); }
+.gesture-guide { position:relative; width:min(640px,70%); padding:clamp(24px,3vw,42px); overflow:hidden; border:1px solid rgba(255,212,126,.48); border-radius:22px; color:#f9e4b4; background:linear-gradient(145deg,rgba(75,24,20,.94),rgba(14,10,15,.96) 62%); box-shadow:0 30px 90px rgba(0,0,0,.68),inset 0 0 48px rgba(233,137,47,.08); animation:gestureGuideIn .46s cubic-bezier(.22,.82,.28,1) both; }
+.gesture-guide::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 82% 12%,rgba(255,188,75,.16),transparent 25%); }
+.gesture-guide-close { position:absolute; right:18px; top:15px; width:34px; height:34px; border:1px solid rgba(255,220,148,.34); border-radius:50%; color:#f6d995; background:rgba(13,8,11,.34); font-size:22px; line-height:1; }
+.gesture-guide-kicker { display:block; color:#dba653; font-size:clamp(9px,.7vw,12px); letter-spacing:.28em; }
+.gesture-guide h2 { margin:10px 0 8px; color:#ffe4a6; font-family:"Ma Shan Zheng","STKaiti",serif; font-size:clamp(32px,3.2vw,54px); font-weight:400; letter-spacing:.08em; text-shadow:0 0 24px rgba(245,169,71,.18); }
+.gesture-guide>p { margin:0 0 24px; color:rgba(247,224,177,.68); font-size:clamp(11px,.78vw,14px); line-height:1.7; }
+.gesture-guide-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.gesture-guide-steps article { min-height:150px; padding:18px 16px; border:1px solid rgba(246,198,104,.2); border-radius:14px; background:linear-gradient(155deg,rgba(255,201,105,.08),rgba(255,255,255,.018)); }
+.gesture-guide-symbol { display:grid; place-items:center; width:44px; height:44px; margin-bottom:14px; border:1px solid rgba(255,218,141,.56); border-radius:50%; color:#ffd77e; background:radial-gradient(circle,rgba(208,104,39,.35),rgba(42,15,16,.15)); box-shadow:0 0 20px rgba(240,153,52,.15); font-family:"Ma Shan Zheng","STKaiti",serif; font-style:normal; font-size:20px; }
+.dwell-symbol { font-family:Georgia,serif; font-size:13px; }
+.gesture-guide-steps span { display:grid; gap:7px; }
+.gesture-guide-steps b { color:#f8ddb0; font-size:clamp(13px,1vw,17px); letter-spacing:.08em; }
+.gesture-guide-steps small { color:rgba(247,224,177,.6); font-size:clamp(9px,.68vw,12px); line-height:1.6; }
+.gesture-guide-note { display:flex; align-items:center; gap:8px; margin:18px 0; color:rgba(247,224,177,.68); font-size:clamp(9px,.68vw,12px); }
+.gesture-guide-note i { width:7px; height:7px; border-radius:50%; background:#f0b450; box-shadow:0 0 10px #e99338; }
+.gesture-guide-actions { display:flex; justify-content:flex-end; gap:12px; }
+.gesture-guide-later,.gesture-guide-start { min-height:42px; padding:0 20px; border-radius:999px; font-size:clamp(11px,.78vw,14px); letter-spacing:.08em; }
+.gesture-guide-later { border:1px solid rgba(255,218,141,.42); color:#ecd39f; background:transparent; }
+.gesture-guide-start { display:flex; align-items:center; gap:12px; border:1px solid #f2c26c; color:#fff0c4; background:linear-gradient(100deg,#8e281c,#b34b26); box-shadow:0 10px 28px rgba(104,28,18,.34); }
+.gesture-guide-start i { display:grid; place-items:center; width:28px; height:28px; margin-right:-12px; border-radius:50%; color:#8a281d; background:#f3ca76; font-style:normal; font-weight:700; }
+.gesture-guide button:focus-visible { outline:2px solid #ffe3a0; outline-offset:3px; }
+
 .gesture-ui {
   position: absolute;
   right: 1.4%;
@@ -2060,6 +2085,16 @@ button.gesture-hover:not(.hub-area), a.gesture-hover {
 @keyframes veilFallback { 0%, 100% { opacity: 0; } 35%, 70% { opacity: 1; } }
 @keyframes boxFloat { 0%, 100% { transform: translateY(3px); } 50% { transform: translateY(-8px); } }
 @keyframes hubBoxFloat { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+@keyframes gestureGuideIn { from { opacity:0; transform:translateY(18px) scale(.965); } to { opacity:1; transform:none; } }
+
+@media (max-width:760px) {
+  .gesture-guide { width:min(94%,560px); padding:26px 20px 20px; }
+  .gesture-guide-steps { grid-template-columns:1fr; }
+  .gesture-guide-steps article { min-height:0; display:flex; align-items:center; gap:14px; padding:13px 14px; }
+  .gesture-guide-symbol { flex:0 0 40px; width:40px; height:40px; margin:0; }
+  .gesture-guide-actions { justify-content:stretch; }
+  .gesture-guide-later,.gesture-guide-start { flex:1; justify-content:center; padding-inline:12px; }
+}
 @keyframes boxTurn { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @keyframes shadowBreathe { 0%, 100% { transform: scale(1); opacity: .7; } 50% { transform: scale(.8); opacity: .42; } }
 @keyframes cameraScan { from { top: 8%; } to { top: 92%; } }
