@@ -17,6 +17,11 @@ const statusText = document.querySelector("#gestureStatus");
 const statusDot = document.querySelector("#gestureStatusDot");
 const cursor = document.querySelector("#gestureCursor");
 const progressCircle = document.querySelector("#gestureProgress");
+const onboarding = document.querySelector("#gestureOnboarding");
+const guideStart = document.querySelector("#gestureGuideStart");
+const guideLater = document.querySelector("#gestureGuideLater");
+const guideClose = document.querySelector("#gestureGuideClose");
+const GUIDE_STORAGE_KEY = "momo-gesture-guide-seen-v1";
 
 let handLandmarker = null;
 let mediaStream = null;
@@ -261,6 +266,28 @@ async function startGestureControl() {
   }
 }
 
+function hasSeenGestureGuide() {
+  try { return localStorage.getItem(GUIDE_STORAGE_KEY) === "1"; }
+  catch { return false; }
+}
+
+function rememberGestureGuide() {
+  try { localStorage.setItem(GUIDE_STORAGE_KEY, "1"); } catch {}
+}
+
+function openGestureGuide() {
+  onboarding.hidden = false;
+  onboarding.setAttribute("aria-hidden", "false");
+  requestAnimationFrame(() => guideStart.focus());
+}
+
+function closeGestureGuide({ remember = false } = {}) {
+  if (remember) rememberGestureGuide();
+  onboarding.hidden = true;
+  onboarding.setAttribute("aria-hidden", "true");
+  toggle.focus();
+}
+
 function stopGestureControl() {
   active = false;
   cancelAnimationFrame(animationFrame);
@@ -279,7 +306,19 @@ function stopGestureControl() {
 
 toggle.addEventListener("click", () => {
   if (active) stopGestureControl();
+  else if (!hasSeenGestureGuide()) openGestureGuide();
   else startGestureControl();
+});
+
+guideStart.addEventListener("click", () => {
+  closeGestureGuide({ remember: true });
+  startGestureControl();
+});
+guideLater.addEventListener("click", () => closeGestureGuide({ remember: true }));
+guideClose.addEventListener("click", () => closeGestureGuide());
+onboarding.querySelector("[data-gesture-dismiss]").addEventListener("click", () => closeGestureGuide());
+window.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !onboarding.hidden) closeGestureGuide();
 });
 
 window.addEventListener("pagehide", stopGestureControl);

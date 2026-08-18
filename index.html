@@ -302,6 +302,34 @@
       <canvas id="fxCanvas" width="1600" height="1000" aria-hidden="true"></canvas>
       <div class="lantern-cursor" id="lanternCursor" aria-hidden="true"><i></i><b></b></div>
       <div class="light-source" id="lightSource" aria-hidden="true"></div>
+      <div class="gesture-onboarding" id="gestureOnboarding" hidden aria-hidden="true">
+        <div class="gesture-onboarding-backdrop" data-gesture-dismiss></div>
+        <section class="gesture-guide" role="dialog" aria-modal="true" aria-labelledby="gestureGuideTitle" aria-describedby="gestureGuideDescription">
+          <button class="gesture-guide-close" id="gestureGuideClose" type="button" aria-label="关闭手势引导">×</button>
+          <span class="gesture-guide-kicker">无声交互 · GESTURE GUIDE</span>
+          <h2 id="gestureGuideTitle">举手入画，以指为灯</h2>
+          <p id="gestureGuideDescription">手势识别只在你的浏览器中运行，画面不会上传或保存。</p>
+          <div class="gesture-guide-steps">
+            <article>
+              <i class="gesture-guide-symbol palm-symbol" aria-hidden="true">掌</i>
+              <span><b>张开手掌</b><small>在收藏卡页面左右移动手掌，转动卡牌环。</small></span>
+            </article>
+            <article>
+              <i class="gesture-guide-symbol finger-symbol" aria-hidden="true">指</i>
+              <span><b>食指引路</b><small>用食指代替鼠标，移动灵珠指向按钮。</small></span>
+            </article>
+            <article>
+              <i class="gesture-guide-symbol dwell-symbol" aria-hidden="true">1.2</i>
+              <span><b>停留确认</b><small>在目标上停留 1.2 秒，光环走满后自动选择。</small></span>
+            </article>
+          </div>
+          <div class="gesture-guide-note"><i></i><span>鼠标、触摸和键盘始终可以正常使用</span></div>
+          <div class="gesture-guide-actions">
+            <button class="gesture-guide-later" id="gestureGuideLater" type="button">暂不用手势</button>
+            <button class="gesture-guide-start" id="gestureGuideStart" type="button"><span>开始手势体验</span><i>启</i></button>
+          </div>
+        </section>
+      </div>
       <div class="gesture-ui" id="gestureUi">
         <div class="gesture-panel" id="gesturePanel" aria-hidden="true">
           <div class="camera-frame">
