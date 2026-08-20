@@ -380,8 +380,8 @@
         series:[
           {name:"省级热度",type:"map",geoIndex:0,data:mapData},
           {name:"文化传播路径",type:"lines",coordinateSystem:"geo",zlevel:2,polyline:false,data:routeData,lineStyle:{color:"#D6A75F",width:1.05,opacity:.48,type:"dotted",curveness:.22},silent:true},
-          {name:"选中项目",type:"effectScatter",coordinateSystem:"geo",zlevel:4,symbolSize:56,rippleEffect:{period:6,scale:1.55,brushType:"stroke"},itemStyle:{color:"rgba(244,177,84,.12)",borderColor:"#f3c77b",borderWidth:1,shadowColor:"rgba(255,174,69,.48)",shadowBlur:10},data:[]},
-          {name:"非遗模型标志",type:"scatter",coordinateSystem:"geo",zlevel:5,symbolSize:[52,52],cursor:"pointer",emphasis:{scale:1.14},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i,symbol:`image://${p.marker}`}))}
+          {name:"选中项目",type:"effectScatter",coordinateSystem:"geo",zlevel:4,symbol:"circle",symbolSize:13,rippleEffect:{period:5,scale:3,brushType:"stroke"},itemStyle:{color:"#ffd48a",borderColor:"#fff0bd",borderWidth:1.5,shadowColor:"rgba(255,174,69,.72)",shadowBlur:14},data:[]},
+          {name:"非遗地点",type:"scatter",coordinateSystem:"geo",zlevel:5,symbol:"circle",symbolSize:12,cursor:"pointer",itemStyle:{color:"#efae62",borderColor:"#ffe0a5",borderWidth:1.5,shadowColor:"rgba(239,150,67,.72)",shadowBlur:10},emphasis:{scale:1.55,itemStyle:{color:"#ffd48a",shadowBlur:16}},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i}))}
         ]
       });
       chart.on("click",params=>{
