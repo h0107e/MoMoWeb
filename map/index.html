@@ -108,11 +108,12 @@
     .detail {
       position: absolute;
       right: 2.8vw;
-      bottom: 6.5vh;
+      top: 50%;
+      bottom: auto;
       z-index: 30;
-      width: min(860px, 52vw);
-      min-height: 470px;
-      padding: 34px 34px 34px 24px;
+      width: min(900px, 54vw);
+      min-height: 410px;
+      padding: 26px 30px 26px 20px;
       overflow: visible;
       border: 1px solid rgba(214,167,95,.56);
       border-radius: 18px;
@@ -122,7 +123,7 @@
       box-shadow: 0 28px 85px rgba(0,0,0,.62),inset 0 0 58px rgba(104,52,38,.16);
       opacity: 0;
       pointer-events: none;
-      transform: translateX(calc(100% + 5vw));
+      transform: translate(calc(100% + 5vw), -50%);
       transition: opacity .4s ease, transform .65s cubic-bezier(.22,.72,.2,1);
     }
     .detail::before {
@@ -139,7 +140,7 @@
       box-shadow:0 22px 55px rgba(0,0,0,.32);
       pointer-events:none;
     }
-    .page.detail-open .detail { opacity: 1; pointer-events: auto; transform: none; }
+    .page.detail-open .detail { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
     .corner-ornament { position:absolute; z-index:2; width:150px; height:150px; object-fit:contain; opacity:.26; pointer-events:none; }
     .corner-ornament.top-left { top:-8px; left:-8px; }
     .corner-ornament.bottom-right { right:-8px; bottom:-8px; transform:rotate(180deg); }
@@ -166,7 +167,7 @@
     .close-detail:hover,.close-detail:focus-visible { outline:0; color:#fff7e5; border-color:var(--gold); background:rgba(104,52,38,.92); }
     .detail.flash .detail-copy { animation: cardRefresh .34s ease; }
     @keyframes cardRefresh { 50% { opacity:.45; transform:translateX(8px); } }
-    .detail-layout { display:grid; grid-template-columns:minmax(270px,40%) 1fr; gap:2px; align-items:center; min-height:400px; }
+    .detail-layout { display:grid; grid-template-columns:minmax(245px,36%) 1fr; gap:10px; align-items:center; min-height:350px; }
     .image-slot {
       position:relative;
       z-index:4;
@@ -205,20 +206,20 @@
       text-align:center;
     }
     .image-placeholder span { padding:8px 14px; border:1px solid rgba(214,167,95,.32); background:rgba(15,10,7,.72); }
-    .detail-copy { min-width:0; padding:54px 4px 20px 12px; }
+    .detail-copy { min-width:0; padding:38px 4px 10px 16px; }
     .detail h2 {
       margin: 0;
       color: var(--ivory);
-      font: 600 clamp(26px,2vw,36px)/1.12 "STKaiti","KaiTi","KaiTi_GB2312",serif;
+      font: 600 clamp(30px,2.2vw,40px)/1.12 "STKaiti","KaiTi","KaiTi_GB2312",serif;
       letter-spacing: .08em;
       text-shadow: 0 3px 18px rgba(0,0,0,.65);
     }
-    .english-name { margin: 5px 0 13px; color: var(--gold); font: 500 12px/1.4 Georgia,serif; letter-spacing: .16em; text-transform: uppercase; }
-    .info-block { padding: 10px 0; border-top: 1px solid rgba(214,167,95,.3); }
-    .info-label { margin: 0 0 6px; color: #dfaa67; font: 600 14px/1.35 "STKaiti","KaiTi",serif; letter-spacing: .08em; }
-    .info-label small { margin-left: 7px; color: rgba(214,167,95,.72); font: 500 9px/1.2 Georgia,serif; letter-spacing: .13em; }
-    .cn-copy { margin: 0; color: #f5e4c2; font: 400 14px/1.7 "STSong","SimSun","Noto Serif SC",serif; }
-    .en-copy { margin: 4px 0 0; color: rgba(243,222,180,.86); font: 400 12px/1.62 Georgia,serif; letter-spacing: .018em; }
+    .english-name { margin: 6px 0 14px; color: var(--gold); font: 500 13px/1.4 Georgia,serif; letter-spacing: .16em; text-transform: uppercase; }
+    .info-block { padding: 12px 0; border-top: 1px solid rgba(214,167,95,.3); }
+    .info-label { margin: 0 0 7px; color: #dfaa67; font: 600 15px/1.35 "STKaiti","KaiTi",serif; letter-spacing: .08em; }
+    .info-label small { margin-left: 8px; color: rgba(214,167,95,.72); font: 500 10px/1.2 Georgia,serif; letter-spacing: .13em; }
+    .cn-copy { margin: 0; color: #f5e4c2; font: 400 16px/1.65 "STSong","SimSun","Noto Serif SC",serif; }
+    .en-copy { margin: 5px 0 0; color: rgba(243,222,180,.86); font: 400 13px/1.58 Georgia,serif; letter-spacing: .018em; }
     .loading {
       position: absolute;
       inset: 0;
@@ -253,6 +254,7 @@
       .title-block { left:22px; top:26px; }
       .map-wrap { left:0; right:0; top:140px; bottom:auto; height:500px; }
       .detail { top:650px; right:16px; bottom:auto; left:16px; width:auto; min-width:0; }
+      .page.detail-open .detail { transform:none; }
       .detail::before { display:none; }
       .detail-layout { grid-template-columns: 1fr; }
       .image-slot { width:min(100%,330px); height:auto; aspect-ratio:3/4; transform:none; margin:0 auto; }
