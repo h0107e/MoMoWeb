@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>非遗文化数字地图</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <style>
+    :root {
+      --panel: #241710;
+      --map: #683426;
+      --cinnabar: #D85A2A;
+      --gold: #D6A75F;
+      --ivory: #F3DEB4;
+      --ink: #090706;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body {
+      overflow: hidden;
+      color: var(--ivory);
+      background: var(--ink);
+      font-family: "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    }
+    button { font: inherit; }
+    .page {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 680px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(4,3,2,.13),rgba(4,3,2,.13)),
+        url("./momo-map-background-final.png") center/cover no-repeat;
+    }
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(circle at 48% 50%,transparent 30%,rgba(4,3,2,.26) 100%);
+    }
+    .title-block {
+      position: absolute;
+      top: 4.1vh;
+      left: 5.7vw;
+      z-index: 20;
+      pointer-events: none;
+      transition: opacity .38s ease, transform .48s ease;
+    }
+    .page.detail-open .title-block { opacity:0; transform:translateY(-24px); }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: clamp(10px,.9vw,15px);
+      letter-spacing: .28em;
+    }
+    h1 {
+      margin: 0;
+      color: var(--ivory);
+      font: 600 clamp(36px,3.5vw,62px)/1.1 "STZhongsong", "FZShuSong-Z01", "SimSun", serif;
+      letter-spacing: .08em;
+      text-shadow: 0 4px 24px #000;
+    }
+    .subtitle {
+      margin: 12px 0 0;
+      color: #d2a66d;
+      font: 500 clamp(13px,1vw,18px) "Microsoft YaHei", sans-serif;
+      letter-spacing: .18em;
+    }
+    .map-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+    }
+    #map { width: 100%; height: 100%; }
+    .legend {
+      position: absolute;
+      left: 4.2vw;
+      bottom: 2.6vh;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: min(780px, 55vw);
+      min-width: 0;
+      padding: 11px 18px;
+      border: 1px solid rgba(214,167,95,.42);
+      border-radius: 7px;
+      color: #d2aa74;
+      background: rgba(20,12,8,.86);
+      box-shadow: 0 14px 38px rgba(0,0,0,.35);
+      font-size: 12px;
+      backdrop-filter: blur(8px);
+      transition: left .55s ease, transform .55s ease, width .55s ease;
+    }
+    .page:not(.detail-open) .legend { left: 50%; transform: translateX(-50%); }
+    .legend-title { padding-right: 18px; border-right: 1px solid rgba(214,167,95,.2); color: var(--ivory); }
+    .scale { display: flex; align-items: center; gap: 12px; }
+    .scale-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .swatch { width: 20px; height: 14px; border: 1px solid rgba(214,167,95,.18); }
+    .dot-key { width: 9px; height: 9px; border: 2px solid #f5b96b; border-radius: 50%; background: #dc7137; box-shadow: 0 0 9px #dd6d2f; }
+    .route-key { width: 29px; border-top: 2px dotted var(--gold); }
+    .detail {
+      position: absolute;
+      right: 2.8vw;
+      bottom: 6.5vh;
+      z-index: 30;
+      width: min(860px, 52vw);
+      min-height: 470px;
+      padding: 34px 34px 34px 24px;
+      overflow: visible;
+      border: 1px solid rgba(214,167,95,.56);
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg,rgba(48,29,19,.97),rgba(15,10,7,.98)),
+        url("./momo-map-background-final.png") right bottom/auto 100% no-repeat;
+      box-shadow: 0 28px 85px rgba(0,0,0,.62),inset 0 0 58px rgba(104,52,38,.16);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(calc(100% + 5vw));
+      transition: opacity .4s ease, transform .65s cubic-bezier(.22,.72,.2,1);
+    }
+    .detail::before {
+      content:"";
+      position:absolute;
+      left:-52px;
+      top:34px;
+      bottom:34px;
+      width:42%;
+      z-index:1;
+      border:1px solid rgba(214,167,95,.38);
+      border-radius:16px;
+      background:rgba(55,34,22,.72);
+      box-shadow:0 22px 55px rgba(0,0,0,.32);
+      pointer-events:none;
+    }
+    .page.detail-open .detail { opacity: 1; pointer-events: auto; transform: none; }
+    .corner-ornament { position:absolute; z-index:2; width:150px; height:150px; object-fit:contain; opacity:.26; pointer-events:none; }
+    .corner-ornament.top-left { top:-8px; left:-8px; }
+    .corner-ornament.bottom-right { right:-8px; bottom:-8px; transform:rotate(180deg); }
+    .detail-layout,.close-detail { position:relative; z-index:2; }
+    .close-detail {
+      position:absolute;
+      top:22px;
+      right:26px;
+      min-width:82px;
+      height:34px;
+      padding:0 14px;
+      border:1px solid rgba(214,167,95,.58);
+      border-radius:18px;
+      color:var(--ivory);
+      background:rgba(36,23,16,.78);
+      font:500 12px "Microsoft YaHei",sans-serif;
+      letter-spacing:.08em;
+      cursor:pointer;
+      pointer-events:auto;
+      touch-action:manipulation;
+      z-index:10;
+      transition:.2s ease;
+    }
+    .close-detail:hover,.close-detail:focus-visible { outline:0; color:#fff7e5; border-color:var(--gold); background:rgba(104,52,38,.92); }
+    .detail.flash .detail-copy { animation: cardRefresh .34s ease; }
+    @keyframes cardRefresh { 50% { opacity:.45; transform:translateX(8px); } }
+    .detail-layout { display:grid; grid-template-columns:minmax(270px,40%) 1fr; gap:2px; align-items:center; min-height:400px; }
+    .image-slot {
+      position:relative;
+      z-index:4;
+      width:100%;
+      aspect-ratio:3/4;
+      min-height:0;
+      border-radius:15px;
+      overflow:hidden;
+      transform:translateX(-58px);
+      box-shadow:0 26px 58px rgba(0,0,0,.58);
+    }
+    .product-image {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      border: 1px solid rgba(214,167,95,.72);
+      border-radius: 14px;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(.9) contrast(1.08);
+      box-shadow: inset 0 0 0 1px rgba(243,222,180,.08), 0 16px 35px rgba(0,0,0,.38);
+    }
+    .image-placeholder {
+      display:none;
+      width:100%;
+      height:100%;
+      min-height:0;
+      place-items:center;
+      border:1px solid rgba(214,167,95,.48);
+      border-radius:14px;
+      color:rgba(243,222,180,.7);
+      background:rgba(36,23,16,.72) url("./momo-map-background-final.png") 18% 86%/auto 175% no-repeat;
+      box-shadow:inset 0 0 40px rgba(0,0,0,.55),0 16px 35px rgba(0,0,0,.3);
+      font:500 13px/1.8 "STKaiti","KaiTi",serif;
+      letter-spacing:.12em;
+      text-align:center;
+    }
+    .image-placeholder span { padding:8px 14px; border:1px solid rgba(214,167,95,.32); background:rgba(15,10,7,.72); }
+    .detail-copy { min-width:0; padding:54px 4px 20px 12px; }
+    .detail h2 {
+      margin: 0;
+      color: var(--ivory);
+      font: 600 clamp(26px,2vw,36px)/1.12 "STKaiti","KaiTi","KaiTi_GB2312",serif;
+      letter-spacing: .08em;
+      text-shadow: 0 3px 18px rgba(0,0,0,.65);
+    }
+    .english-name { margin: 5px 0 13px; color: var(--gold); font: 500 12px/1.4 Georgia,serif; letter-spacing: .16em; text-transform: uppercase; }
+    .info-block { padding: 10px 0; border-top: 1px solid rgba(214,167,95,.3); }
+    .info-label { margin: 0 0 6px; color: #dfaa67; font: 600 14px/1.35 "STKaiti","KaiTi",serif; letter-spacing: .08em; }
+    .info-label small { margin-left: 7px; color: rgba(214,167,95,.72); font: 500 9px/1.2 Georgia,serif; letter-spacing: .13em; }
+    .cn-copy { margin: 0; color: #f5e4c2; font: 400 14px/1.7 "STSong","SimSun","Noto Serif SC",serif; }
+    .en-copy { margin: 4px 0 0; color: rgba(243,222,180,.86); font: 400 12px/1.62 Georgia,serif; letter-spacing: .018em; }
+    .loading {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      color: var(--ivory);
+      background: #090706;
+      transition: opacity .35s;
+    }
+    .loading.hide { opacity: 0; pointer-events: none; }
+    .tip {
+      position: absolute;
+      left: 5.8vw;
+      bottom: 5vh;
+      z-index: 20;
+      color: var(--ivory);
+      font-size: 12px;
+      line-height: 1.8;
+      opacity: .82;
+      pointer-events: none;
+    }
+    .tip strong { display:block; color:#dbab67; font-size:14px; }
+    @media (max-width: 1100px) {
+      .detail { width:min(720px,58vw); }
+      .legend { left:3vw; min-width:55vw; }
+      .tip { display:none; }
+    }
+    @media (max-width: 760px) {
+      body { overflow:auto; }
+      .page { min-height:1100px; overflow:auto; }
+      .title-block { left:22px; top:26px; }
+      .map-wrap { left:0; right:0; top:140px; bottom:auto; height:500px; }
+      .detail { top:650px; right:16px; bottom:auto; left:16px; width:auto; min-width:0; }
+      .detail::before { display:none; }
+      .detail-layout { grid-template-columns: 1fr; }
+      .image-slot { width:min(100%,330px); height:auto; aspect-ratio:3/4; transform:none; margin:0 auto; }
+      .product-image,.image-placeholder { height:100%; min-height:0; }
+      .detail-copy { padding-right:0; padding-top:42px; }
+      .legend { left:16px; right:16px; bottom:auto; top:600px; min-width:0; overflow-x:auto; }
+      .legend-title,.route-key + span { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) { .detail,.legend { animation:none; transition:none; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="title-block">
+      <p class="eyebrow">MOMO · INTANGIBLE HERITAGE</p>
+      <h1>非遗文化数字地图</h1>
+      <p class="subtitle">探寻千年匠心 · 传承文化根脉</p>
+    </header>
+    <section class="map-wrap" aria-label="中国非遗项目地图"><div id="map"></div></section>
+
+    <aside id="detail" class="detail" aria-live="polite" aria-hidden="true">
+      <img class="corner-ornament top-left" src="./gold-cloud-corner.png" alt="" />
+      <img class="corner-ornament bottom-right" src="./gold-cloud-corner.png" alt="" />
+      <button id="returnToMapButton" class="close-detail" type="button" onclick="resetToNationalView(event)">返回全图</button>
+      <div class="detail-layout">
+        <div class="image-slot">
+          <img id="productImage" class="product-image" src="./lion-dance-product.png" alt="广东醒狮产品图" />
+          <div id="imagePlaceholder" class="image-placeholder" aria-label="项目图片待补充"><span>项目图片待补充<br>IMAGE TO BE ADDED</span></div>
+        </div>
+        <div class="detail-copy">
+          <h2 id="name">狮舞巡游</h2>
+          <p id="englishName" class="english-name">LION DANCE PARADE</p>
+          <section class="info-block">
+            <p class="info-label">非遗地点 <small>LOCATION</small></p>
+            <p id="location" class="cn-copy">广东 · 佛山</p>
+            <p id="englishLocation" class="en-copy">Foshan, Guangdong, China</p>
+          </section>
+          <section class="info-block">
+            <p class="info-label">非遗故事 <small>HERITAGE STORY</small></p>
+            <p id="storyCn" class="cn-copy">把岭南醒狮的热烈与勇气装进一场巡游，让传统醒狮从民俗现场走进当代生活。</p>
+            <p id="storyEn" class="en-copy">A spirited parade carries the courage of Lingnan lion dance from folk celebrations into contemporary life.</p>
+          </section>
+        </div>
+      </div>
+    </aside>
+
+    <div id="loading" class="loading">正在载入非遗文化图谱…</div>
+  </main>
+
+  <script>
+    const GEOJSON_URL = "https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json";
+    const products = [
+      {name:"狮舞巡游",englishName:"Lion Dance Parade",province:"广东省",location:"广东 · 佛山",englishLocation:"Foshan, Guangdong, China",heritage:"广东醒狮",coord:[113.1214,23.0215],storyCn:"把岭南醒狮的热烈与勇气装进一场巡游，让传统醒狮从民俗现场走进当代生活。",storyEn:"A spirited parade carries the courage of Lingnan lion dance from folk celebrations into contemporary life."},
+      {name:"京腔雅览",englishName:"Peking Opera Gallery",province:"北京市",location:"北京",englishLocation:"Beijing, China",heritage:"京剧",coord:[116.4074,39.9042],storyCn:"从脸谱、戏服、唱腔与身段出发，在方寸之间收藏东方舞台的神采。",storyEn:"Masks, costumes, melodies and gestures preserve the brilliance of the Chinese stage in a compact cultural portrait."},
+      {name:"虎韵寻珍",englishName:"Tiger Charm Treasures",province:"山西省",location:"山西 · 黎城",englishLocation:"Licheng, Shanxi, China",heritage:"黎侯虎",coord:[113.387,36.503],storyCn:"憨态里藏着虎威，针线中缝入祝福，让传统布艺成为陪伴日常的幸运符号。",storyEn:"Stitched with blessings, the endearing cloth tiger turns ancient strength into a lucky companion for everyday life."},
+      {name:"瓷艺观古",englishName:"Porcelain Through Time",province:"江西省",location:"江西 · 景德镇",englishLocation:"Jingdezhen, Jiangxi, China",heritage:"景德镇手工制瓷技艺",coord:[117.1784,29.2687],storyCn:"沿着拉坯、修坯、绘饰、施釉与烧制的过程，触摸泥与火共同书写的瓷都记忆。",storyEn:"Shaping, trimming, painting, glazing and firing reveal the memory of a porcelain capital written together by clay and flame."},
+      {name:"灯影寻踪",englishName:"Tracing Shadows",province:"陕西省",location:"陕西 · 华州",englishLocation:"Huazhou, Shaanxi, China",heritage:"华县皮影戏",coord:[109.7758,34.497],storyCn:"一盏灯、一方幕，让雕刻精巧的影人在光影之间重新讲述古老故事。",storyEn:"Behind a simple screen, finely carved figures return ancient tales to life through light, shadow and song."},
+      {name:"青釉观承",englishName:"Azure Glaze Legacy",province:"江西省",location:"江西 · 景德镇",englishLocation:"Jingdezhen, Jiangxi, China",heritage:"景德镇青花瓷制作技艺",coord:[117.48,29.37],storyCn:"以青白色彩和传统纹样为灵感，让清雅的东方瓷韵进入当代生活。",storyEn:"Blue-and-white tones and traditional motifs bring the quiet elegance of Chinese porcelain into contemporary life."},
+      {name:"鱼灯揽俗",englishName:"Fish Lantern Traditions",province:"安徽省",location:"安徽 · 歙县",englishLocation:"Shexian, Anhui, China",heritage:"汪满田鱼灯",coord:[118.4356,29.8614],storyCn:"灯随人行，鱼逐光动，把徽州街巷中年年有余的祝福一路带回家。",storyEn:"Carried through Huizhou streets, glowing fish lanterns turn the wish for abundance into a moving river of light."},
+      {name:"傩风览韵",englishName:"Echoes of Nuo",province:"贵州省",location:"贵州 · 德江",englishLocation:"Dejiang, Guizhou, China",heritage:"德江傩堂戏",coord:[108.1198,28.2636],storyCn:"从傩面、唱词和舞步出发，感受古老民俗中神秘、粗犷而富有力量的文化表达。",storyEn:"Ritual masks, chants and powerful steps preserve the mysterious, vigorous voice of Dejiang Nuo theatre."},
+      {name:"泥艺探幽",englishName:"Exploring Clay Art",province:"天津市",location:"天津",englishLocation:"Tianjin, China",heritage:"天津泥人张彩塑",coord:[117.2009,39.0842],storyCn:"一捧泥土经过塑形与设色，化作神态鲜活、富有人情味的天津故事。",storyEn:"With shaping and colour, a handful of clay becomes a vivid, warm-hearted story of Tianjin life."}
+    ];
+    const density = products.reduce((result,p) => ((result[p.province]=(result[p.province]||0)+1),result),{});
+    const chart = echarts.init(document.getElementById("map"));
+    const NATIONAL_CENTER = [104.4,35.5];
+    const NATIONAL_ZOOM = 1.24;
+    let selectedIndex = null;
+
+    const routePairs = [[1,2],[2,4],[4,7],[7,0],[0,3],[3,6],[6,5],[3,8],[8,1]];
+    const routeData = routePairs.map(([from,to]) => ({coords:[products[from].coord,products[to].coord]}));
+
+    function renderSelection(index) {
+      const p=products[index];
+      const page=document.querySelector(".page");
+      const panel=document.getElementById("detail");
+      if(selectedIndex===index&&page.classList.contains("detail-open"))return;
+      selectedIndex=index;
+      panel.classList.remove("flash"); void panel.offsetWidth; panel.classList.add("flash");
+      document.getElementById("name").textContent=p.name;
+      document.getElementById("englishName").textContent=p.englishName;
+      document.getElementById("location").textContent=p.location;
+      document.getElementById("englishLocation").textContent=p.englishLocation;
+      document.getElementById("storyCn").textContent=p.storyCn;
+      document.getElementById("storyEn").textContent=p.storyEn;
+      const image=document.getElementById("productImage");
+      const placeholder=document.getElementById("imagePlaceholder");
+      image.style.display=index===0?"block":"none";
+      placeholder.style.display=index===0?"none":"grid";
+      image.alt=index===0?"广东醒狮产品图":p.name+"产品图片待补充";
+      panel.setAttribute("aria-hidden","false");
+      page.classList.add("detail-open");
+      chart.setOption({
+        geo:{center:[p.coord[0],p.coord[1]],zoom:2.05,layoutCenter:["29%","53%"],layoutSize:"100%"},
+        series:[{}, {}, {data:[{name:p.name,value:[...p.coord,100],productIndex:index}]}]
+      });
+    }
+
+    function resetToNationalView(event) {
+      if(event){event.preventDefault();event.stopPropagation();}
+      selectedIndex=null;
+      const page=document.querySelector(".page");
+      const panel=document.getElementById("detail");
+      page.classList.remove("detail-open");
+      panel.setAttribute("aria-hidden","true");
+      chart.setOption({
+        geo:{center:NATIONAL_CENTER,zoom:NATIONAL_ZOOM,layoutCenter:["53%","56%"],layoutSize:"100%"},
+        series:[{}, {}, {data:[]}]
+      });
+    }
+
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&selectedIndex!==null)resetToNationalView(event);});
+
+    fetch(GEOJSON_URL).then(r=>{if(!r.ok)throw new Error("GeoJSON读取失败："+r.status);return r.json();}).then(geojson=>{
+      echarts.registerMap("china-density",geojson);
+      const mapData=geojson.features.map(f=>({name:f.properties.name,value:density[f.properties.name]||0}));
+      chart.setOption({
+        animationDurationUpdate:480,
+        animationEasingUpdate:"cubicOut",
+        tooltip:{trigger:"item",confine:true,backgroundColor:"rgba(25,14,9,.96)",borderColor:"#D6A75F",textStyle:{color:"#F3DEB4"},formatter(params){if(params.seriesType==="scatter"||params.seriesType==="effectScatter"){const p=products[params.data.productIndex];return `<b>${p.name}</b><br>${p.location}<br><span style="color:#d6a75f">${p.heritage}</span>`;}return `${params.name}<br>项目密度：${params.value||0} 项`; }},
+        geo:{map:"china-density",roam:true,zoom:NATIONAL_ZOOM,center:NATIONAL_CENTER,layoutCenter:["53%","56%"],layoutSize:"100%",scaleLimit:{min:.75,max:4},label:{show:false},itemStyle:{areaColor:"#3d241c",borderColor:"#D6A75F",borderWidth:1.05,shadowColor:"rgba(216,90,42,.2)",shadowBlur:10},emphasis:{label:{show:true,color:"#F3DEB4",fontFamily:"Microsoft YaHei"},itemStyle:{areaColor:"#8b3f29",borderColor:"#f1bb71",borderWidth:1.8}},select:{itemStyle:{areaColor:"#8b3f29"}}},
+        visualMap:{show:false,min:0,max:2,seriesIndex:0,inRange:{color:["#3d241c","#683426","#8b3f29"]}},
+        series:[
+          {name:"省级热度",type:"map",geoIndex:0,data:mapData},
+          {name:"文化传播路径",type:"lines",coordinateSystem:"geo",zlevel:2,polyline:false,data:routeData,lineStyle:{color:"#D6A75F",width:1.1,opacity:.6,type:"dotted",curveness:.22},effect:{show:true,period:12,trailLength:.18,symbol:"circle",symbolSize:2.8,color:"#F3DEB4"},silent:true},
+          {name:"选中项目",type:"effectScatter",coordinateSystem:"geo",zlevel:4,symbolSize:18,rippleEffect:{period:5,scale:4,brushType:"stroke"},itemStyle:{color:"#ff7338",shadowColor:"#ff6e32",shadowBlur:28},data:[]},
+          {name:"项目点",type:"scatter",coordinateSystem:"geo",zlevel:3,symbolSize:7,itemStyle:{color:"#e8a15d",borderColor:"#ffd599",borderWidth:1,shadowColor:"rgba(216,90,42,.72)",shadowBlur:8},emphasis:{scale:1.7,itemStyle:{color:"#ff7a3d"}},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i}))},
+          {name:"项目点击热区",type:"scatter",coordinateSystem:"geo",zlevel:6,symbolSize:34,cursor:"pointer",itemStyle:{color:"rgba(255,255,255,.001)"},emphasis:{itemStyle:{color:"rgba(216,90,42,.08)"}},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i}))}
+        ]
+      });
+      const nearestProjectAt=(offsetX,offsetY,maxDistance=32)=>{
+        let nearest=null;
+        products.forEach((product,index)=>{
+          const pixel=chart.convertToPixel({geoIndex:0},product.coord);
+          if(!pixel||!Number.isFinite(pixel[0])||!Number.isFinite(pixel[1]))return;
+          const distance=Math.hypot(pixel[0]-offsetX,pixel[1]-offsetY);
+          if(distance<=maxDistance&&(!nearest||distance<nearest.distance))nearest={index,distance};
+        });
+        return nearest;
+      };
+      chart.on("click",params=>{
+        if((params.seriesType==="scatter"||params.seriesType==="effectScatter")&&Number.isInteger(params.data?.productIndex)){
+          renderSelection(params.data.productIndex);
+          return;
+        }
+        if(params.seriesType==="map"&&params.name){
+          const provinceIndex=products.findIndex(product=>product.province===params.name);
+          if(provinceIndex>=0)renderSelection(provinceIndex);
+        }
+      });
+      chart.getZr().on("click",event=>{
+        const target=nearestProjectAt(event.offsetX,event.offsetY,34);
+        if(target)renderSelection(target.index);
+      });
+      chart.getZr().on("mousemove",event=>{
+        chart.getDom().style.cursor=nearestProjectAt(event.offsetX,event.offsetY,34)?"pointer":"default";
+      });
+      document.getElementById("loading").classList.add("hide");
+    }).catch(error=>{document.getElementById("loading").textContent="地图载入失败："+error.message;});
+
+    window.addEventListener("resize",()=>chart.resize());
+  </script>
+</body>
+</html>

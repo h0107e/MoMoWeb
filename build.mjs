@@ -10,6 +10,7 @@ await Promise.all([
   cp("script.js", "dist/client/script.js"),
   cp("gesture.js", "dist/client/gesture.js"),
   cp("assets", "dist/client/assets", { recursive: true }),
+  cp("map", "dist/client/map", { recursive: true }),
   cp(".openai/hosting.json", "dist/.openai/hosting.json")
 ]);
 
