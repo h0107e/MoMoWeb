@@ -47,6 +47,18 @@ button { font: inherit; color: inherit; }
 #app[data-scene="story"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="about"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="about"] .stage { --stage-ratio: 1.7882352941; }
+#app[data-scene="map"] {
+  background: #090706;
+}
+#app[data-scene="map"]::before {
+  display: none;
+}
+#app[data-scene="map"] .stage {
+  width: 100vw;
+  height: 100dvh;
+  aspect-ratio: auto;
+  box-shadow: none;
+}
 #app[data-scene="heritage"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
 #app[data-scene="cards"] { --backdrop-image: url("./assets/fish-result-bg.png"); }
 #app[data-scene="draw"] { --backdrop-image: url("./assets/draw.jpg"); }
