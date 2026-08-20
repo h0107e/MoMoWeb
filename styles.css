@@ -54,9 +54,11 @@ button { font: inherit; color: inherit; }
   display: none;
 }
 #app[data-scene="map"] .stage {
-  width: 100vw;
-  height: 100dvh;
-  aspect-ratio: auto;
+  --map-stage-ratio: 1.91;
+  width: max(100vw, calc(100dvh * var(--map-stage-ratio)));
+  height: max(100dvh, calc(100vw / var(--map-stage-ratio)));
+  aspect-ratio: var(--map-stage-ratio);
+  flex: none;
   box-shadow: none;
 }
 #app[data-scene="heritage"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
