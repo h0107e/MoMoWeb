@@ -143,6 +143,17 @@ let suppressCardClickUntil = 0;
 let orbitWheelLockedUntil = 0;
 let gestureOrbitX = null;
 
+function updateMapStageScale() {
+  const designWidth = 1920;
+  const designHeight = 1005;
+  const scale = Math.min(window.innerWidth / designWidth, window.innerHeight / designHeight);
+  stage.style.setProperty("--map-scale", scale.toFixed(5));
+}
+
+updateMapStageScale();
+window.addEventListener("resize", updateMapStageScale, { passive: true });
+document.addEventListener("fullscreenchange", updateMapStageScale);
+
 let selected = null;
 let currentScene = "home";
 let drawing = false;
