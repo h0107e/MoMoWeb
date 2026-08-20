@@ -619,7 +619,7 @@ if (Number.isInteger(directResultIndex)) {
   requestAnimationFrame(startResultRevealSequence);
 } else {
   const directScene = new URLSearchParams(window.location.search).get("scene");
-  if (["home", "hub", "story", "about", "heritage", "cards", "draw"].includes(directScene)) {
+  if (["home", "hub", "story", "about", "map", "heritage", "cards", "draw"].includes(directScene)) {
     app.dataset.scene = directScene;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === directScene));
     currentScene = directScene;

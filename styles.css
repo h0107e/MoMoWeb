@@ -92,6 +92,65 @@ button { font: inherit; color: inherit; }
   transform: scale(1);
 }
 
+.scene-map {
+  background: #090706;
+}
+
+.scene-map::after {
+  display: none;
+}
+
+.map-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #090706;
+}
+
+.map-back {
+  position: absolute;
+  top: clamp(16px, 2.2vw, 34px);
+  right: clamp(16px, 2.2vw, 34px);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 16px 8px 10px;
+  color: #f3deb4;
+  border: 1px solid rgba(214, 167, 95, .62);
+  border-radius: 999px;
+  background: rgba(20, 12, 8, .82);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .34), inset 0 0 18px rgba(214, 167, 95, .08);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.map-back span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(214, 167, 95, .42);
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.map-back b {
+  font-size: clamp(12px, .84vw, 15px);
+  letter-spacing: .12em;
+}
+
+.map-back:hover,
+.map-back:focus-visible {
+  color: #fff4d1;
+  border-color: #e8b967;
+  background: rgba(104, 52, 38, .9);
+  outline: none;
+}
+
 .scene-art {
   position: absolute;
   inset: 0;

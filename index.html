@@ -60,7 +60,7 @@
           <button class="hub-area hub-blindbox" data-hub-action="draw" type="button" aria-label="进入潮玩盲盒"></button>
           <button class="hub-area hub-card" data-go="cards" type="button" aria-label="收藏卡"></button>
           <button class="hub-area hub-about" data-go="about" type="button" aria-label="关于我们"></button>
-          <button class="hub-area hub-enter" data-go="heritage" type="button" aria-label="进入展览"></button>
+          <button class="hub-area hub-enter" data-go="map" type="button" aria-label="进入非遗文化数字地图展览"></button>
           <button class="hub-area hub-journey" data-hub-action="draw" type="button" aria-label="开始盲盒漫游"></button>
           <button class="hub-area hub-explore" data-go="heritage" type="button" aria-label="探索九大非遗"></button>
           <button class="hub-area hub-more" data-go="cards" type="button" aria-label="查看更多收藏"></button>
@@ -129,6 +129,19 @@
           <article><b>共融</b><span>残健共融<br />设计温暖可及</span></article>
         </div>
         <img class="about-philosophy-art" src="./assets/about-philosophy-original.png" alt="文化、科技、共融设计理念" />
+      </section>
+
+      <section class="scene scene-map" data-scene="map" aria-label="非遗文化数字地图展览">
+        <iframe
+          class="map-frame"
+          src="./map/index.html"
+          title="非遗文化数字地图"
+          loading="lazy"
+          allow="fullscreen"
+        ></iframe>
+        <button class="map-back" data-go="hub" type="button" aria-label="返回功能导航">
+          <span aria-hidden="true">←</span><b>返回功能导航</b>
+        </button>
       </section>
 
       <section class="scene scene-heritage archive-scene" data-scene="heritage" aria-label="九大非遗数字图鉴">
