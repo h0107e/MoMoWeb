@@ -48,18 +48,24 @@ button { font: inherit; color: inherit; }
 #app[data-scene="about"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="about"] .stage { --stage-ratio: 1.7882352941; }
 #app[data-scene="map"] {
-  background: #090706;
+  background:
+    radial-gradient(circle at 50% 54%, rgba(92,48,27,.2), rgba(9,7,6,.84) 68%),
+    url("./map/momo-map-background-final.png") center / cover no-repeat,
+    #090706;
 }
 #app[data-scene="map"]::before {
   display: none;
 }
 #app[data-scene="map"] .stage {
   --map-stage-ratio: 1.91;
-  width: max(100vw, calc(100dvh * var(--map-stage-ratio)));
-  height: max(100dvh, calc(100vw / var(--map-stage-ratio)));
+  --map-scale: 1;
+  width: 1920px;
+  height: 1005px;
   aspect-ratio: var(--map-stage-ratio);
   flex: none;
   box-shadow: none;
+  transform: scale(var(--map-scale));
+  transform-origin: center;
 }
 #app[data-scene="heritage"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
 #app[data-scene="cards"] { --backdrop-image: url("./assets/fish-result-bg.png"); }
