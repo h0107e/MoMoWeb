@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>非遗文化数字地图</title>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
   <style>
@@ -300,7 +303,7 @@
   </main>
 
   <script>
-    const GEOJSON_URL = "./china-full.geojson";
+    const GEOJSON_URL = "./china-full.geojson?v=local-geo-2";
     const products = [
       {name:"狮舞巡游",englishName:"Lion Dance Parade",province:"广东省",location:"广东 · 佛山",englishLocation:"Foshan, Guangdong, China",heritage:"广东醒狮",coord:[113.1214,23.0215],storyCn:"把岭南醒狮的热烈与勇气装进一场巡游，让传统醒狮从民俗现场走进当代生活。",storyEn:"A spirited parade carries the courage of Lingnan lion dance from folk celebrations into contemporary life."},
       {name:"京腔雅览",englishName:"Peking Opera Gallery",province:"北京市",location:"北京",englishLocation:"Beijing, China",heritage:"京剧",coord:[116.4074,39.9042],storyCn:"从脸谱、戏服、唱腔与身段出发，在方寸之间收藏东方舞台的神采。",storyEn:"Masks, costumes, melodies and gestures preserve the brilliance of the Chinese stage in a compact cultural portrait."},
