@@ -307,18 +307,18 @@
   <script>
     const GEOJSON_URL = "./china-full.geojson?v=local-geo-2";
     const products = [
-      {name:"狮舞巡游",englishName:"Lion Dance Parade",province:"广东省",location:"广东 · 佛山",englishLocation:"Foshan, Guangdong, China",heritage:"广东醒狮",coord:[113.1214,23.0215],storyCn:"把岭南醒狮的热烈与勇气装进一场巡游，让传统醒狮从民俗现场走进当代生活。",storyEn:"A spirited parade carries the courage of Lingnan lion dance from folk celebrations into contemporary life."},
-      {name:"京腔雅览",englishName:"Peking Opera Gallery",province:"北京市",location:"北京",englishLocation:"Beijing, China",heritage:"京剧",coord:[116.4074,39.9042],storyCn:"从脸谱、戏服、唱腔与身段出发，在方寸之间收藏东方舞台的神采。",storyEn:"Masks, costumes, melodies and gestures preserve the brilliance of the Chinese stage in a compact cultural portrait."},
-      {name:"虎韵寻珍",englishName:"Tiger Charm Treasures",province:"山西省",location:"山西 · 黎城",englishLocation:"Licheng, Shanxi, China",heritage:"黎侯虎",coord:[113.387,36.503],storyCn:"憨态里藏着虎威，针线中缝入祝福，让传统布艺成为陪伴日常的幸运符号。",storyEn:"Stitched with blessings, the endearing cloth tiger turns ancient strength into a lucky companion for everyday life."},
-      {name:"瓷艺观古",englishName:"Porcelain Through Time",province:"江西省",location:"江西 · 景德镇",englishLocation:"Jingdezhen, Jiangxi, China",heritage:"景德镇手工制瓷技艺",coord:[117.1784,29.2687],storyCn:"沿着拉坯、修坯、绘饰、施釉与烧制的过程，触摸泥与火共同书写的瓷都记忆。",storyEn:"Shaping, trimming, painting, glazing and firing reveal the memory of a porcelain capital written together by clay and flame."},
-      {name:"灯影寻踪",englishName:"Tracing Shadows",province:"陕西省",location:"陕西 · 华州",englishLocation:"Huazhou, Shaanxi, China",heritage:"华县皮影戏",coord:[109.7758,34.497],storyCn:"一盏灯、一方幕，让雕刻精巧的影人在光影之间重新讲述古老故事。",storyEn:"Behind a simple screen, finely carved figures return ancient tales to life through light, shadow and song."},
-      {name:"青釉观承",englishName:"Azure Glaze Legacy",province:"江西省",location:"江西 · 景德镇",englishLocation:"Jingdezhen, Jiangxi, China",heritage:"景德镇青花瓷制作技艺",coord:[117.48,29.37],storyCn:"以青白色彩和传统纹样为灵感，让清雅的东方瓷韵进入当代生活。",storyEn:"Blue-and-white tones and traditional motifs bring the quiet elegance of Chinese porcelain into contemporary life."},
-      {name:"鱼灯揽俗",englishName:"Fish Lantern Traditions",province:"安徽省",location:"安徽 · 歙县",englishLocation:"Shexian, Anhui, China",heritage:"汪满田鱼灯",coord:[118.4356,29.8614],storyCn:"灯随人行，鱼逐光动，把徽州街巷中年年有余的祝福一路带回家。",storyEn:"Carried through Huizhou streets, glowing fish lanterns turn the wish for abundance into a moving river of light."},
-      {name:"傩风览韵",englishName:"Echoes of Nuo",province:"贵州省",location:"贵州 · 德江",englishLocation:"Dejiang, Guizhou, China",heritage:"德江傩堂戏",coord:[108.1198,28.2636],storyCn:"从傩面、唱词和舞步出发，感受古老民俗中神秘、粗犷而富有力量的文化表达。",storyEn:"Ritual masks, chants and powerful steps preserve the mysterious, vigorous voice of Dejiang Nuo theatre."},
-      {name:"泥艺探幽",englishName:"Exploring Clay Art",province:"天津市",location:"天津",englishLocation:"Tianjin, China",heritage:"天津泥人张彩塑",coord:[117.2009,39.0842],storyCn:"一捧泥土经过塑形与设色，化作神态鲜活、富有人情味的天津故事。",storyEn:"With shaping and colour, a handful of clay becomes a vivid, warm-hearted story of Tianjin life."}
+      {name:"狮舞巡游",englishName:"Lion Dance Parade",province:"广东省",location:"广东 · 佛山",englishLocation:"Foshan, Guangdong, China",heritage:"广东醒狮",coord:[113.1214,23.0215],marker:"./markers/xingshi.png",storyCn:"把岭南醒狮的热烈与勇气装进一场巡游，让传统醒狮从民俗现场走进当代生活。",storyEn:"A spirited parade carries the courage of Lingnan lion dance from folk celebrations into contemporary life."},
+      {name:"京腔雅览",englishName:"Peking Opera Gallery",province:"北京市",location:"北京",englishLocation:"Beijing, China",heritage:"京剧",coord:[116.4074,39.9042],marker:"./markers/jingju.png",storyCn:"从脸谱、戏服、唱腔与身段出发，在方寸之间收藏东方舞台的神采。",storyEn:"Masks, costumes, melodies and gestures preserve the brilliance of the Chinese stage in a compact cultural portrait."},
+      {name:"虎韵寻珍",englishName:"Tiger Charm Treasures",province:"山西省",location:"山西 · 黎城",englishLocation:"Licheng, Shanxi, China",heritage:"黎侯虎",coord:[113.387,36.503],marker:"./markers/bulaohu.png",storyCn:"憨态里藏着虎威，针线中缝入祝福，让传统布艺成为陪伴日常的幸运符号。",storyEn:"Stitched with blessings, the endearing cloth tiger turns ancient strength into a lucky companion for everyday life."},
+      {name:"瓷艺观古",englishName:"Porcelain Through Time",province:"江西省",location:"江西 · 景德镇",englishLocation:"Jingdezhen, Jiangxi, China",heritage:"景德镇手工制瓷技艺",coord:[116.78,28.93],marker:"./markers/jingdezhen.png",storyCn:"沿着拉坯、修坯、绘饰、施釉与烧制的过程，触摸泥与火共同书写的瓷都记忆。",storyEn:"Shaping, trimming, painting, glazing and firing reveal the memory of a porcelain capital written together by clay and flame."},
+      {name:"灯影寻踪",englishName:"Tracing Shadows",province:"陕西省",location:"陕西 · 华州",englishLocation:"Huazhou, Shaanxi, China",heritage:"华县皮影戏",coord:[109.7758,34.497],marker:"./markers/piyingxi.png",storyCn:"一盏灯、一方幕，让雕刻精巧的影人在光影之间重新讲述古老故事。",storyEn:"Behind a simple screen, finely carved figures return ancient tales to life through light, shadow and song."},
+      {name:"青釉观承",englishName:"Azure Glaze Legacy",province:"江西省",location:"江西 · 景德镇",englishLocation:"Jingdezhen, Jiangxi, China",heritage:"景德镇青花瓷制作技艺",coord:[117.62,29.72],marker:"./markers/qinghuaci.png",storyCn:"以青白色彩和传统纹样为灵感，让清雅的东方瓷韵进入当代生活。",storyEn:"Blue-and-white tones and traditional motifs bring the quiet elegance of Chinese porcelain into contemporary life."},
+      {name:"鱼灯揽俗",englishName:"Fish Lantern Traditions",province:"安徽省",location:"安徽 · 歙县",englishLocation:"Shexian, Anhui, China",heritage:"汪满田鱼灯",coord:[118.4356,29.8614],marker:"./markers/yudeng.png",storyCn:"灯随人行，鱼逐光动，把徽州街巷中年年有余的祝福一路带回家。",storyEn:"Carried through Huizhou streets, glowing fish lanterns turn the wish for abundance into a moving river of light."},
+      {name:"傩风览韵",englishName:"Echoes of Nuo",province:"贵州省",location:"贵州 · 德江",englishLocation:"Dejiang, Guizhou, China",heritage:"德江傩堂戏",coord:[108.1198,28.2636],marker:"./markers/nuoxi.png",storyCn:"从傩面、唱词和舞步出发，感受古老民俗中神秘、粗犷而富有力量的文化表达。",storyEn:"Ritual masks, chants and powerful steps preserve the mysterious, vigorous voice of Dejiang Nuo theatre."},
+      {name:"泥艺探幽",englishName:"Exploring Clay Art",province:"天津市",location:"天津",englishLocation:"Tianjin, China",heritage:"天津泥人张彩塑",coord:[117.2009,39.0842],marker:"./markers/nisu.png",storyCn:"一捧泥土经过塑形与设色，化作神态鲜活、富有人情味的天津故事。",storyEn:"With shaping and colour, a handful of clay becomes a vivid, warm-hearted story of Tianjin life."}
     ];
     const density = products.reduce((result,p) => ((result[p.province]=(result[p.province]||0)+1),result),{});
-    const chart = echarts.init(document.getElementById("map"));
+    const chart = echarts.init(document.getElementById("map"),null,{useDirtyRect:true});
     const NATIONAL_CENTER = [104.4,35.5];
     const NATIONAL_ZOOM = 1.24;
     let selectedIndex = null;
@@ -341,9 +341,10 @@
       document.getElementById("storyEn").textContent=p.storyEn;
       const image=document.getElementById("productImage");
       const placeholder=document.getElementById("imagePlaceholder");
-      image.style.display=index===0?"block":"none";
-      placeholder.style.display=index===0?"none":"grid";
-      image.alt=index===0?"广东醒狮产品图":p.name+"产品图片待补充";
+      image.src=p.marker;
+      image.style.display="block";
+      placeholder.style.display="none";
+      image.alt=p.name+"非遗玩偶模型预览";
       panel.setAttribute("aria-hidden","false");
       page.classList.add("detail-open");
       chart.setOption({
@@ -371,29 +372,18 @@
       echarts.registerMap("china-density",geojson);
       const mapData=geojson.features.map(f=>({name:f.properties.name,value:density[f.properties.name]||0}));
       chart.setOption({
-        animationDurationUpdate:480,
+        animationDurationUpdate:260,
         animationEasingUpdate:"cubicOut",
         tooltip:{trigger:"item",confine:true,backgroundColor:"rgba(25,14,9,.96)",borderColor:"#D6A75F",textStyle:{color:"#F3DEB4"},formatter(params){if(params.seriesType==="scatter"||params.seriesType==="effectScatter"){const p=products[params.data.productIndex];return `<b>${p.name}</b><br>${p.location}<br><span style="color:#d6a75f">${p.heritage}</span>`;}return `${params.name}<br>项目密度：${params.value||0} 项`; }},
-        geo:{map:"china-density",roam:true,zoom:NATIONAL_ZOOM,center:NATIONAL_CENTER,layoutCenter:["53%","56%"],layoutSize:"100%",scaleLimit:{min:.75,max:4},label:{show:false},itemStyle:{areaColor:"#3d241c",borderColor:"#D6A75F",borderWidth:1.05,shadowColor:"rgba(216,90,42,.2)",shadowBlur:10},emphasis:{label:{show:true,color:"#F3DEB4",fontFamily:"Microsoft YaHei"},itemStyle:{areaColor:"#8b3f29",borderColor:"#f1bb71",borderWidth:1.8}},select:{itemStyle:{areaColor:"#8b3f29"}}},
+        geo:{map:"china-density",roam:true,zoom:NATIONAL_ZOOM,center:NATIONAL_CENTER,layoutCenter:["53%","56%"],layoutSize:"100%",scaleLimit:{min:.75,max:4},label:{show:false},itemStyle:{areaColor:"#3d241c",borderColor:"#D6A75F",borderWidth:1.05,shadowColor:"rgba(216,90,42,.14)",shadowBlur:4},emphasis:{label:{show:true,color:"#F3DEB4",fontFamily:"Microsoft YaHei"},itemStyle:{areaColor:"#8b3f29",borderColor:"#f1bb71",borderWidth:1.8}},select:{itemStyle:{areaColor:"#8b3f29"}}},
         visualMap:{show:false,min:0,max:2,seriesIndex:0,inRange:{color:["#3d241c","#683426","#8b3f29"]}},
         series:[
           {name:"省级热度",type:"map",geoIndex:0,data:mapData},
-          {name:"文化传播路径",type:"lines",coordinateSystem:"geo",zlevel:2,polyline:false,data:routeData,lineStyle:{color:"#D6A75F",width:1.1,opacity:.6,type:"dotted",curveness:.22},effect:{show:true,period:12,trailLength:.18,symbol:"circle",symbolSize:2.8,color:"#F3DEB4"},silent:true},
-          {name:"选中项目",type:"effectScatter",coordinateSystem:"geo",zlevel:4,symbolSize:18,rippleEffect:{period:5,scale:4,brushType:"stroke"},itemStyle:{color:"#ff7338",shadowColor:"#ff6e32",shadowBlur:28},data:[]},
-          {name:"项目点",type:"scatter",coordinateSystem:"geo",zlevel:3,symbolSize:7,itemStyle:{color:"#e8a15d",borderColor:"#ffd599",borderWidth:1,shadowColor:"rgba(216,90,42,.72)",shadowBlur:8},emphasis:{scale:1.7,itemStyle:{color:"#ff7a3d"}},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i}))},
-          {name:"项目点击热区",type:"scatter",coordinateSystem:"geo",zlevel:6,symbolSize:34,cursor:"pointer",itemStyle:{color:"rgba(255,255,255,.001)"},emphasis:{itemStyle:{color:"rgba(216,90,42,.08)"}},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i}))}
+          {name:"文化传播路径",type:"lines",coordinateSystem:"geo",zlevel:2,polyline:false,data:routeData,lineStyle:{color:"#D6A75F",width:1.05,opacity:.48,type:"dotted",curveness:.22},silent:true},
+          {name:"选中项目",type:"effectScatter",coordinateSystem:"geo",zlevel:4,symbolSize:56,rippleEffect:{period:6,scale:1.55,brushType:"stroke"},itemStyle:{color:"rgba(244,177,84,.12)",borderColor:"#f3c77b",borderWidth:1,shadowColor:"rgba(255,174,69,.48)",shadowBlur:10},data:[]},
+          {name:"非遗模型标志",type:"scatter",coordinateSystem:"geo",zlevel:5,symbolSize:[52,52],cursor:"pointer",emphasis:{scale:1.14},data:products.map((p,i)=>({name:p.name,value:[...p.coord,density[p.province]],productIndex:i,symbol:`image://${p.marker}`}))}
         ]
       });
-      const nearestProjectAt=(offsetX,offsetY,maxDistance=32)=>{
-        let nearest=null;
-        products.forEach((product,index)=>{
-          const pixel=chart.convertToPixel({geoIndex:0},product.coord);
-          if(!pixel||!Number.isFinite(pixel[0])||!Number.isFinite(pixel[1]))return;
-          const distance=Math.hypot(pixel[0]-offsetX,pixel[1]-offsetY);
-          if(distance<=maxDistance&&(!nearest||distance<nearest.distance))nearest={index,distance};
-        });
-        return nearest;
-      };
       chart.on("click",params=>{
         if((params.seriesType==="scatter"||params.seriesType==="effectScatter")&&Number.isInteger(params.data?.productIndex)){
           renderSelection(params.data.productIndex);
@@ -404,17 +394,11 @@
           if(provinceIndex>=0)renderSelection(provinceIndex);
         }
       });
-      chart.getZr().on("click",event=>{
-        const target=nearestProjectAt(event.offsetX,event.offsetY,34);
-        if(target)renderSelection(target.index);
-      });
-      chart.getZr().on("mousemove",event=>{
-        chart.getDom().style.cursor=nearestProjectAt(event.offsetX,event.offsetY,34)?"pointer":"default";
-      });
       document.getElementById("loading").classList.add("hide");
     }).catch(error=>{document.getElementById("loading").textContent="地图载入失败："+error.message;});
 
-    window.addEventListener("resize",()=>chart.resize());
+    let resizeFrame=0;
+    window.addEventListener("resize",()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>chart.resize());},{passive:true});
   </script>
 </body>
 </html>
