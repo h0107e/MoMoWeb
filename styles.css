@@ -57,15 +57,12 @@ button { font: inherit; color: inherit; }
   display: none;
 }
 #app[data-scene="map"] .stage {
-  --map-stage-ratio: 1.91;
-  --map-scale: 1;
-  width: 1920px;
-  height: 1005px;
-  aspect-ratio: var(--map-stage-ratio);
+  width: 100vw;
+  height: 100dvh;
+  aspect-ratio: auto;
   flex: none;
   box-shadow: none;
-  transform: scale(var(--map-scale));
-  transform-origin: center;
+  transform: none;
 }
 #app[data-scene="heritage"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
 #app[data-scene="cards"] { --backdrop-image: url("./assets/fish-result-bg.png"); }
