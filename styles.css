@@ -2404,6 +2404,18 @@ button.gesture-hover:not(.hub-area), a.gesture-hover {
 .photo-controls h1 { margin:14px 0 16px; font-size:clamp(30px,3.4vw,58px); font-weight:400; line-height:1.18; }
 .photo-controls h1 em { color:#ffd98c; font-style:normal; }
 .photo-controls>p { max-width:470px; color:rgba(250,231,190,.76); font-size:clamp(14px,1.15vw,18px); line-height:1.9; }
+.photo-mode-switch { display:flex; width:max-content; margin-top:20px; padding:4px; border:1px solid rgba(220,168,79,.42); border-radius:999px; background:rgba(15,8,8,.54); }
+.photo-mode-switch button { min-width:102px; padding:9px 15px; border:0; border-radius:999px; background:transparent; color:rgba(248,223,170,.58); font:600 13px/1 inherit; letter-spacing:.08em; transition:.25s ease; }
+.photo-mode-switch button.is-active { color:#31120c; background:linear-gradient(135deg,#f8d47d,#c78935); box-shadow:0 0 18px rgba(234,167,65,.3); }
+.photo-paper.is-scene-mode { transform:none; padding:9px; background:rgba(31,12,9,.7); }
+.photo-paper.is-scene-mode .photo-live { background:url("./assets/cloth-tiger-photo-scene.png") center 49%/cover no-repeat; }
+.photo-paper.is-scene-mode video { z-index:1; left:3.5%; top:17%; width:41%; height:72%; object-fit:cover; border-radius:47% 47% 42% 42%/32% 32% 20% 20%; -webkit-mask-image:radial-gradient(ellipse 72% 78% at 50% 48%,#000 65%,transparent 100%); mask-image:radial-gradient(ellipse 72% 78% at 50% 48%,#000 65%,transparent 100%); filter:sepia(.12) saturate(.86) contrast(1.04); opacity:.94; }
+.photo-paper.is-scene-mode .photo-camera-empty { z-index:1; inset:17% auto 11% 3.5%; width:41%; border-radius:48%; background:radial-gradient(circle,rgba(88,37,18,.64),rgba(18,8,6,.78) 68%,transparent 72%); }
+.photo-paper.is-scene-mode .photo-camera-empty b { font-size:clamp(24px,3vw,42px); }
+.photo-paper.is-scene-mode .photo-camera-empty span { max-width:220px; margin:auto; }
+.photo-paper.is-scene-mode model-viewer { right:0; bottom:-2%; width:49%; height:89%; filter:drop-shadow(0 20px 20px rgba(0,0,0,.45)) drop-shadow(0 0 14px rgba(255,179,62,.25)); }
+.photo-paper.is-scene-mode .photo-frame-overlay { display:none; }
+.photo-paper.is-scene-mode::before { border-color:rgba(255,198,87,.46); }
 .photo-actions { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:27px; }
 .photo-button { min-height:50px; border:1px solid rgba(220,168,79,.62); border-radius:999px; color:#f7d99c; background:rgba(36,15,12,.72); font:600 15px/1 inherit; letter-spacing:.09em; transition:.24s ease; }
 .photo-button:hover:not(:disabled) { transform:translateY(-2px); border-color:#f5cd76; background:rgba(106,35,20,.78); box-shadow:0 8px 26px rgba(222,132,42,.2); }
