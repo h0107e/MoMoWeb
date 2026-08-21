@@ -19,7 +19,20 @@ const resultModelViewer = document.querySelector("#resultModelViewer");
 const resultModelLoading = document.querySelector("#resultModelLoading");
 const resultCollectCard = document.querySelector("#resultCollectCard");
 const resultCollectCardImage = document.querySelector("#resultCollectCardImage");
+const photoVideo = document.querySelector("#photoVideo");
+const photoModelViewer = document.querySelector("#photoModelViewer");
+const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
+const photoPreview = document.querySelector("#photoPreview");
+const photoStatus = document.querySelector("#photoStatus");
+const photoCameraEmpty = document.querySelector("#photoCameraEmpty");
+const photoCountdown = document.querySelector("#photoCountdown");
+const photoPaper = document.querySelector("#photoPaper");
+const capturePhotoButton = document.querySelector("#capturePhoto");
+const retakePhotoButton = document.querySelector("#retakePhoto");
+const downloadPhotoButton = document.querySelector("#downloadPhoto");
 let modelViewerLoader = null;
+let photoStream = null;
+let photoFrameCanvas = null;
 let resultRotationTimer = null;
 let resultCardDockTimer = null;
 let resultModelRevealTimer = null;
@@ -163,6 +176,7 @@ function goTo(name) {
     if (sceneChanged) return;
     sceneChanged = true;
     if (name === "draw" && currentScene === "result") resetDrawState();
+    if (currentScene === "photo" && name !== "photo") stopPhotoCamera();
     app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
@@ -175,6 +189,7 @@ function goTo(name) {
         setTimeout(loadModel, 300);
       }
     }
+    if (name === "photo") preparePhotoScene();
   };
 
   if (name !== "result") {
@@ -628,20 +643,92 @@ if (Number.isInteger(directResultIndex)) {
   requestAnimationFrame(startResultRevealSequence);
 } else {
   const directScene = new URLSearchParams(window.location.search).get("scene");
-  if (["home", "hub", "story", "about", "map", "heritage", "cards"].includes(directScene)) {
+  if (["home", "hub", "story", "about", "map", "heritage", "cards", "photo"].includes(directScene)) {
     app.dataset.scene = directScene;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === directScene));
     currentScene = directScene;
     if (directScene === "hub") loadHubBoxModel().catch(console.error);
+    if (directScene === "photo") preparePhotoScene();
   }
 }
 
-document.querySelector("#collectButton").addEventListener("click", event => {
-  const label = event.currentTarget.querySelector("span");
-  label.textContent = "已收入藏阁";
-  event.currentTarget.querySelector("i").textContent = "✓";
-  setTimeout(() => { label.textContent = "收入藏阁"; event.currentTarget.querySelector("i").textContent = "珍藏"; }, 1800);
-});
+async function buildTransparentPhotoFrame() {
+  if (photoFrameCanvas) return photoFrameCanvas;
+  await photoFrameOverlay.decode().catch(() => {});
+  const canvas = document.createElement("canvas");
+  canvas.width = photoFrameOverlay.naturalWidth || 1177;
+  canvas.height = photoFrameOverlay.naturalHeight || 789;
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  context.drawImage(photoFrameOverlay, 0, 0, canvas.width, canvas.height);
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    const r = imageData.data[i], g = imageData.data[i + 1], b = imageData.data[i + 2];
+    const white = Math.min(r, g, b);
+    if (white > 224 && Math.max(r, g, b) - white < 26) imageData.data[i + 3] = Math.max(0, (244 - white) * 12);
+  }
+  context.putImageData(imageData, 0, 0);
+  photoFrameOverlay.src = canvas.toDataURL("image/png");
+  photoFrameCanvas = canvas;
+  return canvas;
+}
+
+async function preparePhotoScene() {
+  const figure = figures[selected ?? 0];
+  document.querySelector("#photoFigureName").textContent = figure.name;
+  if (!customElements.get("model-viewer")) { modelViewerLoader ??= import("./assets/model-viewer.min.js"); await modelViewerLoader; }
+  photoModelViewer.src = figure.model;
+  photoModelViewer.cameraOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
+  buildTransparentPhotoFrame().catch(console.error);
+}
+
+async function startPhotoCamera() {
+  try {
+    stopPhotoCamera();
+    photoStatus.textContent = "正在请求摄像头权限…";
+    photoStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:"user", width:{ideal:1280}, height:{ideal:720} }, audio:false });
+    photoVideo.srcObject = photoStream;
+    await photoVideo.play();
+    photoCameraEmpty.hidden = true;
+    capturePhotoButton.disabled = false;
+    photoStatus.textContent = "相机已开启，请站到画面中间";
+  } catch (error) {
+    photoStatus.textContent = "未能开启相机，请允许浏览器使用摄像头后重试";
+    console.error(error);
+  }
+}
+
+function stopPhotoCamera() {
+  photoStream?.getTracks().forEach(track => track.stop());
+  photoStream = null;
+  if (photoVideo) photoVideo.srcObject = null;
+}
+
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+async function capturePhoto() {
+  if (!photoStream) return;
+  capturePhotoButton.disabled = true;
+  for (const count of [3,2,1]) { photoCountdown.textContent = count; await wait(650); }
+  photoCountdown.textContent = "";
+  photoPaper.classList.remove("is-flashing"); void photoPaper.offsetWidth; photoPaper.classList.add("is-flashing");
+  const canvas = document.createElement("canvas"); canvas.width = 1412; canvas.height = 947;
+  const context = canvas.getContext("2d");
+  context.save(); context.translate(canvas.width,0); context.scale(-1,1); context.drawImage(photoVideo,0,0,canvas.width,canvas.height); context.restore();
+  try {
+    const blob = photoModelViewer.toBlob ? await photoModelViewer.toBlob({ idealAspect:true }) : null;
+    if (blob) { const image = new Image(); image.src = URL.createObjectURL(blob); await image.decode(); context.drawImage(image, canvas.width*.55, canvas.height*.08, canvas.width*.43, canvas.height*.86); URL.revokeObjectURL(image.src); }
+  } catch (error) { console.warn("模型快照暂不可用", error); }
+  const frame = await buildTransparentPhotoFrame(); context.drawImage(frame,0,0,canvas.width,canvas.height);
+  photoPreview.src = canvas.toDataURL("image/png",1);
+  photoPreview.hidden = false; retakePhotoButton.hidden = false; downloadPhotoButton.hidden = false;
+  capturePhotoButton.hidden = true; photoStatus.textContent = "合影已生成，可下载保存";
+}
+
+document.querySelector("#collectButton").addEventListener("click", () => goTo("photo"));
+document.querySelector("#photoBack").addEventListener("click", () => goTo("result"));
+document.querySelector("#startPhotoCamera").addEventListener("click", startPhotoCamera);
+capturePhotoButton.addEventListener("click", capturePhoto);
+retakePhotoButton.addEventListener("click", () => { photoPreview.hidden=true; retakePhotoButton.hidden=true; downloadPhotoButton.hidden=true; capturePhotoButton.hidden=false; capturePhotoButton.disabled=!photoStream; photoStatus.textContent="已准备好，可以重新拍摄"; });
+downloadPhotoButton.addEventListener("click", () => { const link=document.createElement("a"); link.href=photoPreview.src; link.download=`MOMO-非遗合影-${figures[selected ?? 0].name}.png`; link.click(); });
 
 stage.addEventListener("pointermove", event => {
   const rect = stage.getBoundingClientRect();
