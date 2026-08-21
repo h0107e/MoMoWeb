@@ -33,9 +33,6 @@ const downloadPhotoButton = document.querySelector("#downloadPhoto");
 let modelViewerLoader = null;
 let photoStream = null;
 let photoFrameCanvas = null;
-let photoMode = "frame";
-const photoSceneImage = new Image();
-photoSceneImage.src = "./assets/cloth-tiger-photo-scene.png";
 let resultRotationTimer = null;
 let resultCardDockTimer = null;
 let resultModelRevealTimer = null;
@@ -676,33 +673,12 @@ async function buildTransparentPhotoFrame() {
 }
 
 async function preparePhotoScene() {
-  if (new URLSearchParams(location.search).get("figure") === "tiger") selected = 4;
   const figure = figures[selected ?? 0];
   document.querySelector("#photoFigureName").textContent = figure.name;
   if (!customElements.get("model-viewer")) { modelViewerLoader ??= import("./assets/model-viewer.min.js"); await modelViewerLoader; }
   photoModelViewer.src = figure.model;
   photoModelViewer.cameraOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
   buildTransparentPhotoFrame().catch(console.error);
-  if (new URLSearchParams(location.search).get("mode") === "scene") setPhotoMode("scene");
-}
-
-function setPhotoMode(mode) {
-  photoMode = mode;
-  photoPaper.classList.toggle("is-scene-mode", mode === "scene");
-  document.querySelector("#framePhotoMode").classList.toggle("is-active", mode === "frame");
-  document.querySelector("#scenePhotoMode").classList.toggle("is-active", mode === "scene");
-  if (mode === "scene" && selected !== 4) {
-    selected = 4;
-    document.querySelector("#photoFigureName").textContent = figures[4].name;
-    photoModelViewer.src = figures[4].model;
-    photoModelViewer.cameraOrbit = figures[4].cameraOrbit;
-  }
-  photoPreview.hidden = true;
-  retakePhotoButton.hidden = true;
-  downloadPhotoButton.hidden = true;
-  capturePhotoButton.hidden = false;
-  capturePhotoButton.disabled = !photoStream;
-  photoStatus.textContent = mode === "scene" ? "布老虎古街场景已就位" : "相纸合影模式已就位";
 }
 
 async function startPhotoCamera() {
@@ -736,25 +712,12 @@ async function capturePhoto() {
   photoPaper.classList.remove("is-flashing"); void photoPaper.offsetWidth; photoPaper.classList.add("is-flashing");
   const canvas = document.createElement("canvas"); canvas.width = 1412; canvas.height = 947;
   const context = canvas.getContext("2d");
-  if (photoMode === "scene") {
-    await photoSceneImage.decode().catch(() => {});
-    context.drawImage(photoSceneImage,0,0,canvas.width,canvas.height);
-    context.save();
-    context.beginPath();
-    context.ellipse(canvas.width*.235,canvas.height*.53,canvas.width*.2,canvas.height*.38,0,0,Math.PI*2);
-    context.clip();
-    context.translate(canvas.width*.44,0);
-    context.scale(-1,1);
-    context.drawImage(photoVideo,0,canvas.height*.15,canvas.width*.41,canvas.height*.76);
-    context.restore();
-  } else {
-    context.save(); context.translate(canvas.width,0); context.scale(-1,1); context.drawImage(photoVideo,0,0,canvas.width,canvas.height); context.restore();
-  }
+  context.save(); context.translate(canvas.width,0); context.scale(-1,1); context.drawImage(photoVideo,0,0,canvas.width,canvas.height); context.restore();
   try {
     const blob = photoModelViewer.toBlob ? await photoModelViewer.toBlob({ idealAspect:true }) : null;
     if (blob) { const image = new Image(); image.src = URL.createObjectURL(blob); await image.decode(); context.drawImage(image, canvas.width*.55, canvas.height*.08, canvas.width*.43, canvas.height*.86); URL.revokeObjectURL(image.src); }
   } catch (error) { console.warn("模型快照暂不可用", error); }
-  if (photoMode === "frame") { const frame = await buildTransparentPhotoFrame(); context.drawImage(frame,0,0,canvas.width,canvas.height); }
+  const frame = await buildTransparentPhotoFrame(); context.drawImage(frame,0,0,canvas.width,canvas.height);
   photoPreview.src = canvas.toDataURL("image/png",1);
   photoPreview.hidden = false; retakePhotoButton.hidden = false; downloadPhotoButton.hidden = false;
   capturePhotoButton.hidden = true; photoStatus.textContent = "合影已生成，可下载保存";
@@ -763,8 +726,6 @@ async function capturePhoto() {
 document.querySelector("#collectButton").addEventListener("click", () => goTo("photo"));
 document.querySelector("#photoBack").addEventListener("click", () => goTo("result"));
 document.querySelector("#startPhotoCamera").addEventListener("click", startPhotoCamera);
-document.querySelector("#framePhotoMode").addEventListener("click", () => setPhotoMode("frame"));
-document.querySelector("#scenePhotoMode").addEventListener("click", () => setPhotoMode("scene"));
 capturePhotoButton.addEventListener("click", capturePhoto);
 retakePhotoButton.addEventListener("click", () => { photoPreview.hidden=true; retakePhotoButton.hidden=true; downloadPhotoButton.hidden=true; capturePhotoButton.hidden=false; capturePhotoButton.disabled=!photoStream; photoStatus.textContent="已准备好，可以重新拍摄"; });
 downloadPhotoButton.addEventListener("click", () => { const link=document.createElement("a"); link.href=photoPreview.src; link.download=`MOMO-非遗合影-${figures[selected ?? 0].name}.png`; link.click(); });
