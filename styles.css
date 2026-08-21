@@ -372,9 +372,9 @@ button { font: inherit; color: inherit; }
 .hub-model-slot {
   position: absolute;
   left: 50%;
-  top: 29%;
-  width: 24.5%;
-  height: 46%;
+  top: 23.7%;
+  width: 20.2%;
+  height: 41.5%;
   z-index: 3;
   pointer-events: auto;
   translate: -50% 0;
