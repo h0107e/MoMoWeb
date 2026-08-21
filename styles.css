@@ -464,6 +464,8 @@ button { font: inherit; color: inherit; }
   transform-origin: 50% 100%;
   border: 0;
   outline: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .hub-model-slot model-viewer {
   display: block;
@@ -473,6 +475,8 @@ button { font: inherit; color: inherit; }
   --poster-color: transparent;
   border: 0;
   outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
   filter:
     drop-shadow(0 10px 12px rgba(37, 7, 2, .72))
     drop-shadow(0 0 13px rgba(255, 181, 68, .24));
@@ -480,9 +484,22 @@ button { font: inherit; color: inherit; }
   cursor: grab;
   touch-action: pan-y;
 }
+.hub-model-slot,
+.hub-model-slot:hover,
+.hub-model-slot:active,
 .hub-model-slot:focus,
+.hub-model-slot:focus-visible,
 .hub-model-slot:focus-within,
-.hub-model-slot model-viewer:focus { border: 0; outline: 0 !important; }
+.hub-model-slot model-viewer,
+.hub-model-slot model-viewer:hover,
+.hub-model-slot model-viewer:active,
+.hub-model-slot model-viewer:focus,
+.hub-model-slot model-viewer:focus-visible {
+  border: 0 !important;
+  outline: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
 .hub-model-slot model-viewer:active { cursor: grabbing; }
 .hub-model-slot model-viewer.loaded {
   opacity: 1;
