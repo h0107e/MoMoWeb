@@ -424,32 +424,32 @@ button { font: inherit; color: inherit; }
 .hub-action-bar {
   position: absolute;
   z-index: 8;
-  left: 25%;
-  bottom: 2.15%;
-  width: 50%;
-  height: 9.6%;
+  left: 26.5%;
+  bottom: 2.25%;
+  width: 47%;
+  height: 8.35%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   overflow: visible;
-  border: 1px solid rgba(205, 145, 61, .92);
-  border-radius: 3px;
-  background: linear-gradient(180deg, rgba(123, 39, 20, .86), rgba(70, 18, 13, .91));
-  box-shadow: 0 10px 30px rgba(12, 2, 0, .6), inset 0 1px 0 rgba(255, 222, 151, .2);
-  backdrop-filter: blur(7px) saturate(1.15);
+  border: 1px solid rgba(190, 130, 53, .88);
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(101, 31, 18, .8), rgba(70, 18, 13, .86));
+  box-shadow: 0 8px 22px rgba(12, 2, 0, .5), inset 0 1px 0 rgba(255, 222, 151, .12);
+  backdrop-filter: blur(6px) saturate(1.08);
 }
 .hub-action-bar::before {
   content: "";
   position: absolute;
-  inset: 4px;
+  inset: 3px;
   z-index: 0;
-  border: 1px solid rgba(233, 177, 82, .45);
+  border: 1px solid rgba(229, 170, 74, .36);
   pointer-events: none;
 }
 .hub-corner {
   position: absolute;
   z-index: 3;
-  width: clamp(23px, 2vw, 34px);
-  height: clamp(23px, 2vw, 34px);
+  width: clamp(18px, 1.55vw, 27px);
+  height: clamp(18px, 1.55vw, 27px);
   object-fit: contain;
   opacity: .8;
   pointer-events: none;
@@ -465,21 +465,28 @@ button { font: inherit; color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(10px, 1vw, 18px);
+  gap: clamp(8px, .72vw, 12px);
   min-width: 0;
-  padding: 5px 10px;
+  padding: 4px 10px;
   border: 0;
-  border-right: 1px solid rgba(222, 163, 72, .3);
+  border-right: 1px solid rgba(222, 163, 72, .13);
   color: #f8dca0;
   background: transparent;
   text-align: left;
   transition: translate .24s ease, color .24s ease, background .24s ease, box-shadow .24s ease;
 }
 .hub-action:last-of-type { border-right: 0; }
-.hub-action > img { width: clamp(27px, 2.4vw, 40px); height: auto; flex: 0 0 auto; }
+.hub-action > img { width: clamp(22px, 1.7vw, 29px); height: clamp(22px, 1.7vw, 29px); flex: 0 0 auto; }
 .hub-action span { display: grid; gap: 2px; min-width: 0; }
-.hub-action b { font-size: clamp(14px, 1.3vw, 22px); font-weight: 500; letter-spacing: .08em; white-space: nowrap; }
-.hub-action small { font-family: Georgia, serif; font-size: clamp(7px, .62vw, 10px); letter-spacing: .08em; opacity: .8; white-space: nowrap; }
+.hub-action b { font-size: clamp(13px, 1.13vw, 19px); font-weight: 500; letter-spacing: .08em; white-space: nowrap; }
+.hub-action small {
+  font-family: Georgia, serif;
+  font-size: clamp(6px, .48vw, 8px);
+  line-height: 1;
+  letter-spacing: .06em;
+  opacity: .62;
+  white-space: nowrap;
+}
 .hub-action:hover,
 .hub-action:focus-visible {
   translate: 0 -3px;
@@ -489,16 +496,16 @@ button { font: inherit; color: inherit; }
   outline: none;
 }
 .hub-action-primary {
-  margin: -2px 0;
-  border: 1px solid rgba(255, 211, 126, .92);
+  margin: 5px 4px;
+  border: 1px solid rgba(244, 199, 112, .8);
   color: #fff0c2;
-  background: linear-gradient(180deg, rgba(164, 68, 31, .68), rgba(100, 28, 18, .72));
-  box-shadow: inset 0 0 0 3px rgba(255, 203, 112, .1), 0 0 20px rgba(255, 171, 60, .3), 0 0 44px rgba(255, 134, 35, .12);
+  background: linear-gradient(180deg, rgba(139, 49, 25, .58), rgba(94, 26, 17, .62));
+  box-shadow: inset 0 0 0 2px rgba(255, 203, 112, .07), 0 0 12px rgba(255, 171, 60, .12);
 }
 .hub-action-primary:hover,
 .hub-action-primary:focus-visible {
-  background: linear-gradient(180deg, rgba(190, 83, 36, .88), rgba(111, 29, 18, .86));
-  box-shadow: inset 0 0 0 3px rgba(255, 225, 160, .14), 0 0 25px rgba(255, 185, 69, .48), 0 0 54px rgba(255, 136, 33, .2);
+  background: linear-gradient(180deg, rgba(159, 62, 29, .72), rgba(105, 29, 18, .72));
+  box-shadow: inset 0 0 0 2px rgba(255, 225, 160, .1), 0 0 16px rgba(255, 185, 69, .22);
 }
 
 /* 关于我们：灯火人物志 */
