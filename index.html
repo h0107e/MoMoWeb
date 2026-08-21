@@ -29,7 +29,8 @@
       </section>
 
       <section class="scene scene-hub" data-scene="hub" aria-label="非遗漫游功能导航">
-        <img class="scene-art" src="./assets/hub.png" alt="默默非遗漫游功能导航大厅" />
+        <img class="scene-art hub-stage-art" src="./assets/hub-stage-bg.png" alt="灯火非遗小镇与中央盲盒展台" />
+        <img class="hub-title-lockup" src="./assets/title-original.svg" alt="MOMO 默默·非遗漫游，无声相伴，默默守艺" />
         <div
           class="hub-model-slot"
           id="hubModelSlot"
@@ -53,20 +54,28 @@
             field-of-view="24deg">
           </model-viewer>
         </div>
-        <button class="hub-back icon-button" data-go="home" type="button" aria-label="返回首页">←</button>
-        <nav class="hub-hotspots" aria-label="功能导航">
-          <button class="hub-area hub-story" data-go="story" type="button" aria-label="系列故事"></button>
-          <button class="hub-area hub-heritage" data-go="heritage" type="button" aria-label="九大非遗"></button>
-          <button class="hub-area hub-blindbox" data-hub-action="draw" type="button" aria-label="进入潮玩盲盒"></button>
-          <button class="hub-area hub-card" data-go="cards" type="button" aria-label="收藏卡"></button>
-          <button class="hub-area hub-about" data-go="about" type="button" aria-label="关于我们"></button>
-          <button class="hub-area hub-enter" data-go="map" type="button" aria-label="进入非遗文化数字地图展览"></button>
-          <button class="hub-area hub-journey" data-hub-action="draw" type="button" aria-label="开始盲盒漫游"></button>
-          <button class="hub-area hub-explore" data-go="heritage" type="button" aria-label="探索九大非遗"></button>
-          <button class="hub-area hub-more" data-go="cards" type="button" aria-label="查看更多收藏"></button>
-          <button class="hub-area hub-product" data-hub-action="draw" type="button" aria-label="进入盲盒产品"></button>
+        <button class="hub-about-button" data-go="about" type="button">
+          <img src="./assets/icon-user.svg" alt="" aria-hidden="true" />
+          <span>关于我们</span>
+        </button>
+        <nav class="hub-action-bar" aria-label="功能导航">
+          <img class="hub-corner hub-corner-tl" src="./map/gold-cloud-corner.png" alt="" aria-hidden="true" />
+          <img class="hub-corner hub-corner-tr" src="./map/gold-cloud-corner.png" alt="" aria-hidden="true" />
+          <img class="hub-corner hub-corner-bl" src="./map/gold-cloud-corner.png" alt="" aria-hidden="true" />
+          <img class="hub-corner hub-corner-br" src="./map/gold-cloud-corner.png" alt="" aria-hidden="true" />
+          <button class="hub-action" data-go="map" type="button">
+            <img src="./assets/icon-map.svg" alt="" aria-hidden="true" />
+            <span><b>非遗地图</b><small>HERITAGE MAP</small></span>
+          </button>
+          <button class="hub-action hub-action-primary" data-hub-action="draw" type="button">
+            <img src="./assets/icon-package-open.svg" alt="" aria-hidden="true" />
+            <span><b>开启盲盒</b><small>OPEN BLIND BOX</small></span>
+          </button>
+          <button class="hub-action" data-go="cards" type="button">
+            <img src="./assets/icon-gallery.svg" alt="" aria-hidden="true" />
+            <span><b>收藏卡</b><small>COLLECTION</small></span>
+          </button>
         </nav>
-        <div class="hub-toast" id="hubToast" role="status">点击功能区域，开启非遗漫游</div>
       </section>
 
       <section class="scene scene-story archive-scene" data-scene="story" aria-label="默默系列故事与项目介绍">
