@@ -341,7 +341,45 @@
         </div>
         <div class="result-actions">
           <button class="secondary-button" id="redrawDirect" type="button">再抽一次</button>
-          <button class="primary-button" id="collectButton" type="button"><span>收入藏阁</span><i>珍藏</i></button>
+          <button class="primary-button" id="collectButton" type="button"><span>非遗合影</span><i>拍</i></button>
+        </div>
+      </section>
+
+      <section class="scene scene-photo" data-scene="photo" aria-label="非遗合影照相馆">
+        <img class="scene-art photo-scene-art" src="./assets/result-showcase-bg.png" alt="非遗水乡夜景" />
+        <header class="photo-nav">
+          <button class="icon-button" id="photoBack" type="button" aria-label="返回抽取结果">←</button>
+          <div><b>非遗合影</b><span>HERITAGE PHOTO STUDIO</span></div>
+          <span class="photo-privacy">影像仅在本机生成 · 不上传</span>
+        </header>
+        <div class="photo-layout">
+          <div class="photo-paper" id="photoPaper">
+            <div class="photo-live">
+              <video id="photoVideo" autoplay playsinline muted></video>
+              <div class="photo-camera-empty" id="photoCameraEmpty"><b>举镜入画</b><span>开启摄像头后，与非遗玩偶同框留影</span></div>
+              <model-viewer id="photoModelViewer" alt="合影中的非遗玩偶" interaction-prompt="none" shadow-intensity="1" exposure=".9" camera-orbit="90deg 82deg 2.25m" field-of-view="27deg"></model-viewer>
+              <img class="photo-frame-overlay" id="photoFrameOverlay" src="./assets/photo-frame-temp.jpg" alt="临时相纸边框" />
+              <div class="photo-countdown" id="photoCountdown" aria-live="polite"></div>
+              <div class="photo-flash" aria-hidden="true"></div>
+              <img class="photo-preview" id="photoPreview" alt="合影成片预览" hidden />
+            </div>
+          </div>
+          <aside class="photo-controls">
+            <span class="photo-kicker">MOMO · 留住相遇</span>
+            <h1>与「<em id="photoFigureName">非遗玩偶</em>」合影</h1>
+            <p>站到画面中间，玩偶将陪伴在你身侧。拍摄完成后可直接下载高清相片。</p>
+            <div class="photo-actions">
+              <button class="photo-button photo-button-primary" id="startPhotoCamera" type="button">开启相机</button>
+              <button class="photo-button" id="capturePhoto" type="button" disabled>拍摄合影</button>
+              <button class="photo-button" id="retakePhoto" type="button" hidden>重新拍摄</button>
+              <button class="photo-button" id="downloadPhoto" type="button" hidden>下载相片</button>
+            </div>
+            <p class="photo-status" id="photoStatus">等待开启摄像头</p>
+            <div class="photo-qr-prototype">
+              <div class="photo-qr-grid" aria-hidden="true"></div>
+              <div><b>手机扫码取片</b><span>雏形占位 · 接入临时云存储后启用</span></div>
+            </div>
+          </aside>
         </div>
       </section>
 
