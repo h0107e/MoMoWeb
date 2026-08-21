@@ -371,13 +371,16 @@ button { font: inherit; color: inherit; }
 }
 .hub-model-slot {
   position: absolute;
-  left: 42.1%;
+  left: 50%;
   top: 29%;
-  width: 15.8%;
-  height: 38%;
+  width: 24.5%;
+  height: 46%;
   z-index: 3;
   pointer-events: auto;
+  translate: -50% 0;
   transform-origin: 50% 100%;
+  border: 0;
+  outline: 0;
 }
 .hub-model-slot model-viewer {
   display: block;
@@ -385,7 +388,8 @@ button { font: inherit; color: inherit; }
   height: 100%;
   opacity: 0;
   --poster-color: transparent;
-  outline: none;
+  border: 0;
+  outline: none !important;
   filter:
     drop-shadow(0 10px 12px rgba(37, 7, 2, .72))
     drop-shadow(0 0 13px rgba(255, 181, 68, .24));
@@ -393,6 +397,9 @@ button { font: inherit; color: inherit; }
   cursor: grab;
   touch-action: pan-y;
 }
+.hub-model-slot:focus,
+.hub-model-slot:focus-within,
+.hub-model-slot model-viewer:focus { border: 0; outline: 0 !important; }
 .hub-model-slot model-viewer:active { cursor: grabbing; }
 .hub-model-slot model-viewer.loaded {
   opacity: 1;
