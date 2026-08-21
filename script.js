@@ -153,7 +153,7 @@ let targetPointer = { x: 800, y: 500 };
 let resultFrontOrbit = "0deg 82deg 2.25m";
 
 function goTo(name) {
-  if (name === currentScene || transitioning) return;
+  if ((name === currentScene && name !== "result") || transitioning) return;
   transitioning = true;
   let sceneChanged = false;
   let sceneTimer;
@@ -233,7 +233,7 @@ function goTo(name) {
 
 document.querySelector("#enterJourney").addEventListener("click", () => goTo("hub"));
 document.querySelectorAll("[data-go]").forEach(button => button.addEventListener("click", () => goTo(button.dataset.go)));
-document.querySelectorAll("[data-hub-action='draw']").forEach(button => button.addEventListener("click", () => goTo("draw")));
+document.querySelectorAll("[data-hub-action='draw']").forEach(button => button.addEventListener("click", () => startDirectDraw()));
 document.querySelectorAll(".member-lantern").forEach(button => button.addEventListener("click", () => {
   document.querySelectorAll(".member-lantern").forEach(member => {
     const active = member === button;
@@ -276,10 +276,7 @@ heritageListButtons.forEach(button => {
 });
 
 heritageDrawButton.addEventListener("click", () => {
-  selected = heritageSelection;
-  choiceButtons.forEach((button, index) => button.classList.toggle("is-selected", index === selected));
-  prompt.textContent = `已与「${figures[selected].name}」的灵灯相应`;
-  goTo("draw");
+  startDirectDraw(heritageSelection);
 });
 
 function closeCardViewer() {
@@ -609,6 +606,18 @@ function runDraw() {
 }
 drawButton.addEventListener("click", runDraw);
 
+function startDirectDraw(forcedIndex = null) {
+  if (drawing || transitioning) return;
+  if (currentScene === "result") resetDrawState();
+  drawing = true;
+  selected = Number.isInteger(forcedIndex) ? forcedIndex : Math.floor(Math.random() * figures.length);
+  presentResult(selected);
+  goTo("result");
+  window.setTimeout(() => { drawing = false; }, 900);
+}
+
+document.querySelector("#redrawDirect").addEventListener("click", () => startDirectDraw());
+
 const directResult = new URLSearchParams(window.location.search).get("result");
 const directResultIndex = { lion: 0, opera: 1, porcelain: 2, shadow: 3, qinghua: 5, nisu: 6, fish: 7, tiger: 4, nuoxi: 8 }[directResult];
 if (Number.isInteger(directResultIndex)) {
@@ -619,7 +628,7 @@ if (Number.isInteger(directResultIndex)) {
   requestAnimationFrame(startResultRevealSequence);
 } else {
   const directScene = new URLSearchParams(window.location.search).get("scene");
-  if (["home", "hub", "story", "about", "map", "heritage", "cards", "draw"].includes(directScene)) {
+  if (["home", "hub", "story", "about", "map", "heritage", "cards"].includes(directScene)) {
     app.dataset.scene = directScene;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === directScene));
     currentScene = directScene;
@@ -780,7 +789,7 @@ requestAnimationFrame(drawFx);
 
 window.addEventListener("keydown", event => {
   if (event.key === "Escape") {
-    if (currentScene === "result") goTo("draw");
+    if (currentScene === "result") goTo("hub");
     else if (currentScene === "draw") goTo("hub");
     else if (currentScene === "hub") goTo("home");
   }
