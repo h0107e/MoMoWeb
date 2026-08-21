@@ -432,78 +432,57 @@ button { font: inherit; color: inherit; }
 .hub-action-bar {
   position: absolute;
   z-index: 8;
-  left: 24.2%;
-  bottom: 1.15%;
-  width: 51.6%;
-  height: 14.1%;
+  left: 21.5%;
+  bottom: .65%;
+  width: 57%;
+  height: auto;
+  aspect-ratio: 1797 / 357;
   display: grid;
-  grid-template-columns: 1fr 1.08fr 1fr;
-  align-items: end;
-  gap: clamp(26px, 2.5vw, 46px);
+  grid-template-columns: 29% 42% 29%;
+  align-items: stretch;
+  gap: 0;
   overflow: visible;
   pointer-events: none;
 }
 .hub-action-bar::before {
-  content: "";
+  content: none;
+}
+.hub-action-art {
   position: absolute;
-  left: 7%;
-  right: 7%;
-  bottom: 30%;
-  height: 28%;
+  inset: 0;
   z-index: 1;
-  border-top: 1px solid rgba(232, 175, 85, .5);
-  border-radius: 50% 50% 0 0;
-  filter: drop-shadow(0 0 5px rgba(255, 181, 65, .34));
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   pointer-events: none;
+  transition: filter .25s ease;
 }
 .hub-action {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  justify-self: center;
-  gap: clamp(2px, .22vw, 4px);
-  width: 82%;
-  height: 82%;
+  display: block;
+  width: 100%;
+  height: 100%;
   min-width: 0;
-  padding: clamp(8px, .65vw, 12px) 12px;
-  border: 1px solid rgba(221, 161, 72, .88);
+  padding: 0;
+  border: 0;
   border-radius: 50%;
-  color: #f8dca0;
-  background:
-    radial-gradient(ellipse at 50% 18%, rgba(178, 72, 35, .72), transparent 48%),
-    linear-gradient(180deg, rgba(107, 34, 22, .96), rgba(52, 15, 14, .97));
-  box-shadow: 0 10px 20px rgba(12, 2, 0, .52), inset 0 1px 0 rgba(255, 225, 164, .22), inset 0 -8px 18px rgba(26, 4, 3, .34);
-  backdrop-filter: blur(6px) saturate(1.08);
-  text-align: center;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
   pointer-events: auto;
   transition: transform .26s ease, color .24s ease, border-color .24s ease, background .24s ease, box-shadow .24s ease;
 }
 .hub-action::before {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border: 1px solid rgba(243, 195, 105, .54);
-  border-radius: inherit;
-  pointer-events: none;
+  content: none;
 }
 .hub-action::after {
-  content: "";
-  position: absolute;
-  left: 20%;
-  right: 20%;
-  bottom: -9%;
-  height: 9%;
-  border-radius: 50%;
-  background: rgba(247, 174, 65, .22);
-  filter: blur(7px);
-  opacity: .62;
-  pointer-events: none;
+  content: none;
 }
-.hub-action > img { width: clamp(20px, 1.35vw, 25px); height: clamp(20px, 1.35vw, 25px); flex: 0 0 auto; }
-.hub-action span { display: grid; gap: 2px; min-width: 0; }
+.hub-action > img,
+.hub-action span { opacity: 0; pointer-events: none; }
+.hub-action > img { width: 1px; height: 1px; }
+.hub-action span { display: block; }
 .hub-action b { font-size: clamp(13px, 1.02vw, 18px); font-weight: 500; letter-spacing: .1em; white-space: nowrap; }
 .hub-action small {
   font-family: Georgia, serif;
@@ -515,31 +494,19 @@ button { font: inherit; color: inherit; }
 }
 .hub-action:hover,
 .hub-action:focus-visible {
-  transform: translateY(-4px);
-  color: #fff0c2;
-  border-color: #f7d389;
-  background:
-    radial-gradient(ellipse at 50% 18%, rgba(210, 96, 45, .8), transparent 50%),
-    linear-gradient(180deg, rgba(126, 41, 25, .98), rgba(62, 18, 15, .98));
-  box-shadow: 0 12px 24px rgba(12, 2, 0, .58), 0 0 16px rgba(255, 182, 67, .2), inset 0 1px 0 rgba(255, 231, 174, .25);
+  transform: translateY(-2px);
+  background: rgba(255, 195, 88, .025);
+  box-shadow: 0 0 22px rgba(255, 183, 62, .16);
   outline: none;
 }
 .hub-action-primary {
-  width: 96%;
+  width: 100%;
   height: 100%;
-  border-color: rgba(250, 206, 117, .98);
-  color: #fff0c2;
-  background:
-    radial-gradient(ellipse at 50% 12%, rgba(225, 112, 49, .84), transparent 52%),
-    linear-gradient(180deg, rgba(139, 47, 25, .98), rgba(72, 20, 15, .98));
-  box-shadow: 0 12px 26px rgba(12, 2, 0, .58), 0 0 22px rgba(255, 176, 55, .3), inset 0 1px 0 rgba(255, 237, 191, .3), inset 0 -10px 20px rgba(39, 7, 4, .28);
 }
 .hub-action-primary:hover,
 .hub-action-primary:focus-visible {
-  background:
-    radial-gradient(ellipse at 50% 12%, rgba(240, 132, 59, .9), transparent 52%),
-    linear-gradient(180deg, rgba(153, 56, 27, .99), rgba(79, 22, 15, .99));
-  box-shadow: 0 15px 30px rgba(12, 2, 0, .62), 0 0 28px rgba(255, 190, 72, .4), inset 0 1px 0 rgba(255, 241, 202, .34);
+  background: rgba(255, 195, 88, .035);
+  box-shadow: 0 0 28px rgba(255, 188, 68, .2);
 }
 
 /* 关于我们：灯火人物志 */
