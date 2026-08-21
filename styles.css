@@ -455,9 +455,9 @@ button { font: inherit; color: inherit; }
 .hub-model-slot {
   position: absolute;
   left: 50%;
-  top: 27.2%;
-  width: 20.2%;
-  height: 41.5%;
+  top: 19.4%;
+  width: 34%;
+  height: 57%;
   z-index: 3;
   pointer-events: auto;
   translate: -50% 0;
@@ -466,6 +466,7 @@ button { font: inherit; color: inherit; }
   outline: 0;
   background: transparent;
   box-shadow: none;
+  overflow: visible;
 }
 .hub-model-slot model-viewer {
   display: block;
