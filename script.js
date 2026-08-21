@@ -21,6 +21,7 @@ const resultCollectCard = document.querySelector("#resultCollectCard");
 const resultCollectCardImage = document.querySelector("#resultCollectCardImage");
 const photoVideo = document.querySelector("#photoVideo");
 const photoModelViewer = document.querySelector("#photoModelViewer");
+const photoCharacterCutout = document.querySelector("#photoCharacterCutout");
 const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
 const photoPreview = document.querySelector("#photoPreview");
 const photoStatus = document.querySelector("#photoStatus");
@@ -33,6 +34,7 @@ const downloadPhotoButton = document.querySelector("#downloadPhoto");
 let modelViewerLoader = null;
 let photoStream = null;
 let photoFrameCanvas = null;
+let photoCharacterCanvas = null;
 let resultRotationTimer = null;
 let resultCardDockTimer = null;
 let resultModelRevealTimer = null;
@@ -673,12 +675,46 @@ async function buildTransparentPhotoFrame() {
 }
 
 async function preparePhotoScene() {
+  if (new URLSearchParams(location.search).get("figure") === "tiger") selected = 4;
   const figure = figures[selected ?? 0];
   document.querySelector("#photoFigureName").textContent = figure.name;
   if (!customElements.get("model-viewer")) { modelViewerLoader ??= import("./assets/model-viewer.min.js"); await modelViewerLoader; }
-  photoModelViewer.src = figure.model;
-  photoModelViewer.cameraOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
+  const useFlatTiger = (selected ?? 0) === 4;
+  photoModelViewer.hidden = useFlatTiger;
+  photoCharacterCutout.hidden = !useFlatTiger;
+  if (useFlatTiger) {
+    await buildTransparentTigerCutout();
+  } else {
+    photoModelViewer.src = figure.model;
+    photoModelViewer.cameraOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
+  }
   buildTransparentPhotoFrame().catch(console.error);
+}
+
+async function buildTransparentTigerCutout() {
+  if (photoCharacterCanvas) return photoCharacterCanvas;
+  await photoCharacterCutout.decode().catch(() => {});
+  const canvas = document.createElement("canvas");
+  canvas.width = photoCharacterCutout.naturalWidth;
+  canvas.height = photoCharacterCutout.naturalHeight;
+  const context = canvas.getContext("2d", { willReadFrequently:true });
+  context.drawImage(photoCharacterCutout,0,0);
+  const imageData = context.getImageData(0,0,canvas.width,canvas.height);
+  const data = imageData.data, width=canvas.width, height=canvas.height;
+  const seen = new Uint8Array(width*height), queue = new Int32Array(width*height);
+  let head=0, tail=0;
+  const add = index => {
+    if (seen[index]) return;
+    const offset=index*4, r=data[offset], g=data[offset+1], b=data[offset+2];
+    if (Math.min(r,g,b)>218 && Math.max(r,g,b)-Math.min(r,g,b)<28) { seen[index]=1; queue[tail++]=index; }
+  };
+  for(let x=0;x<width;x++){add(x);add((height-1)*width+x);}
+  for(let y=0;y<height;y++){add(y*width);add(y*width+width-1);}
+  while(head<tail){ const index=queue[head++], x=index%width, y=(index/width)|0; data[index*4+3]=0; if(x)add(index-1); if(x<width-1)add(index+1); if(y)add(index-width); if(y<height-1)add(index+width); }
+  context.putImageData(imageData,0,0);
+  photoCharacterCutout.src=canvas.toDataURL("image/png");
+  photoCharacterCanvas=canvas;
+  return canvas;
 }
 
 async function startPhotoCamera() {
@@ -714,8 +750,12 @@ async function capturePhoto() {
   const context = canvas.getContext("2d");
   context.save(); context.translate(canvas.width,0); context.scale(-1,1); context.drawImage(photoVideo,0,0,canvas.width,canvas.height); context.restore();
   try {
-    const blob = photoModelViewer.toBlob ? await photoModelViewer.toBlob({ idealAspect:true }) : null;
-    if (blob) { const image = new Image(); image.src = URL.createObjectURL(blob); await image.decode(); context.drawImage(image, canvas.width*.55, canvas.height*.08, canvas.width*.43, canvas.height*.86); URL.revokeObjectURL(image.src); }
+    if ((selected ?? 0) === 4) {
+      const cutout=await buildTransparentTigerCutout(); context.drawImage(cutout,canvas.width*.56,canvas.height*.08,canvas.width*.4,canvas.height*.86);
+    } else {
+      const blob = photoModelViewer.toBlob ? await photoModelViewer.toBlob({ idealAspect:true }) : null;
+      if (blob) { const image = new Image(); image.src = URL.createObjectURL(blob); await image.decode(); context.drawImage(image, canvas.width*.55, canvas.height*.08, canvas.width*.43, canvas.height*.86); URL.revokeObjectURL(image.src); }
+    }
   } catch (error) { console.warn("模型快照暂不可用", error); }
   const frame = await buildTransparentPhotoFrame(); context.drawImage(frame,0,0,canvas.width,canvas.height);
   photoPreview.src = canvas.toDataURL("image/png",1);
