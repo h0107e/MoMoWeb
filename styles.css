@@ -44,7 +44,15 @@ button { font: inherit; color: inherit; }
 
 #app[data-scene="home"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="hub"] { --backdrop-image: url("./assets/hub-stage-bg.png"); }
-#app[data-scene="hub"] .stage { --stage-ratio: 1.7768331562; }
+#app[data-scene="hub"]::before { display: none; }
+#app[data-scene="hub"] .stage {
+  width: 100vw;
+  height: 100dvh;
+  aspect-ratio: auto;
+  flex: none;
+  box-shadow: none;
+  transform: none;
+}
 #app[data-scene="story"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="about"] { --backdrop-image: url("./assets/home-bg.png"); }
 #app[data-scene="about"] .stage { --stage-ratio: 1.7882352941; }
