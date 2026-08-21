@@ -1,41 +1,23 @@
-# Design QA — 关于我们 / 灯火人物志
+# 第二页功能导航视觉验收
 
-- Source visual truth: `D:\MoMoGPT\about-page-v59-no-labels.png` plus the requirement that all visible copy remain editable HTML text
-- Implementation screenshot: `D:\MoMoGPT\about-page-v61-reference-ratio.png`
-- Responsive screenshot: `D:\MoMoGPT\about-page-v61-ratio-fixed.png`
-- Combined comparison: `D:\MoMoGPT\about-design-comparison-v61.png`
-- State: `?scene=about&v=61`, default unselected state
-- Viewport: 1920 × 1080 CSS px and 1366 × 768 CSS px
-- Source pixels: 1672 × 935; implementation pixels: 1920 × 1080; device scale factor: 1
-- Normalization: source and implementation were both fitted to 960 × 540 in the combined comparison; full-size originals were separately inspected for text clarity.
+## 验收范围
 
-## Findings
+- 参考图：`codex-clipboard-fafc676d-4129-4956-8e8a-87a428bf325e.png`
+- 页面：`?scene=hub`
+- 重点：背景、标题、中央模型、右上“关于我们”、底部三栏操作栏及交互状态
 
-- No actionable P0/P1/P2 differences remain.
-- Typography: title, slogan, member names and roles preserve the source's warm-gold hierarchy; small copy remains readable at both tested viewports.
-- Spacing and layout: five member lanterns remain inside the orbit and do not overlap persistent navigation or the philosophy row. The selected member is visually dominant.
-- Colors and tokens: dark-blue/black night field, warm gold, amber glow and restrained cinnabar-brown match the selected direction.
-- Image quality: the text-free high-resolution illustration preserves the portraits, lantern structure, orbit light and philosophy stones; no generated typography remains in the background.
-- Copy: title, slogan, central identity, all five supplied names and responsibilities, interaction hint and philosophy copy are exact editable HTML text.
+## 实际检查
 
-## Interaction and runtime checks
+- [x] 1672 × 941：画面比例与参考图一致，背景无裁切错位
+- [x] 1366 × 768：标题、模型、操作栏均保持在安全区域内
+- [x] 标题使用透明项目字标，未带入棋盘格底色
+- [x] 操作栏为三栏等宽，深朱红半透明渐变、双层暗金描边与四角装饰完整
+- [x] 中间“开启盲盒”具有独立发光描边
+- [x] “非遗地图”“收藏卡”“关于我们”均保留真实跳转
+- [x] “开启盲盒”继续调用直接抽取流程
+- [x] 鼠标悬停与键盘聚焦均有提亮、轻微上移反馈
+- [x] 构建、脚本语法和差异格式检查通过
 
-- Production build completed successfully.
-- `script.js` passed syntax validation.
-- Direct route `?scene=about` rendered successfully in Edge at both viewports.
-- Five semantic member buttons are present; selected state uses `aria-pressed`, updates through the shared click handler and exposes hover/focus/gesture-dwell highlight states.
-- Back navigation and hub “关于我们” entry use the existing `data-go` navigation system.
-- No page-breaking browser output was observed during screenshot capture.
+## 最终结果
 
-## Comparison history
-
-1. Initial implementation: the selected mockup was used as one flattened image, leaving generated text errors and only transparent hotspots (P1).
-2. Fix: created a text-free visual layer, moved every visible label into HTML, and made the five member regions real semantic controls with active states.
-3. A browser-ratio check found that the global 1.65:1 stage distorted the 1.79:1 reference composition (P1). The About scene now owns a 1.7882352941 ratio, the default selected glow was removed, and the full “返回首页” control was restored.
-4. Post-fix evidence: `about-design-comparison-v61.png` shows aligned composition; `about-page-v61-ratio-fixed.png` confirms the reference ratio remains intact in the user's taller browser viewport.
-
-## Follow-up polish
-
-- P3: real team photos can later replace the current silhouettes if desired.
-
-final result: passed
+通过。第二页已按参考图的视觉层级重构为可交互页面，而非整张静态图片覆盖。
