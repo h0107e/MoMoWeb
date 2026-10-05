@@ -1,8 +1,6 @@
 const stage = document.querySelector("#stage");
 const app = document.querySelector("#app");
 const scenes = [...document.querySelectorAll(".scene")];
-const veil = document.querySelector(".transition-veil");
-const transitionVideo = document.querySelector("#transitionVideo");
 const cursor = document.querySelector("#lanternCursor");
 const light = document.querySelector("#lightSource");
 const canvas = document.querySelector("#fxCanvas");
@@ -21,7 +19,6 @@ const resultCollectCard = document.querySelector("#resultCollectCard");
 const resultCollectCardImage = document.querySelector("#resultCollectCardImage");
 const photoVideo = document.querySelector("#photoVideo");
 const photoModelViewer = document.querySelector("#photoModelViewer");
-const photoCharacterCutout = document.querySelector("#photoCharacterCutout");
 const photoFrameOverlay = document.querySelector("#photoFrameOverlay");
 const photoPreview = document.querySelector("#photoPreview");
 const photoStatus = document.querySelector("#photoStatus");
@@ -30,14 +27,19 @@ const photoCountdown = document.querySelector("#photoCountdown");
 const photoPaper = document.querySelector("#photoPaper");
 const capturePhotoButton = document.querySelector("#capturePhoto");
 const retakePhotoButton = document.querySelector("#retakePhoto");
-const downloadPhotoButton = document.querySelector("#downloadPhoto");
 let modelViewerLoader = null;
 let photoStream = null;
 let photoFrameCanvas = null;
-let photoCharacterCanvas = null;
 let resultRotationTimer = null;
 let resultCardDockTimer = null;
 let resultModelRevealTimer = null;
+let hubBoxOpenTimer = null;
+let hubBoxOpening = false;
+let hubBoxSwayFrame = null;
+let hubBoxSwayTime = 0;
+let hubBoxSwayLastTime = 0;
+let hubBoxInteractionUntil = 0;
+const hubBoxReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
 const figures = [
   {
@@ -142,9 +144,6 @@ const heritageName = document.querySelector("#heritageName");
 const heritageDescription = document.querySelector("#heritageDescription");
 const heritageStatus = document.querySelector("#heritageStatus");
 const heritageDrawButton = document.querySelector("#heritageDrawButton");
-const cardViewer = document.querySelector("#cardViewer");
-const cardViewerImage = document.querySelector("#cardViewerImage");
-const cardViewerName = document.querySelector("#cardViewerName");
 const cardGallery = document.querySelector("#cardGallery");
 const orbitCards = [...document.querySelectorAll("#cardGallery .orbit-card")];
 const cardOrbitName = document.querySelector("#cardOrbitName");
@@ -167,12 +166,10 @@ let pointer = { x: 800, y: 500 };
 let targetPointer = { x: 800, y: 500 };
 let resultFrontOrbit = "0deg 82deg 2.25m";
 
-function goTo(name) {
+function goTo(name, options = {}) {
   if ((name === currentScene && name !== "result") || transitioning) return;
   transitioning = true;
   let sceneChanged = false;
-  let sceneTimer;
-  let finishTimer;
 
   const changeScene = () => {
     if (sceneChanged) return;
@@ -182,21 +179,20 @@ function goTo(name) {
     app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
-    if (name !== "cards") closeCardViewer();
+    if (name !== "hub") stopHubBoxSway();
     if (name === "hub") {
-      const loadModel = () => loadHubBoxModel().catch(console.error);
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(loadModel, { timeout: 900 });
-      } else {
-        setTimeout(loadModel, 300);
-      }
+      resetHubBoxLid();
+      loadHubBoxModel().catch(console.error);
     }
     if (name === "photo") preparePhotoScene();
   };
 
-  if (name !== "result") {
+  {
     changeScene();
     transitioning = false;
+    if (name === "result") {
+      requestAnimationFrame(startResultRevealSequence);
+    }
     if (queuedDraw && currentScene === "draw") {
       queuedDraw = false;
       runDraw();
@@ -204,48 +200,6 @@ function goTo(name) {
     return;
   }
 
-  const finishTransition = () => {
-    changeScene();
-    clearTimeout(sceneTimer);
-    clearTimeout(finishTimer);
-    transitionVideo.removeEventListener("ended", finishTransition);
-    transitionVideo.pause();
-    veil.classList.remove("is-running", "is-fallback");
-    veil.style.removeProperty("pointer-events");
-    transitioning = false;
-    if (currentScene === "result") {
-      startResultRevealSequence();
-    }
-    if (queuedDraw && currentScene === "draw") {
-      queuedDraw = false;
-      runDraw();
-    }
-  };
-
-  const useFallback = () => {
-    veil.classList.add("is-fallback");
-    clearTimeout(sceneTimer);
-    clearTimeout(finishTimer);
-    sceneTimer = setTimeout(changeScene, 585);
-    finishTimer = setTimeout(finishTransition, 1380);
-  };
-
-  veil.style.removeProperty("pointer-events");
-  veil.classList.remove("is-running", "is-fallback");
-  void veil.offsetWidth;
-  veil.classList.add("is-running");
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    useFallback();
-    return;
-  }
-
-  transitionVideo.pause();
-  transitionVideo.currentTime = 0;
-  sceneTimer = setTimeout(changeScene, 1450);
-  finishTimer = setTimeout(finishTransition, 3600);
-  transitionVideo.addEventListener("ended", finishTransition, { once: true });
-  transitionVideo.play().catch(useFallback);
 }
 
 document.querySelector("#enterJourney").addEventListener("click", () => goTo("hub"));
@@ -296,22 +250,6 @@ heritageDrawButton.addEventListener("click", () => {
   startDirectDraw(heritageSelection);
 });
 
-function closeCardViewer() {
-  cardViewer.hidden = true;
-  cardViewer.setAttribute("aria-hidden", "true");
-  cardViewer.classList.remove("is-open");
-}
-
-function openCardViewer(button) {
-  if (!button.dataset.card) return;
-  cardViewerImage.src = button.dataset.card;
-  cardViewerImage.alt = `${button.dataset.name}非遗收藏卡大图`;
-  cardViewerName.textContent = `${button.dataset.name} · HERITAGE CARD`;
-  cardViewer.hidden = false;
-  cardViewer.setAttribute("aria-hidden", "false");
-  requestAnimationFrame(() => cardViewer.classList.add("is-open"));
-}
-
 function layoutCardOrbit() {
   const count = orbitCards.length;
   cardOrbitIndex = ((Math.round(cardOrbitPosition) % count) + count) % count;
@@ -320,9 +258,10 @@ function layoutCardOrbit() {
     if (relativeIndex > count / 2) relativeIndex -= count;
     const angle = relativeIndex * Math.PI * 2 / count;
     const depth = (Math.cos(angle) + 1) / 2;
-    const x = Math.sin(angle) * 34;
+    const x = Math.sin(angle) * 32;
     const y = -(1 - depth) * 17;
-    const scale = .56 + depth * .76;
+    // Gentle emphasis at the front, rather than a dramatically enlarged card.
+    const scale = .74 + depth * .24 + Math.pow(depth, 10) * .14;
     const rotateY = -Math.sin(angle) * 28;
 
     card.style.left = `${50 + x}%`;
@@ -359,7 +298,6 @@ orbitCards.forEach((button, index) => {
       layoutCardOrbit();
       return;
     }
-    openCardViewer(button);
   });
 });
 document.querySelector("#cardOrbitPrev").addEventListener("click", () => rotateCardOrbit(-1));
@@ -406,7 +344,7 @@ cardGallery.addEventListener("keydown", event => {
 
 window.addEventListener("momo-gesture-palm", event => {
   const { active, clientX, clientY, now } = event.detail;
-  if (!active || currentScene !== "cards" || cardViewer.classList.contains("is-open")) {
+  if (!active || currentScene !== "cards") {
     if (gestureOrbitX != null) snapCardOrbit();
     gestureOrbitX = null;
     cardOrbitShell.classList.remove("is-palm-moving");
@@ -425,10 +363,6 @@ window.addEventListener("momo-gesture-palm", event => {
   layoutCardOrbit();
 });
 
-document.querySelector("#cardViewerClose").addEventListener("click", closeCardViewer);
-cardViewer.addEventListener("click", event => {
-  if (event.target === cardViewer) closeCardViewer();
-});
 layoutCardOrbit();
 
 async function loadHubBoxModel() {
@@ -441,7 +375,88 @@ async function loadHubBoxModel() {
   }
 }
 
-hubBoxViewer.addEventListener("load", () => hubBoxViewer.classList.add("loaded"));
+function stopHubBoxSway() {
+  cancelAnimationFrame(hubBoxSwayFrame);
+  hubBoxSwayFrame = null;
+  hubBoxSwayLastTime = 0;
+}
+
+function startHubBoxSway() {
+  stopHubBoxSway();
+  if (hubBoxReducedMotion.matches || currentScene !== "hub" || hubBoxOpening || !hubBoxViewer.classList.contains("loaded")) return;
+  const sway = now => {
+    if (currentScene !== "hub" || hubBoxOpening || hubBoxReducedMotion.matches) {
+      stopHubBoxSway();
+      return;
+    }
+    const elapsed = hubBoxSwayLastTime ? Math.min(now - hubBoxSwayLastTime, 50) : 0;
+    hubBoxSwayLastTime = now;
+    if (!document.hidden && now > hubBoxInteractionUntil) {
+      hubBoxSwayTime += elapsed;
+      const phase = hubBoxSwayTime / 14000 * Math.PI * 2;
+      // Orbit the real 3D model without changing its framing or apparent scale.
+      hubBoxViewer.cameraOrbit = `${-30 + 6 * Math.sin(phase)}deg 72deg 6m`;
+    }
+    hubBoxSwayFrame = requestAnimationFrame(sway);
+  };
+  hubBoxSwayFrame = requestAnimationFrame(sway);
+}
+
+hubBoxViewer.addEventListener("pointerdown", () => { hubBoxInteractionUntil = Infinity; });
+window.addEventListener("pointerup", () => { hubBoxInteractionUntil = performance.now() + 2200; });
+window.addEventListener("pointercancel", () => { hubBoxInteractionUntil = performance.now() + 2200; });
+hubBoxReducedMotion.addEventListener("change", startHubBoxSway);
+
+function resetHubBoxLid() {
+  clearTimeout(hubBoxOpenTimer);
+  hubBoxOpening = false;
+  hubBoxViewer.pause?.();
+  if (hubBoxViewer.classList.contains("loaded")) hubBoxViewer.currentTime = 0;
+  hubBoxViewer.classList.remove("is-opening", "is-open");
+  hubBoxSwayTime = 0;
+  hubBoxViewer.cameraOrbit = "-30deg 72deg 6m";
+  startHubBoxSway();
+  document.querySelectorAll("[data-hub-action='draw']").forEach(button => {
+    button.disabled = false;
+    button.removeAttribute("aria-busy");
+  });
+}
+
+hubBoxViewer.addEventListener("load", () => {
+  hubBoxViewer.classList.add("loaded");
+  resetHubBoxLid();
+});
+
+// Prepare the box on the landing page, before the visitor enters the journey.
+loadHubBoxModel().catch(console.error);
+
+function playHubBoxOpening(onComplete) {
+  if (hubBoxOpening) return;
+
+  hubBoxOpening = true;
+  stopHubBoxSway();
+  document.querySelectorAll("[data-hub-action='draw']").forEach(button => {
+    button.disabled = true;
+    button.setAttribute("aria-busy", "true");
+  });
+  hubBoxViewer.classList.add("is-opening");
+  hubBoxViewer.pause?.();
+  hubBoxViewer.currentTime = 0;
+
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    clearTimeout(hubBoxOpenTimer);
+    hubBoxViewer.pause?.();
+    hubBoxViewer.classList.remove("is-opening");
+    hubBoxViewer.classList.add("is-open");
+    hubBoxOpenTimer = setTimeout(onComplete, 220);
+  };
+
+  hubBoxViewer.play?.({ repetitions: 1 });
+  hubBoxOpenTimer = setTimeout(finish, 1420);
+}
 
 function holdResultModelFront() {
   clearTimeout(resultRotationTimer);
@@ -628,9 +643,16 @@ function startDirectDraw(forcedIndex = null) {
   if (currentScene === "result") resetDrawState();
   drawing = true;
   selected = Number.isInteger(forcedIndex) ? forcedIndex : Math.floor(Math.random() * figures.length);
-  presentResult(selected);
-  goTo("result");
-  window.setTimeout(() => { drawing = false; }, 900);
+  const showResult = () => {
+    presentResult(selected);
+    goTo("result", { skipTransition: true });
+    window.setTimeout(() => { drawing = false; }, 900);
+  };
+  if (currentScene === "hub") {
+    playHubBoxOpening(showResult);
+  } else {
+    showResult();
+  }
 }
 
 document.querySelector("#redrawDirect").addEventListener("click", () => startDirectDraw());
@@ -656,65 +678,32 @@ if (Number.isInteger(directResultIndex)) {
 
 async function buildTransparentPhotoFrame() {
   if (photoFrameCanvas) return photoFrameCanvas;
-  await photoFrameOverlay.decode().catch(() => {});
+  await photoFrameOverlay.decode();
   const canvas = document.createElement("canvas");
-  canvas.width = photoFrameOverlay.naturalWidth || 1177;
-  canvas.height = photoFrameOverlay.naturalHeight || 789;
-  const context = canvas.getContext("2d", { willReadFrequently: true });
-  context.drawImage(photoFrameOverlay, 0, 0, canvas.width, canvas.height);
-  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    const r = imageData.data[i], g = imageData.data[i + 1], b = imageData.data[i + 2];
-    const white = Math.min(r, g, b);
-    if (white > 224 && Math.max(r, g, b) - white < 26) imageData.data[i + 3] = Math.max(0, (244 - white) * 12);
-  }
-  context.putImageData(imageData, 0, 0);
-  photoFrameOverlay.src = canvas.toDataURL("image/png");
+  // Match the preview crop: remove only the PNG's transparent outer margin.
+  const crop = { x:43, y:52, width:1582, height:849 };
+  canvas.width = crop.width;
+  canvas.height = crop.height;
+  const context = canvas.getContext("2d");
+  context.drawImage(photoFrameOverlay, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
   photoFrameCanvas = canvas;
   return canvas;
 }
 
 async function preparePhotoScene() {
+  photoPaper.closest(".scene-photo").classList.remove("is-photo-display");
+  photoPreview.hidden = true;
+  retakePhotoButton.hidden = true;
+  capturePhotoButton.hidden = false;
+  capturePhotoButton.disabled = !photoStream;
   if (new URLSearchParams(location.search).get("figure") === "tiger") selected = 4;
   const figure = figures[selected ?? 0];
   document.querySelector("#photoFigureName").textContent = figure.name;
   if (!customElements.get("model-viewer")) { modelViewerLoader ??= import("./assets/model-viewer.min.js"); await modelViewerLoader; }
-  const useFlatTiger = (selected ?? 0) === 4;
-  photoModelViewer.hidden = useFlatTiger;
-  photoCharacterCutout.hidden = !useFlatTiger;
-  if (useFlatTiger) {
-    await buildTransparentTigerCutout();
-  } else {
-    photoModelViewer.src = figure.model;
-    photoModelViewer.cameraOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
-  }
+  photoModelViewer.hidden = false;
+  photoModelViewer.src = figure.model;
+  photoModelViewer.cameraOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
   buildTransparentPhotoFrame().catch(console.error);
-}
-
-async function buildTransparentTigerCutout() {
-  if (photoCharacterCanvas) return photoCharacterCanvas;
-  await photoCharacterCutout.decode().catch(() => {});
-  const canvas = document.createElement("canvas");
-  canvas.width = photoCharacterCutout.naturalWidth;
-  canvas.height = photoCharacterCutout.naturalHeight;
-  const context = canvas.getContext("2d", { willReadFrequently:true });
-  context.drawImage(photoCharacterCutout,0,0);
-  const imageData = context.getImageData(0,0,canvas.width,canvas.height);
-  const data = imageData.data, width=canvas.width, height=canvas.height;
-  const seen = new Uint8Array(width*height), queue = new Int32Array(width*height);
-  let head=0, tail=0;
-  const add = index => {
-    if (seen[index]) return;
-    const offset=index*4, r=data[offset], g=data[offset+1], b=data[offset+2];
-    if (Math.min(r,g,b)>218 && Math.max(r,g,b)-Math.min(r,g,b)<28) { seen[index]=1; queue[tail++]=index; }
-  };
-  for(let x=0;x<width;x++){add(x);add((height-1)*width+x);}
-  for(let y=0;y<height;y++){add(y*width);add(y*width+width-1);}
-  while(head<tail){ const index=queue[head++], x=index%width, y=(index/width)|0; data[index*4+3]=0; if(x)add(index-1); if(x<width-1)add(index+1); if(y)add(index-width); if(y<height-1)add(index+width); }
-  context.putImageData(imageData,0,0);
-  photoCharacterCutout.src=canvas.toDataURL("image/png");
-  photoCharacterCanvas=canvas;
-  return canvas;
 }
 
 async function startPhotoCamera() {
@@ -740,35 +729,69 @@ function stopPhotoCamera() {
 }
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+function drawPhotoLayer(context, source, box, fit = "contain", bottomAligned = false) {
+  const width = source.videoWidth || source.naturalWidth || source.width;
+  const height = source.videoHeight || source.naturalHeight || source.height;
+  if (!width || !height) return;
+  const scale = fit === "cover" ? Math.max(box.width/width,box.height/height) : Math.min(box.width/width,box.height/height);
+  const drawnWidth = width*scale, drawnHeight = height*scale;
+  const x = box.x+(box.width-drawnWidth)/2;
+  const y = box.y+(bottomAligned ? box.height-drawnHeight : (box.height-drawnHeight)/2);
+  context.drawImage(source,x,y,drawnWidth,drawnHeight);
+}
+
+function photoLayerBox(element, canvas) {
+  const live = photoPaper.querySelector(".photo-live").getBoundingClientRect();
+  const layer = element.getBoundingClientRect();
+  return { x:(layer.left-live.left)/live.width*canvas.width, y:(layer.top-live.top)/live.height*canvas.height,
+    width:layer.width/live.width*canvas.width, height:layer.height/live.height*canvas.height };
+}
+
 async function capturePhoto() {
   if (!photoStream) return;
   capturePhotoButton.disabled = true;
   for (const count of [3,2,1]) { photoCountdown.textContent = count; await wait(650); }
   photoCountdown.textContent = "";
   photoPaper.classList.remove("is-flashing"); void photoPaper.offsetWidth; photoPaper.classList.add("is-flashing");
-  const canvas = document.createElement("canvas"); canvas.width = 1412; canvas.height = 947;
+  const frame = await buildTransparentPhotoFrame();
+  const canvas = document.createElement("canvas"); canvas.width = frame.width; canvas.height = frame.height;
   const context = canvas.getContext("2d");
-  context.save(); context.translate(canvas.width,0); context.scale(-1,1); context.drawImage(photoVideo,0,0,canvas.width,canvas.height); context.restore();
+  // Opaque backing prevents camera pixels leaking through the frame's transparent outer margin.
+  context.fillStyle = "#0b0909";
+  context.fillRect(0,0,canvas.width,canvas.height);
+  context.save();
+  // Match the preview aperture; the figure must not cover the caption or outer margin.
+  context.beginPath();
+  context.rect(canvas.width*.03,canvas.height*.12,canvas.width*.94,canvas.height*.74);
+  context.clip();
+  context.save();
+  context.translate(canvas.width,0); context.scale(-1,1);
+  drawPhotoLayer(context,photoVideo,{x:0,y:0,width:canvas.width,height:canvas.height},"cover");
+  context.restore();
   try {
-    if ((selected ?? 0) === 4) {
-      const cutout=await buildTransparentTigerCutout(); context.drawImage(cutout,canvas.width*.56,canvas.height*.08,canvas.width*.4,canvas.height*.86);
-    } else {
-      const blob = photoModelViewer.toBlob ? await photoModelViewer.toBlob({ idealAspect:true }) : null;
-      if (blob) { const image = new Image(); image.src = URL.createObjectURL(blob); await image.decode(); context.drawImage(image, canvas.width*.55, canvas.height*.08, canvas.width*.43, canvas.height*.86); URL.revokeObjectURL(image.src); }
+    {
+      const box = photoLayerBox(photoModelViewer,canvas);
+      const blob = photoModelViewer.toBlob ? await photoModelViewer.toBlob({ idealAspect:false }) : null;
+      if (blob) {
+        const image = new Image(); image.src = URL.createObjectURL(blob);
+        try { await image.decode(); drawPhotoLayer(context,image,box); }
+        finally { URL.revokeObjectURL(image.src); }
+      }
     }
   } catch (error) { console.warn("模型快照暂不可用", error); }
-  const frame = await buildTransparentPhotoFrame(); context.drawImage(frame,0,0,canvas.width,canvas.height);
+  context.restore();
+  context.drawImage(frame,0,0,canvas.width,canvas.height);
   photoPreview.src = canvas.toDataURL("image/png",1);
-  photoPreview.hidden = false; retakePhotoButton.hidden = false; downloadPhotoButton.hidden = false;
-  capturePhotoButton.hidden = true; photoStatus.textContent = "合影已生成，可下载保存";
+  photoPreview.hidden = false; retakePhotoButton.hidden = false;
+  photoPaper.closest(".scene-photo").classList.add("is-photo-display");
+  capturePhotoButton.hidden = true; photoStatus.textContent = "合影已生成";
 }
 
 document.querySelector("#collectButton").addEventListener("click", () => goTo("photo"));
-document.querySelector("#photoBack").addEventListener("click", () => goTo("result"));
+document.querySelector("#photoBack").addEventListener("click", () => goTo("hub", { skipTransition: true }));
 document.querySelector("#startPhotoCamera").addEventListener("click", startPhotoCamera);
 capturePhotoButton.addEventListener("click", capturePhoto);
-retakePhotoButton.addEventListener("click", () => { photoPreview.hidden=true; retakePhotoButton.hidden=true; downloadPhotoButton.hidden=true; capturePhotoButton.hidden=false; capturePhotoButton.disabled=!photoStream; photoStatus.textContent="已准备好，可以重新拍摄"; });
-downloadPhotoButton.addEventListener("click", () => { const link=document.createElement("a"); link.href=photoPreview.src; link.download=`MOMO-非遗合影-${figures[selected ?? 0].name}.png`; link.click(); });
+retakePhotoButton.addEventListener("click", () => { photoPaper.closest(".scene-photo").classList.remove("is-photo-display"); photoPreview.hidden=true; retakePhotoButton.hidden=true; capturePhotoButton.hidden=false; capturePhotoButton.disabled=!photoStream; photoStatus.textContent="已准备好，可以重新拍摄"; });
 
 stage.addEventListener("pointermove", event => {
   const rect = stage.getBoundingClientRect();

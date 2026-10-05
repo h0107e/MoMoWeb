@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0b0a10" />
   <title>MOMO 默默 · 非遗漫游</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=momo-card-display-2" />
+  <link rel="modulepreload" href="./assets/model-viewer.min.js" />
+  <link rel="preload" href="./assets/momo-blind-box-v1.glb?v=lid-open-1" as="fetch" crossorigin />
 </head>
 <body>
   <main id="app" data-scene="home" aria-live="polite">
@@ -67,18 +69,24 @@
           <model-viewer
             id="hubBoxViewer"
             tabindex="-1"
-            data-src="./assets/momo-blind-box-v1.glb"
+            data-src="./assets/momo-blind-box-v1.glb?v=lid-open-1"
+            src="./assets/momo-blind-box-v1.glb?v=lid-open-1"
+            loading="eager"
             alt="默默非遗漫游盲盒三维模型"
+            animation-name="Open Lid"
             interaction-prompt="none"
             camera-controls
             disable-pan
-            shadow-intensity="1.25"
-            shadow-softness=".8"
-            exposure="1.18"
+            disable-zoom
+            min-camera-orbit="-36deg 72deg auto"
+            max-camera-orbit="-24deg 72deg auto"
+            shadow-intensity="1.6"
+            shadow-softness=".65"
+            exposure=".94"
             environment-image="neutral"
-            camera-orbit="0deg 78deg 3.65m"
+            camera-orbit="-30deg 72deg 6m"
             camera-target="auto auto auto"
-            field-of-view="30deg">
+            field-of-view="28deg">
           </model-viewer>
         </div>
         <button class="hub-about-button" data-go="about" type="button">
@@ -137,7 +145,7 @@
         <img class="scene-art archive-art about-art" src="./assets/about-team-visual.png" alt="默默团队介绍与文化、科技、残健共融设计理念" />
         <div class="about-shade" aria-hidden="true"></div>
         <header class="archive-nav about-nav">
-          <button class="icon-button about-back" data-go="hub" type="button" aria-label="返回功能导航"><i>←</i><span>返回首页</span></button>
+          <button class="icon-button about-back" data-go="hub" type="button" aria-label="返回"><i>←</i><span>返回</span></button>
           <span></span>
           <span></span>
         </header>
@@ -150,11 +158,11 @@
           <div class="momo-core" aria-hidden="true"><b>MOMO</b><span>默默 · 非遗漫游</span></div>
           <div class="orbit-line orbit-line-one" aria-hidden="true"></div>
           <div class="orbit-line orbit-line-two" aria-hidden="true"></div>
-          <button class="member-lantern member-annie" type="button" data-member="annie" aria-pressed="false"><span class="lantern-portrait is-female" aria-hidden="true"><i>贺</i></span><b>贺安妮</b><small>交互设计师</small></button>
-          <button class="member-lantern member-yang" type="button" data-member="yang" aria-pressed="false"><span class="lantern-portrait is-male" aria-hidden="true"><i>阳</i></span><b>阳宇</b><small>3D建模师</small></button>
-          <button class="member-lantern member-cheng" type="button" data-member="cheng" aria-pressed="false"><span class="lantern-portrait is-male" aria-hidden="true"><i>程</i></span><b>程东豪</b><small>运营推广师</small></button>
-          <button class="member-lantern member-kang" type="button" data-member="kang" aria-pressed="false"><span class="lantern-portrait is-female" aria-hidden="true"><i>康</i></span><b>康筠雅</b><small>方案策划师</small></button>
-          <button class="member-lantern member-guo" type="button" data-member="guo" aria-pressed="false"><span class="lantern-portrait is-male" aria-hidden="true"><i>郭</i></span><b>郭丙午</b><small>项目负责人</small></button>
+          <button class="member-lantern member-annie" type="button" data-member="annie" aria-pressed="false"><span class="lantern-portrait is-female" aria-hidden="true"><i>贺</i></span><span class="member-caption"><b>贺安妮</b><small>交互设计师</small></span></button>
+          <button class="member-lantern member-yang" type="button" data-member="yang" aria-pressed="false"><span class="lantern-portrait is-male" aria-hidden="true"><i>阳</i></span><span class="member-caption"><b>阳宇</b><small>3D建模师</small></span></button>
+          <button class="member-lantern member-cheng" type="button" data-member="cheng" aria-pressed="false"><span class="lantern-portrait is-male" aria-hidden="true"><i>程</i></span><span class="member-caption"><b>程东豪</b><small>运营推广师</small></span></button>
+          <button class="member-lantern member-kang" type="button" data-member="kang" aria-pressed="false"><span class="lantern-portrait is-female" aria-hidden="true"><i>康</i></span><span class="member-caption"><b>康筠雅</b><small>方案策划师</small></span></button>
+          <button class="member-lantern member-guo" type="button" data-member="guo" aria-pressed="false"><span class="lantern-portrait is-male" aria-hidden="true"><i>郭</i></span><span class="member-caption"><b>郭丙午</b><small>项目负责人</small></span></button>
         </div>
         <div class="about-philosophy" aria-label="设计理念">
           <article><b>文化</b><span>根植传统<br />激活非遗生命力</span></article>
@@ -167,7 +175,7 @@
       <section class="scene scene-map" data-scene="map" aria-label="非遗文化数字地图展览">
         <iframe
           class="map-frame"
-          src="./map/index.html?v=light-points-1"
+          src="./map/index.html?v=scene-preload-2"
           title="非遗文化数字地图"
           loading="lazy"
           allow="fullscreen"
@@ -246,13 +254,7 @@
           <button class="orbit-step orbit-next" id="cardOrbitNext" type="button" aria-label="顺时针旋转卡牌">›</button>
           <div class="orbit-caption">
             <strong id="cardOrbitName">醒狮</strong>
-            <span>中心卡牌 · 点击放大</span>
           </div>
-        </div>
-        <div class="card-viewer" id="cardViewer" hidden aria-hidden="true">
-          <button class="card-viewer-close" id="cardViewerClose" type="button" aria-label="关闭卡牌大图">×</button>
-          <img id="cardViewerImage" alt="" />
-          <p id="cardViewerName"></p>
         </div>
       </section>
 
@@ -348,7 +350,7 @@
       <section class="scene scene-photo" data-scene="photo" aria-label="非遗合影照相馆">
         <img class="scene-art photo-scene-art" src="./assets/result-showcase-bg.png" alt="非遗水乡夜景" />
         <header class="photo-nav">
-          <button class="icon-button" id="photoBack" type="button" aria-label="返回抽取结果">←</button>
+          <button class="photo-home-back" id="photoBack" type="button" aria-label="返回首页（抽盲盒页）">← <span>返回首页</span></button>
           <div><b>非遗合影</b><span>HERITAGE PHOTO STUDIO</span></div>
           <span class="photo-privacy">影像仅在本机生成 · 不上传</span>
         </header>
@@ -357,9 +359,10 @@
             <div class="photo-live">
               <video id="photoVideo" autoplay playsinline muted></video>
               <div class="photo-camera-empty" id="photoCameraEmpty"><b>举镜入画</b><span>开启摄像头后，与非遗玩偶同框留影</span></div>
+              <div class="photo-figure-window">
               <model-viewer id="photoModelViewer" alt="合影中的非遗玩偶" interaction-prompt="none" shadow-intensity="1" exposure=".9" camera-orbit="90deg 82deg 2.25m" field-of-view="27deg"></model-viewer>
-              <img class="photo-character-cutout" id="photoCharacterCutout" src="./assets/cloth-tiger-photo-flat-source.png" alt="布老虎合影玩偶" hidden />
-              <img class="photo-frame-overlay" id="photoFrameOverlay" src="./assets/photo-frame-temp.jpg" alt="临时相纸边框" />
+              </div>
+              <img class="photo-frame-overlay" id="photoFrameOverlay" src="./assets/photo-frame-night-cocoa.png" alt="MOMO 黑金夜游方角非遗合影相框" />
               <div class="photo-countdown" id="photoCountdown" aria-live="polite"></div>
               <div class="photo-flash" aria-hidden="true"></div>
               <img class="photo-preview" id="photoPreview" alt="合影成片预览" hidden />
@@ -368,18 +371,13 @@
           <aside class="photo-controls">
             <span class="photo-kicker">MOMO · 留住相遇</span>
             <h1>与「<em id="photoFigureName">非遗玩偶</em>」合影</h1>
-            <p>站到画面中间，玩偶将陪伴在你身侧。拍摄完成后可直接下载高清相片。</p>
+            <p>站到画面中间，玩偶将陪伴在你身侧。拍摄完成后，合影将在屏幕中央放大展示。</p>
             <div class="photo-actions">
               <button class="photo-button photo-button-primary" id="startPhotoCamera" type="button">开启相机</button>
               <button class="photo-button" id="capturePhoto" type="button" disabled>拍摄合影</button>
               <button class="photo-button" id="retakePhoto" type="button" hidden>重新拍摄</button>
-              <button class="photo-button" id="downloadPhoto" type="button" hidden>下载相片</button>
             </div>
             <p class="photo-status" id="photoStatus">等待开启摄像头</p>
-            <div class="photo-qr-prototype">
-              <div class="photo-qr-grid" aria-hidden="true"></div>
-              <div><b>手机扫码取片</b><span>雏形占位 · 接入临时云存储后启用</span></div>
-            </div>
           </aside>
         </div>
       </section>
@@ -438,18 +436,9 @@
         </svg>
         <span></span>
       </div>
-      <div class="transition-veil" aria-hidden="true">
-        <video
-          id="transitionVideo"
-          src="./assets/momo-transition.mp4"
-          preload="auto"
-          muted
-          playsinline></video>
-        <span>默</span>
-      </div>
     </div>
   </main>
-  <script src="./script.js"></script>
+  <script src="./script.js?v=momo-card-display-2"></script>
   <script type="module" src="./gesture.js"></script>
 </body>
 </html>

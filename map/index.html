@@ -317,6 +317,65 @@
       {name:"傩风览韵",englishName:"Echoes of Nuo",province:"贵州省",location:"贵州 · 德江",englishLocation:"Dejiang, Guizhou, China",heritage:"德江傩堂戏",coord:[108.1198,28.2636],marker:"./markers/nuoxi.png",storyCn:"从傩面、唱词和舞步出发，感受古老民俗中神秘、粗犷而富有力量的文化表达。",storyEn:"Ritual masks, chants and powerful steps preserve the mysterious, vigorous voice of Dejiang Nuo theatre."},
       {name:"泥艺探幽",englishName:"Exploring Clay Art",province:"天津市",location:"天津",englishLocation:"Tianjin, China",heritage:"天津泥人张彩塑",coord:[117.2009,39.0842],marker:"./markers/nisu.png",storyCn:"一捧泥土经过塑形与设色，化作神态鲜活、富有人情味的天津故事。",storyEn:"With shaping and colour, a handful of clay becomes a vivid, warm-hearted story of Tianjin life."}
     ];
+    const detailScenes = {
+      "./markers/xingshi.png": "./scenes/xingshi.png",
+      "./markers/jingju.png": "./scenes/jingju.png",
+      "./markers/bulaohu.png": "./scenes/bulaohu.png",
+      "./markers/jingdezhen.png": "./scenes/porcelain.png",
+      "./markers/qinghuaci.png": "./scenes/porcelain.png",
+      "./markers/piyingxi.png": "./scenes/piyingxi.png",
+      "./markers/yudeng.png": "./scenes/yudeng.png",
+      "./markers/nuoxi.png": "./scenes/nuoxi.png",
+      "./markers/nisu.png": "./scenes/nisu.png"
+    };
+    const sceneCache = new Map();
+    function preloadScene(src) {
+      if (sceneCache.has(src)) return sceneCache.get(src);
+      const image = new Image();
+      image.decoding = "async";
+      const entry = { image, ready: false, promise: null };
+      entry.promise = new Promise(resolve => {
+        image.onload = async () => {
+          try { await image.decode(); } catch (_) {}
+          entry.ready = image.naturalWidth > 0;
+          resolve(entry.ready);
+        };
+        image.onerror = () => { sceneCache.delete(src); resolve(false); };
+      });
+      sceneCache.set(src, entry);
+      image.src = src;
+      return entry;
+    }
+    // Load and decode each unique scene once while the visitor explores the map.
+    [...new Set(Object.values(detailScenes))].forEach(preloadScene);
+    let imageRequest = 0;
+    function showSceneImage(p) {
+      const request = ++imageRequest;
+      const src = detailScenes[p.marker] || p.marker;
+      const image = document.getElementById("productImage");
+      const placeholder = document.getElementById("imagePlaceholder");
+      const asset = preloadScene(src);
+      const show = () => {
+        if (request !== imageRequest) return;
+        const next = asset.image;
+        next.id = "productImage";
+        next.className = "product-image";
+        next.alt = p.name + "非遗玩偶场景插图";
+        next.style.filter = detailScenes[p.marker] ? "none" : "";
+        next.style.display = "block";
+        document.getElementById("productImage").replaceWith(next);
+        placeholder.style.display = "none";
+      };
+      if (asset.ready) { show(); return; }
+      image.style.display = "none";
+      placeholder.style.display = "grid";
+      placeholder.querySelector("span").textContent = "正在载入" + p.name + "场景图…";
+      asset.promise.then(ok => {
+        if (request !== imageRequest) return;
+        if (ok) show();
+        else placeholder.querySelector("span").textContent = "图片加载失败，请返回全图后重试";
+      });
+    }
     const density = products.reduce((result,p) => ((result[p.province]=(result[p.province]||0)+1),result),{});
     const chart = echarts.init(document.getElementById("map"),null,{useDirtyRect:true});
     const NATIONAL_CENTER = [104.4,35.5];
@@ -339,12 +398,7 @@
       document.getElementById("englishLocation").textContent=p.englishLocation;
       document.getElementById("storyCn").textContent=p.storyCn;
       document.getElementById("storyEn").textContent=p.storyEn;
-      const image=document.getElementById("productImage");
-      const placeholder=document.getElementById("imagePlaceholder");
-      image.src=p.marker;
-      image.style.display="block";
-      placeholder.style.display="none";
-      image.alt=p.name+"非遗玩偶模型预览";
+      showSceneImage(p);
       panel.setAttribute("aria-hidden","false");
       page.classList.add("detail-open");
       chart.setOption({
@@ -356,6 +410,7 @@
     function resetToNationalView(event) {
       if(event){event.preventDefault();event.stopPropagation();}
       selectedIndex=null;
+      imageRequest++;
       const page=document.querySelector(".page");
       const panel=document.getElementById("detail");
       page.classList.remove("detail-open");
