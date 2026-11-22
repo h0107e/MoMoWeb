@@ -117,9 +117,9 @@ const figures = [
   {
     name: "傩戏",
     story: "戴面起舞，逐疫纳福。愿你无惧前路，心怀正气与光明。",
-    model: "./assets/NuoXi.glb",
+    model: "./assets/NuoXi.glb?v=2",
     modelAlt: "傩戏非遗玩偶三维模型",
-    cameraOrbit: "90deg 82deg 2.25m",
+    cameraOrbit: "0deg 82deg 2.25m",
     card: "./assets/Card-NuoXi.png",
     cardAlt: "MOMO 傩戏 SSR 非遗收藏卡"
   }
