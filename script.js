@@ -99,7 +99,7 @@ const figures = [
   {
     name: "泥塑",
     story: "泥土有形，匠心有温。愿你守住本真，塑成心中所愿。",
-    model: "./assets/NiSu.glb",
+    model: "./assets/NiSu.glb?v=2",
     modelAlt: "泥塑非遗玩偶三维模型",
     cameraOrbit: "90deg 82deg 2.25m",
     card: "./assets/Card-NiSu.jpg",
