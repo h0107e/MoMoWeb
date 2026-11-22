@@ -461,15 +461,11 @@ function playHubBoxOpening(onComplete) {
 function holdResultModelFront() {
   clearTimeout(resultRotationTimer);
   resultModelViewer.removeAttribute("auto-rotate");
-  resultModelViewer.removeAttribute("camera-orbit");
+  // Auto-rotation turns the model independently of camera-orbit. Reset both
+  // so repeated draws of the same loaded model always start from its front.
+  resultModelViewer.resetTurntableRotation?.(0);
   resultModelViewer.setAttribute("camera-orbit", resultFrontOrbit);
   resultModelViewer.jumpCameraToGoal?.();
-  if (currentScene !== "result" || transitioning || resultScene.classList.contains("is-model-concealed")) return;
-  resultRotationTimer = setTimeout(() => {
-    if (currentScene === "result" && resultModelViewer.hasAttribute("src")) {
-      resultModelViewer.setAttribute("auto-rotate", "");
-    }
-  }, 3000);
 }
 
 resultModelViewer.addEventListener("load", () => {
@@ -499,9 +495,8 @@ async function presentResultModel(figure) {
   resultModelViewer.removeAttribute("aria-hidden");
   resultModelViewer.alt = figure.modelAlt || `${figure.name}三维模型`;
   resultModelLoading.textContent = `${figure.name}灵影呈现中`;
-  resultFrontOrbit = figure.cameraOrbit || "0deg 82deg 2.25m";
-  resultModelViewer.removeAttribute("camera-orbit");
-  resultModelViewer.setAttribute("camera-orbit", resultFrontOrbit);
+  resultFrontOrbit = figure.cameraOrbit || "90deg 82deg 2.25m";
+  holdResultModelFront();
 
   if (!customElements.get("model-viewer")) {
     modelViewerLoader ??= import("./assets/model-viewer.min.js");
