@@ -99,7 +99,7 @@ const figures = [
   {
     name: "泥塑",
     story: "泥土有形，匠心有温。愿你守住本真，塑成心中所愿。",
-    model: "./assets/NiSu.glb?v=2",
+    model: "./assets/NiSu.glb?v=3",
     modelAlt: "泥塑非遗玩偶三维模型",
     cameraOrbit: "90deg 82deg 2.25m",
     card: "./assets/Card-NiSu.jpg",
@@ -117,7 +117,7 @@ const figures = [
   {
     name: "傩戏",
     story: "戴面起舞，逐疫纳福。愿你无惧前路，心怀正气与光明。",
-    model: "./assets/NuoXi.glb?v=2",
+    model: "./assets/NuoXi.glb?v=3",
     modelAlt: "傩戏非遗玩偶三维模型",
     cameraOrbit: "0deg 82deg 2.25m",
     card: "./assets/Card-NuoXi.png",
