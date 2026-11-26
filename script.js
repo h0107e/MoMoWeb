@@ -490,9 +490,9 @@ function startHubBoxSway() {
     hubBoxSwayLastTime = now;
     if (!document.hidden && now > hubBoxInteractionUntil) {
       hubBoxSwayTime += elapsed;
-      const angle = -30 + hubBoxSwayTime / 45000 * 360;
+      const phase = hubBoxSwayTime / 14000 * Math.PI * 2;
       // Orbit the real 3D model without changing its framing or apparent scale.
-      hubBoxViewer.cameraOrbit = `${angle}deg 72deg 6m`;
+      hubBoxViewer.cameraOrbit = `${-30 + 6 * Math.sin(phase)}deg 72deg 6m`;
     }
     hubBoxSwayFrame = requestAnimationFrame(sway);
   };
@@ -500,8 +500,11 @@ function startHubBoxSway() {
 }
 
 hubBoxViewer.addEventListener("pointerdown", () => { hubBoxInteractionUntil = Infinity; });
-window.addEventListener("pointerup", () => { hubBoxInteractionUntil = performance.now() + 2200; });
-window.addEventListener("pointercancel", () => { hubBoxInteractionUntil = performance.now() + 2200; });
+function finishHubBoxInteraction() {
+  if (hubBoxInteractionUntil === Infinity) hubBoxInteractionUntil = performance.now() + 2200;
+}
+window.addEventListener("pointerup", finishHubBoxInteraction);
+window.addEventListener("pointercancel", finishHubBoxInteraction);
 hubBoxReducedMotion.addEventListener("change", startHubBoxSway);
 
 function resetHubBoxLid() {
@@ -511,6 +514,7 @@ function resetHubBoxLid() {
   if (hubBoxViewer.classList.contains("loaded")) hubBoxViewer.currentTime = 0;
   hubBoxViewer.classList.remove("is-opening", "is-open");
   hubBoxSwayTime = 0;
+  hubBoxInteractionUntil = 0;
   hubBoxViewer.cameraOrbit = "-30deg 72deg 6m";
   startHubBoxSway();
   document.querySelectorAll("[data-hub-action='draw']").forEach(button => {
