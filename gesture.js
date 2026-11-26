@@ -187,7 +187,7 @@ function processFrame(now) {
     if (hand?.[INDEX_TIP]) {
       const isCardsScene = document.querySelector("#app")?.dataset.scene === "cards";
       if (isCardsScene && isOpenPalm(hand)) {
-        setStatus("左右挥手拨转 · 可连续换向", "tracking");
+        setStatus("左右移掌转动 · 停手即停", "tracking");
         mapPalm(hand, now);
       } else if (isCardsScene) {
         setStatus("请张开手掌进行浏览", "ready");
