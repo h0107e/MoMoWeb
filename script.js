@@ -435,6 +435,11 @@ window.addEventListener("momo-gesture-palm", event => {
     return;
   }
   const movement = clientX - gestureOrbitLastX;
+  if (movement > 0) {
+    gestureOrbitLastX = clientX;
+    gestureOrbitAnchorAt = now;
+    return;
+  }
   if (Math.abs(movement) < Math.max(18, cardOrbitWidth * .015)) return;
   if (Math.abs(movement) > cardOrbitWidth * .18) {
     gestureOrbitLastX = clientX;
@@ -444,7 +449,7 @@ window.addEventListener("momo-gesture-palm", event => {
   const seconds = Math.max(.034, (now - gestureOrbitAnchorAt) / 1000);
   const travelPerCard = Math.max(160, cardOrbitWidth * .12);
   const speed = Math.min(2.5, Math.max(.8, Math.abs(movement) / travelPerCard / seconds));
-  gestureOrbitCommand = -Math.sign(movement) * speed;
+  gestureOrbitCommand = speed;
   gestureOrbitLastX = clientX;
   gestureOrbitAnchorAt = now;
   followCardOrbit();

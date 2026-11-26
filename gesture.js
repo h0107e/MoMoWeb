@@ -192,7 +192,7 @@ function processFrame(now) {
         const extendedFingers = countExtendedFingers(hand);
         if (extendedFingers >= 3) {
           cardFistSince = null;
-          setStatus("张掌拨转 · 握拳居中停止", "tracking");
+          setStatus("张掌向左拨转 · 握拳居中停止", "tracking");
           mapPalm(hand, now);
         } else if (extendedFingers <= 1) {
           cardFistSince ??= now;
