@@ -156,6 +156,9 @@ let orbitLastX = 0;
 let suppressCardClickUntil = 0;
 let orbitWheelLockedUntil = 0;
 let gestureOrbitX = null;
+let gestureOrbitStartedAt = 0;
+let gestureOrbitCooldownUntil = 0;
+let orbitSpinFrame = 0;
 
 let selected = null;
 let currentScene = "home";
@@ -176,6 +179,12 @@ function goTo(name, options = {}) {
     sceneChanged = true;
     if (name === "draw" && currentScene === "result") resetDrawState();
     if (currentScene === "photo" && name !== "photo") stopPhotoCamera();
+    if (currentScene === "cards" && name !== "cards") {
+      stopCardSpin();
+      gestureOrbitX = null;
+      gestureOrbitCooldownUntil = 0;
+      snapCardOrbit();
+    }
     app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
@@ -254,7 +263,7 @@ function layoutCardOrbit() {
   const count = orbitCards.length;
   cardOrbitIndex = ((Math.round(cardOrbitPosition) % count) + count) % count;
   orbitCards.forEach((card, index) => {
-    let relativeIndex = (index - cardOrbitPosition + count) % count;
+    let relativeIndex = ((index - cardOrbitPosition) % count + count) % count;
     if (relativeIndex > count / 2) relativeIndex -= count;
     const angle = relativeIndex * Math.PI * 2 / count;
     const depth = (Math.cos(angle) + 1) / 2;
@@ -281,8 +290,40 @@ function layoutCardOrbit() {
 }
 
 function rotateCardOrbit(step) {
+  stopCardSpin();
   cardOrbitPosition = Math.round(cardOrbitPosition) + step;
   layoutCardOrbit();
+}
+
+function stopCardSpin() {
+  cancelAnimationFrame(orbitSpinFrame);
+  orbitSpinFrame = 0;
+  cardOrbitShell.classList.remove("is-spinning");
+}
+
+function spinCardOrbit(step) {
+  stopCardSpin();
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    rotateCardOrbit(step);
+    return;
+  }
+  const start = cardOrbitPosition;
+  const target = Math.round(start) + step;
+  const startedAt = performance.now();
+  const duration = 850 + Math.abs(step) * 100;
+  cardOrbitShell.classList.add("is-spinning");
+  function animate(now) {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    cardOrbitPosition = start + (target - start) * (1 - Math.pow(1 - progress, 3));
+    layoutCardOrbit();
+    if (progress < 1) {
+      orbitSpinFrame = requestAnimationFrame(animate);
+    } else {
+      stopCardSpin();
+      snapCardOrbit();
+    }
+  }
+  orbitSpinFrame = requestAnimationFrame(animate);
 }
 
 function snapCardOrbit() {
@@ -294,6 +335,7 @@ orbitCards.forEach((button, index) => {
   button.addEventListener("click", () => {
     if (performance.now() < suppressCardClickUntil) return;
     if (index !== cardOrbitIndex) {
+      stopCardSpin();
       cardOrbitPosition = index;
       layoutCardOrbit();
       return;
@@ -305,6 +347,7 @@ document.querySelector("#cardOrbitNext").addEventListener("click", () => rotateC
 
 cardGallery.addEventListener("pointerdown", event => {
   if (event.button !== 0) return;
+  stopCardSpin();
   orbitPointerId = event.pointerId;
   orbitLastX = event.clientX;
   cardOrbitShell.classList.add("is-dragging");
@@ -345,22 +388,27 @@ cardGallery.addEventListener("keydown", event => {
 window.addEventListener("momo-gesture-palm", event => {
   const { active, clientX, clientY, now } = event.detail;
   if (!active || currentScene !== "cards") {
-    if (gestureOrbitX != null) snapCardOrbit();
     gestureOrbitX = null;
     cardOrbitShell.classList.remove("is-palm-moving");
     return;
   }
+  if (now < gestureOrbitCooldownUntil || orbitPointerId !== null) return;
   const rect = cardOrbitShell.getBoundingClientRect();
-  if (gestureOrbitX == null) {
+  if (gestureOrbitX == null || now - gestureOrbitStartedAt > 700) {
     gestureOrbitX = clientX;
-    cardOrbitShell.classList.add("is-palm-moving");
+    gestureOrbitStartedAt = now;
     return;
   }
   const delta = clientX - gestureOrbitX;
-  gestureOrbitX = clientX;
-  const palmTravelPerCard = Math.max(250, rect.width * .19);
-  cardOrbitPosition -= delta / palmTravelPerCard;
-  layoutCardOrbit();
+  const elapsed = now - gestureOrbitStartedAt;
+  const threshold = Math.max(65, rect.width * .055);
+  if (Math.abs(delta) < threshold || elapsed < 50) return;
+  const speed = Math.abs(delta) / elapsed;
+  if (speed < .25) return;
+  const steps = Math.min(3, Math.max(1, Math.round(speed / .65)));
+  spinCardOrbit(delta > 0 ? -steps : steps);
+  gestureOrbitX = null;
+  gestureOrbitCooldownUntil = now + 1100;
 });
 
 layoutCardOrbit();

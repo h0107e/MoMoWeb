@@ -1400,6 +1400,7 @@ button { font: inherit; color: inherit; }
     opacity .09s linear,
     filter .09s linear;
 }
+.card-orbit-shell.is-spinning .orbit-card { transition: none; }
 .card-gallery .orbit-card::after {
   content: "";
   position: absolute;
