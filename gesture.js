@@ -36,6 +36,7 @@ let cooldownUntil = 0;
 let smoothX = null;
 let smoothY = null;
 let animationFrame = 0;
+let cardFistSince = null;
 
 function setStatus(message, mode = "") {
   statusText.textContent = message;
@@ -134,7 +135,7 @@ function mapIndexFinger(landmark, now) {
   updateDwell(findInteractiveTarget(smoothX, smoothY), now);
 }
 
-function isOpenPalm(hand) {
+function countExtendedFingers(hand) {
   const wrist = hand[0];
   const distanceFromWrist = index => Math.hypot(
     hand[index].x - wrist.x,
@@ -146,7 +147,7 @@ function isOpenPalm(hand) {
     [16, 14],
     [20, 18]
   ].filter(([tip, joint]) => distanceFromWrist(tip) > distanceFromWrist(joint) * 1.16).length;
-  return extendedFingers >= 3;
+  return extendedFingers;
 }
 
 function mapPalm(hand, now) {
@@ -186,22 +187,35 @@ function processFrame(now) {
     const hand = result.landmarks?.[0];
     if (hand?.[INDEX_TIP]) {
       const isCardsScene = document.querySelector("#app")?.dataset.scene === "cards";
-      if (isCardsScene && isOpenPalm(hand)) {
-        setStatus("左右移掌转动 · 停手即停", "tracking");
-        mapPalm(hand, now);
-      } else if (isCardsScene) {
-        setStatus("请张开手掌进行浏览", "ready");
-        window.dispatchEvent(new CustomEvent("momo-gesture-palm", {
-          detail: { active: false, clientX: 0, clientY: 0, now }
-        }));
-        smoothX = null;
-        smoothY = null;
-        resetDwell();
+      if (isCardsScene) {
+        lastHandAt = now;
+        const extendedFingers = countExtendedFingers(hand);
+        if (extendedFingers >= 3) {
+          cardFistSince = null;
+          setStatus("张掌拨转 · 握拳居中停止", "tracking");
+          mapPalm(hand, now);
+        } else if (extendedFingers <= 1) {
+          cardFistSince ??= now;
+          if (now - cardFistSince >= 65) {
+            setStatus("已握拳 · 当前卡牌居中锁定", "ready");
+            window.dispatchEvent(new CustomEvent("momo-gesture-palm", {
+              detail: { active: false, pose: "fist", clientX: 0, clientY: 0, now }
+            }));
+            cursor.classList.remove("is-visible");
+            smoothX = null;
+            smoothY = null;
+            resetDwell();
+          }
+        } else {
+          cardFistSince = null;
+        }
       } else {
+        cardFistSince = null;
         setStatus("已识别食指 · 停留以确认", "tracking");
         mapIndexFinger(hand[INDEX_TIP], now);
       }
     } else if (now - lastHandAt > 220) {
+      cardFistSince = null;
       setStatus("请将一只手放入画面", "ready");
       smoothX = null;
       smoothY = null;
