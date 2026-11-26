@@ -492,7 +492,7 @@ function startHubBoxSway() {
       hubBoxSwayTime += elapsed;
       const phase = hubBoxSwayTime / 14000 * Math.PI * 2;
       // Orbit the real 3D model without changing its framing or apparent scale.
-      hubBoxViewer.cameraOrbit = `${-30 + 6 * Math.sin(phase)}deg 72deg 6m`;
+      hubBoxViewer.cameraOrbit = `${-30 + 6 * Math.sin(phase)}deg 69deg 6m`;
     }
     hubBoxSwayFrame = requestAnimationFrame(sway);
   };
@@ -515,7 +515,7 @@ function resetHubBoxLid() {
   hubBoxViewer.classList.remove("is-opening", "is-open");
   hubBoxSwayTime = 0;
   hubBoxInteractionUntil = 0;
-  hubBoxViewer.cameraOrbit = "-30deg 72deg 6m";
+  hubBoxViewer.cameraOrbit = "-30deg 69deg 6m";
   startHubBoxSway();
   document.querySelectorAll("[data-hub-action='draw']").forEach(button => {
     button.disabled = false;
