@@ -21,9 +21,7 @@ button { font: inherit; color: inherit; }
   place-items: center;
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 50%, #19101a 0, #07080c 64%),
-    #05060a;
+  background: #05060a;
 }
 
 @font-face {
@@ -86,16 +84,7 @@ button { font: inherit; color: inherit; }
 #app[data-scene="result"] { --backdrop-image: url("./assets/result-showcase-bg.png"); }
 
 #app::before {
-  content: "";
-  position: absolute;
-  inset: -5%;
-  z-index: 0;
-  background:
-    linear-gradient(rgba(5, 5, 10, .28), rgba(5, 5, 10, .28)),
-    var(--backdrop-image) center / cover no-repeat;
-  filter: blur(26px) saturate(.9) brightness(.68);
-  transform: scale(1.08);
-  transition: background-image .45s ease;
+  content: none;
 }
 
 .stage {
@@ -107,7 +96,7 @@ button { font: inherit; color: inherit; }
   aspect-ratio: var(--stage-ratio);
   overflow: hidden;
   isolation: isolate;
-  box-shadow: 0 0 70px rgba(1, 2, 7, .76);
+  box-shadow: none;
 }
 
 .scene {
