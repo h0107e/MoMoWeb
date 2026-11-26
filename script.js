@@ -788,17 +788,33 @@ document.querySelector("#startPhotoCamera").addEventListener("click", startPhoto
 capturePhotoButton.addEventListener("click", capturePhoto);
 retakePhotoButton.addEventListener("click", () => { photoPaper.closest(".scene-photo").classList.remove("is-photo-display"); photoPreview.hidden=true; retakePhotoButton.hidden=true; capturePhotoButton.hidden=false; capturePhotoButton.disabled=!photoStream; photoStatus.textContent="已准备好，可以重新拍摄"; });
 
-stage.addEventListener("pointermove", event => {
+function updateStagePointer(clientX, clientY) {
   const rect = stage.getBoundingClientRect();
-  targetPointer.x = ((event.clientX - rect.left) / rect.width) * 1600;
-  targetPointer.y = ((event.clientY - rect.top) / rect.height) * 1000;
+  targetPointer.x = ((clientX - rect.left) / rect.width) * 1600;
+  targetPointer.y = ((clientY - rect.top) / rect.height) * 1000;
   const xPercent = (targetPointer.x / 1600) * 100;
   const yPercent = (targetPointer.y / 1000) * 100;
   scenes.forEach(scene => {
     scene.style.setProperty("--light-x", `${xPercent}%`);
     scene.style.setProperty("--light-y", `${yPercent}%`);
   });
-});
+}
+
+stage.addEventListener("pointermove", event => updateStagePointer(event.clientX, event.clientY));
+const mapFrame = document.querySelector(".map-frame");
+function connectMapPointer() {
+  const mapDocument = mapFrame.contentDocument;
+  if (!mapDocument) return;
+  mapDocument.addEventListener("pointermove", event => {
+    const rect = mapFrame.getBoundingClientRect();
+    updateStagePointer(
+      rect.left + event.clientX * rect.width / mapFrame.clientWidth,
+      rect.top + event.clientY * rect.height / mapFrame.clientHeight
+    );
+  }, { passive: true });
+}
+mapFrame.addEventListener("load", connectMapPointer);
+if (mapFrame.contentDocument?.readyState === "complete") connectMapPointer();
 
 const particles = Array.from({ length: 72 }, () => ({
   x: Math.random() * 1600,

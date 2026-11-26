@@ -20,7 +20,7 @@
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; }
     body {
-      overflow: hidden;
+      overflow: clip;
       color: var(--ivory);
       background: var(--ink);
       font-family: "Microsoft YaHei", "Noto Sans SC", sans-serif;
@@ -31,7 +31,7 @@
       width: 100%;
       height: 100%;
       min-height: 680px;
-      overflow: hidden;
+      overflow: clip;
       background:
         linear-gradient(rgba(4,3,2,.13),rgba(4,3,2,.13)),
         url("./momo-map-background-final.png") center/cover no-repeat;
@@ -78,6 +78,36 @@
       z-index: 5;
     }
     #map { width: 100%; height: 100%; }
+    .map-point {
+      position: absolute;
+      z-index: 6;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .map-point:focus-visible, .map-point.gesture-hover {
+      outline: 2px solid #ffe0a5;
+      box-shadow: 0 0 18px #efae62;
+    }
+    .map-reset {
+      position: absolute;
+      left: 26px;
+      bottom: 26px;
+      z-index: 25;
+      padding: 10px 18px;
+      border: 1px solid rgba(214,167,95,.58);
+      border-radius: 24px;
+      color: var(--ivory);
+      background: rgba(36,23,16,.9);
+      cursor: pointer;
+    }
+    .map-reset[hidden] { display: none; }
     .legend {
       position: absolute;
       left: 4.2vw;
@@ -273,7 +303,8 @@
       <h1>非遗文化数字地图</h1>
       <p class="subtitle">探寻千年匠心 · 传承文化根脉</p>
     </header>
-    <section class="map-wrap" aria-label="中国非遗项目地图"><div id="map"></div></section>
+    <section class="map-wrap" tabindex="-1" aria-label="中国非遗项目地图"><div id="map"></div></section>
+    <button id="resetMapView" class="map-reset" type="button" hidden>返回全图</button>
 
     <aside id="detail" class="detail" aria-live="polite" aria-hidden="true">
       <img class="corner-ornament top-left" src="./gold-cloud-corner.png" alt="" />
@@ -382,6 +413,49 @@
     const NATIONAL_ZOOM = 1.24;
     let selectedIndex = null;
 
+    const mapPoints = products.map((product, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "map-point";
+      button.setAttribute("aria-label", product.location + " · " + product.heritage);
+      button.hidden = true;
+      button.addEventListener("click", () => renderSelection(index));
+      document.querySelector(".map-wrap").append(button);
+      return button;
+    });
+    let mapReady = false;
+    let lastPointLayout = "";
+    function positionMapPoints() {
+      if (!mapReady) return;
+      const positions = products.map(product => chart.convertToPixel({ geoIndex: 0 }, product.coord));
+      const layout = JSON.stringify(positions);
+      if (layout === lastPointLayout) return;
+      lastPointLayout = layout;
+      positions.forEach((position, index) => {
+        const button = mapPoints[index];
+        if (!position) { button.hidden = true; return; }
+        const [x, y] = position;
+        const nearestDistance = Math.min(...positions.map((other, otherIndex) =>
+          otherIndex === index || !other ? Infinity : Math.hypot(x - other[0], y - other[1])
+        ));
+        const size = Math.min(32, nearestDistance);
+        button.hidden = x < 0 || y < 0 || x > chart.getWidth() || y > chart.getHeight();
+        button.style.left = x + "px";
+        button.style.top = y + "px";
+        button.style.width = size + "px";
+        button.style.height = size + "px";
+      });
+    }
+    let pointFrame = 0;
+    chart.on("rendered", () => {
+      cancelAnimationFrame(pointFrame);
+      pointFrame = requestAnimationFrame(positionMapPoints);
+    });
+    chart.on("georoam", () => {
+      positionMapPoints();
+      document.getElementById("resetMapView").hidden = selectedIndex !== null;
+    });
+
     const routePairs = [[1,2],[2,4],[4,7],[7,0],[0,3],[3,6],[6,5],[3,8],[8,1]];
     const routeData = routePairs.map(([from,to]) => ({coords:[products[from].coord,products[to].coord]}));
 
@@ -391,6 +465,7 @@
       const panel=document.getElementById("detail");
       if(selectedIndex===index&&page.classList.contains("detail-open"))return;
       selectedIndex=index;
+      document.getElementById("resetMapView").hidden=true;
       panel.classList.remove("flash"); void panel.offsetWidth; panel.classList.add("flash");
       document.getElementById("name").textContent=p.name;
       document.getElementById("englishName").textContent=p.englishName;
@@ -410,9 +485,13 @@
     function resetToNationalView(event) {
       if(event){event.preventDefault();event.stopPropagation();}
       selectedIndex=null;
+      document.getElementById("resetMapView").hidden=true;
       imageRequest++;
       const page=document.querySelector(".page");
       const panel=document.getElementById("detail");
+      if (panel.contains(document.activeElement) || document.activeElement === document.getElementById("resetMapView")) {
+        document.querySelector(".map-wrap").focus({ preventScroll: true });
+      }
       page.classList.remove("detail-open");
       panel.setAttribute("aria-hidden","true");
       chart.setOption({
@@ -421,7 +500,8 @@
       });
     }
 
-    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&selectedIndex!==null)resetToNationalView(event);});
+    document.getElementById("resetMapView").addEventListener("click", resetToNationalView);
+    document.addEventListener("keydown",event=>{if(event.key==="Escape")resetToNationalView(event);});
 
     fetch(GEOJSON_URL).then(r=>{if(!r.ok)throw new Error("GeoJSON读取失败："+r.status);return r.json();}).then(geojson=>{
       echarts.registerMap("china-density",geojson);
@@ -449,6 +529,8 @@
           if(provinceIndex>=0)renderSelection(provinceIndex);
         }
       });
+      mapReady = true;
+      positionMapPoints();
       document.getElementById("loading").classList.add("hide");
     }).catch(error=>{document.getElementById("loading").textContent="地图载入失败："+error.message;});
 

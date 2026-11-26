@@ -63,10 +63,21 @@ function hideGestureCursor() {
 }
 
 function findInteractiveTarget(clientX, clientY) {
-  const element = document.elementFromPoint(clientX, clientY);
+  let targetDocument = document;
+  let element = document.elementFromPoint(clientX, clientY);
+  if (element?.matches("iframe.map-frame")) {
+    const frame = element;
+    targetDocument = frame.contentDocument;
+    if (!targetDocument) return null;
+    const rect = frame.getBoundingClientRect();
+    element = targetDocument.elementFromPoint(
+      (clientX - rect.left) * frame.clientWidth / rect.width,
+      (clientY - rect.top) * frame.clientHeight / rect.height
+    );
+  }
   const candidate = element?.closest("button:not([disabled]), a[href], [role='button']");
-  if (!candidate || !stage.contains(candidate)) return null;
-  const style = getComputedStyle(candidate);
+  if (!candidate || (targetDocument === document && !stage.contains(candidate))) return null;
+  const style = targetDocument.defaultView.getComputedStyle(candidate);
   if (style.visibility === "hidden" || style.pointerEvents === "none" || Number(style.opacity) < .08) return null;
   return candidate;
 }
