@@ -490,9 +490,9 @@ function startHubBoxSway() {
     hubBoxSwayLastTime = now;
     if (!document.hidden && now > hubBoxInteractionUntil) {
       hubBoxSwayTime += elapsed;
-      const phase = hubBoxSwayTime / 14000 * Math.PI * 2;
+      const angle = -30 + hubBoxSwayTime / 45000 * 360;
       // Orbit the real 3D model without changing its framing or apparent scale.
-      hubBoxViewer.cameraOrbit = `${-30 + 6 * Math.sin(phase)}deg 72deg 6m`;
+      hubBoxViewer.cameraOrbit = `${angle}deg 72deg 6m`;
     }
     hubBoxSwayFrame = requestAnimationFrame(sway);
   };
