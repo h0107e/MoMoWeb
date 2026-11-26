@@ -167,7 +167,7 @@ function mapPalm(hand, now) {
   lastHandAt = now;
 
   window.dispatchEvent(new CustomEvent("momo-gesture-palm", {
-    detail: { active: true, clientX: smoothX, clientY: smoothY, now }
+    detail: { active: true, clientX: rawX, clientY: rawY, now }
   }));
 }
 
@@ -187,7 +187,7 @@ function processFrame(now) {
     if (hand?.[INDEX_TIP]) {
       const isCardsScene = document.querySelector("#app")?.dataset.scene === "cards";
       if (isCardsScene && isOpenPalm(hand)) {
-        setStatus("左右挥手拨转 · 停稳后再挥", "tracking");
+        setStatus("左右挥手拨转 · 可连续换向", "tracking");
         mapPalm(hand, now);
       } else if (isCardsScene) {
         setStatus("请张开手掌进行浏览", "ready");

@@ -158,7 +158,12 @@ let orbitWheelLockedUntil = 0;
 let gestureOrbitX = null;
 let gestureOrbitStartedAt = 0;
 let gestureOrbitCooldownUntil = 0;
+let gestureOrbitLastX = null;
+let gestureOrbitDirection = 0;
+let gestureOrbitLastSpinDirection = 0;
 let orbitSpinFrame = 0;
+let cardOrbitWidth = 0;
+let cardOrbitHeight = 0;
 
 let selected = null;
 let currentScene = "home";
@@ -182,12 +187,18 @@ function goTo(name, options = {}) {
     if (currentScene === "cards" && name !== "cards") {
       stopCardSpin();
       gestureOrbitX = null;
+      gestureOrbitLastX = null;
+      gestureOrbitDirection = 0;
       gestureOrbitCooldownUntil = 0;
       snapCardOrbit();
     }
     app.dataset.scene = name;
     scenes.forEach(scene => scene.classList.toggle("is-active", scene.dataset.scene === name));
     currentScene = name;
+    if (name === "cards") {
+      measureCardOrbit();
+      layoutCardOrbit();
+    }
     if (name !== "hub") stopHubBoxSway();
     if (name === "hub") {
       resetHubBoxLid();
@@ -259,6 +270,11 @@ heritageDrawButton.addEventListener("click", () => {
   startDirectDraw(heritageSelection);
 });
 
+function measureCardOrbit() {
+  cardOrbitWidth = cardGallery.clientWidth;
+  cardOrbitHeight = cardGallery.clientHeight;
+}
+
 function layoutCardOrbit() {
   const count = orbitCards.length;
   cardOrbitIndex = ((Math.round(cardOrbitPosition) % count) + count) % count;
@@ -273,19 +289,19 @@ function layoutCardOrbit() {
     const scale = .74 + depth * .24 + Math.pow(depth, 10) * .14;
     const rotateY = -Math.sin(angle) * 28;
 
-    card.style.left = `${50 + x}%`;
-    card.style.top = `${55 + y}%`;
+    card.style.left = "50%";
+    card.style.top = "55%";
     card.style.zIndex = `${10 + Math.round(depth * 90)}`;
     card.style.opacity = `${.28 + depth * .72}`;
-    card.style.filter = `brightness(${.62 + depth * .45}) blur(${(1 - depth) * .7}px)`;
-    card.style.transform = `translate(-50%, -50%) perspective(900px) rotateY(${rotateY}deg) scale(${scale})`;
+    if (!orbitSpinFrame) card.style.filter = `brightness(${.62 + depth * .45}) blur(${(1 - depth) * .7}px)`;
+    card.style.transform = `translate(-50%, -50%) translate3d(${x * cardOrbitWidth / 100}px, ${y * cardOrbitHeight / 100}px, 0) perspective(900px) rotateY(${rotateY}deg) scale(${scale})`;
     const isCenter = index === cardOrbitIndex;
     card.classList.toggle("is-center", isCenter);
     card.setAttribute("aria-selected", isCenter ? "true" : "false");
     card.tabIndex = isCenter ? 0 : -1;
   });
   const activeCard = orbitCards[cardOrbitIndex];
-  cardOrbitName.textContent = activeCard.dataset.name;
+  if (cardOrbitName.textContent !== activeCard.dataset.name) cardOrbitName.textContent = activeCard.dataset.name;
   cardOrbitShell.classList.toggle("is-future-center", !activeCard.dataset.card);
 }
 
@@ -310,7 +326,7 @@ function spinCardOrbit(step) {
   const start = cardOrbitPosition;
   const target = Math.round(start) + step;
   const startedAt = performance.now();
-  const duration = 850 + Math.abs(step) * 100;
+  const duration = 380 + Math.abs(step) * 90;
   cardOrbitShell.classList.add("is-spinning");
   function animate(now) {
     const progress = Math.min(1, (now - startedAt) / duration);
@@ -389,29 +405,48 @@ window.addEventListener("momo-gesture-palm", event => {
   const { active, clientX, clientY, now } = event.detail;
   if (!active || currentScene !== "cards") {
     gestureOrbitX = null;
+    gestureOrbitLastX = null;
+    gestureOrbitDirection = 0;
     cardOrbitShell.classList.remove("is-palm-moving");
     return;
   }
-  if (now < gestureOrbitCooldownUntil || orbitPointerId !== null) return;
-  const rect = cardOrbitShell.getBoundingClientRect();
-  if (gestureOrbitX == null || now - gestureOrbitStartedAt > 700) {
+  if (orbitPointerId !== null) return;
+  if (gestureOrbitLastX == null) {
     gestureOrbitX = clientX;
+    gestureOrbitLastX = clientX;
     gestureOrbitStartedAt = now;
     return;
   }
+  const movement = clientX - gestureOrbitLastX;
+  if (Math.abs(movement) < 2) return;
+  const direction = Math.sign(movement);
+  if (direction !== gestureOrbitDirection || now - gestureOrbitStartedAt > 450) {
+    gestureOrbitX = gestureOrbitLastX;
+    gestureOrbitStartedAt = now - 34;
+    gestureOrbitDirection = direction;
+  }
+  gestureOrbitLastX = clientX;
   const delta = clientX - gestureOrbitX;
   const elapsed = now - gestureOrbitStartedAt;
-  const threshold = Math.max(65, rect.width * .055);
-  if (Math.abs(delta) < threshold || elapsed < 50) return;
+  const threshold = Math.max(28, cardOrbitWidth * .025);
+  if (Math.abs(delta) < threshold || elapsed < 34) return;
   const speed = Math.abs(delta) / elapsed;
-  if (speed < .25) return;
-  const steps = Math.min(3, Math.max(1, Math.round(speed / .65)));
+  if (speed < .12) return;
+  if (direction === gestureOrbitLastSpinDirection && now < gestureOrbitCooldownUntil) return;
+  const steps = Math.min(2, Math.max(1, Math.round(speed / 1.1)));
   spinCardOrbit(delta > 0 ? -steps : steps);
-  gestureOrbitX = null;
-  gestureOrbitCooldownUntil = now + 1100;
+  gestureOrbitX = clientX;
+  gestureOrbitStartedAt = now;
+  gestureOrbitLastSpinDirection = direction;
+  gestureOrbitCooldownUntil = now + 170;
 });
 
+measureCardOrbit();
 layoutCardOrbit();
+window.addEventListener("resize", () => {
+  measureCardOrbit();
+  layoutCardOrbit();
+}, { passive: true });
 
 async function loadHubBoxModel() {
   if (!customElements.get("model-viewer")) {
