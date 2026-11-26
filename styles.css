@@ -2070,9 +2070,10 @@ button { font: inherit; color: inherit; }
   padding: clamp(6px, .8vw, 12px) clamp(8px, .9vw, 14px) clamp(6px, .8vw, 12px) clamp(18px, 1.9vw, 32px);
 }
 .scene-result.is-showcase .result-actions .primary-button i {
-  width: clamp(30px, 3.3vw, 46px);
-  height: clamp(30px, 3.3vw, 46px);
-  font-size: clamp(10px, .8vw, 13px);
+  width: clamp(26px, 2.5vw, 34px);
+  height: clamp(26px, 2.5vw, 34px);
+  flex: 0 0 auto;
+  font-size: clamp(12px, 1vw, 16px);
 }
 
 #fxCanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 8; pointer-events: none; mix-blend-mode: screen; }
