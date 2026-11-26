@@ -2280,8 +2280,8 @@ button { font: inherit; color: inherit; }
   left: 50%;
   top: 50%;
   z-index: 26;
-  width: 46px;
-  height: 46px;
+  width: clamp(84px, 6vw, 120px);
+  height: clamp(84px, 6vw, 120px);
   translate: -50% -50%;
   pointer-events: none;
   opacity: 0;
@@ -2292,7 +2292,7 @@ button { font: inherit; color: inherit; }
 .gesture-cursor.is-visible { opacity: 1; scale: 1; }
 .gesture-cursor svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .gesture-cursor circle { fill: none; stroke-width: 2.2; }
-.gesture-track { stroke: rgba(255,226,162,.25); }
+.gesture-track { stroke: rgba(255,226,162,.48); }
 .gesture-progress {
   stroke: #ffd77e;
   stroke-linecap: round;
@@ -2303,13 +2303,46 @@ button { font: inherit; color: inherit; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 10px;
-  height: 10px;
+  width: 34%;
+  height: 45%;
   translate: -50% -50%;
-  border: 1px solid #fff0bd;
+  border: 1.5px solid #ffe6a1;
+  border-radius: 20% 20% 32% 32% / 10% 10% 24% 24%;
+  background:
+    linear-gradient(90deg, rgba(155,61,15,.32), transparent 28%, rgba(255,255,218,.65) 49%, transparent 72%, rgba(155,61,15,.3)),
+    radial-gradient(ellipse at 50% 88%, #fffbd4 4%, #ffd16b 36%, #ef9b35 76%);
+  box-shadow: 0 0 15px rgba(255,189,76,.95), 0 0 34px rgba(255,151,40,.55), inset 0 0 9px #ffeb9e;
+}
+.gesture-lantern::before, .gesture-lantern::after {
+  content: "";
+  position: absolute;
+  left: -3%;
+  width: 106%;
+  height: 12%;
+  border: 1px solid #ffe6a1;
   border-radius: 50%;
-  background: radial-gradient(circle, #fff7ca, #f3a83d 62%, #9a351e);
-  box-shadow: 0 0 12px #f5a941;
+}
+.gesture-lantern::before {
+  top: -3%;
+  background: linear-gradient(#f2b94f, #ffe6a1);
+}
+.gesture-lantern::after {
+  bottom: -2%;
+  left: 12%;
+  width: 76%;
+  background: #9c4c1c;
+  box-shadow: 0 3px 9px rgba(255,180,57,.8);
+}
+.gesture-lantern i {
+  position: absolute;
+  z-index: 1;
+  left: 38%;
+  bottom: -2%;
+  width: 24%;
+  height: 30%;
+  border-radius: 65% 35% 55% 45%;
+  background: linear-gradient(#fffde1 28%, #ffc55b 68%, #ed721c);
+  box-shadow: 0 0 8px #fff1a0;
 }
 .gesture-cursor.is-targeting > span { animation: fingerFocus .7s ease-in-out infinite alternate; }
 .gesture-cursor.is-complete { filter: drop-shadow(0 0 16px #ffe4a0); }
