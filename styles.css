@@ -315,16 +315,6 @@ button { font: inherit; color: inherit; }
 .gate-copy small { margin-top: 5px; font-family: Georgia, serif; font-size: clamp(6px, .48vw, 8px); letter-spacing: .2em; opacity: .72; }
 .gate-arrow { font-size: 18px; transition: transform .3s; }
 .journey-gate:hover .gate-arrow { transform: translateX(4px); }
-.home-hint {
-  position: absolute;
-  right: 2.2%;
-  bottom: 2.2%;
-  margin: 0;
-  font-size: clamp(7px, .7vw, 11px);
-  letter-spacing: .22em;
-  opacity: .65;
-}
-
 .draw-nav, .result-nav {
   position: absolute;
   left: 2%;
@@ -1308,7 +1298,7 @@ button { font: inherit; color: inherit; }
 .cards-heading h1 {
   margin: 8px 0 6px;
   color: #ffe9b3;
-  font-size: clamp(27px, 3.1vw, 50px);
+  font-size: clamp(34px, 4vw, 64px);
   font-weight: 500;
   letter-spacing: .11em;
 }
