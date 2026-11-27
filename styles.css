@@ -862,7 +862,7 @@ button { font: inherit; color: inherit; }
 .scene-about .about-heading,
 .scene-about .about-philosophy,
 .scene-about .about-hint { display: block; }
-.scene-about .about-title { left: 5.2%; top: 9.5%; }
+.scene-about .about-title { left: 5.2%; top: max(9.5%, calc(2.4% + 80px)); }
 .scene-about .about-heading { top: 8.8%; }
 .scene-about .momo-core {
   display: flex;
