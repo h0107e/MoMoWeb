@@ -2473,8 +2473,8 @@ button.gesture-hover:not(.hub-area), a.gesture-hover {
 .photo-home-back:focus-visible { outline:2px solid #ffd98c; outline-offset:4px; }
 .photo-nav>div { position:absolute; left:50%; top:18px; width:max-content; text-align:center; letter-spacing:.18em; transform:translateX(-50%); }
 .photo-privacy { grid-column:3; }
-.photo-nav b { display:block; font-size:clamp(25px,2.1vw,36px); font-weight:500; }
-.photo-nav div span { display:block; margin-top:4px; font:10px/1.2 Georgia,serif; letter-spacing:.3em; color:#c99851; }
+.photo-nav b { display:block; font-size:clamp(28px,2.8vw,48px); font-weight:500; }
+.photo-nav div span { display:block; margin-top:8px; font:clamp(11px,.9vw,16px)/1.2 Georgia,serif; letter-spacing:.3em; color:#c99851; }
 .photo-privacy { justify-self:end; font-size:12px; color:rgba(248,223,170,.66); letter-spacing:.08em; }
 .photo-layout { position:absolute; z-index:3; inset:13% 6% 5%; display:grid; grid-template-columns:minmax(0,1.55fr) minmax(290px,.72fr); gap:clamp(28px,4vw,76px); align-items:center; }
 .photo-paper { position:relative; padding:0; border:0; background:none; box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 42px rgba(231,153,57,.14); transform:none; }
