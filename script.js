@@ -93,7 +93,7 @@ const figures = [
     model: "./assets/QingHuaCi.glb",
     modelAlt: "青花瓷非遗玩偶三维模型",
     cameraOrbit: "90deg 82deg 2.25m",
-    card: "./assets/Card-QingHuaCi.webp",
+    card: "./assets/Card-QingHuaCi-20261128.webp",
     cardAlt: "MOMO 青花瓷 SSR 非遗收藏卡"
   },
   {
@@ -102,7 +102,7 @@ const figures = [
     model: "./assets/NiSu.glb?v=3",
     modelAlt: "泥塑非遗玩偶三维模型",
     cameraOrbit: "90deg 82deg 2.25m",
-    card: "./assets/Card-NiSu.jpg",
+    card: "./assets/Card-NiSu-20261128.webp",
     cardAlt: "MOMO 泥塑 SSR 非遗收藏卡"
   },
   {
@@ -120,7 +120,7 @@ const figures = [
     model: "./assets/NuoXi.glb?v=3",
     modelAlt: "傩戏非遗玩偶三维模型",
     cameraOrbit: "0deg 82deg 2.25m",
-    card: "./assets/Card-NuoXi.png",
+    card: "./assets/Card-NuoXi-20261128.webp",
     cardAlt: "MOMO 傩戏 SSR 非遗收藏卡"
   }
 ];
