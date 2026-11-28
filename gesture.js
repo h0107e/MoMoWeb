@@ -37,6 +37,7 @@ let smoothX = null;
 let smoothY = null;
 let animationFrame = 0;
 let cardFistSince = null;
+let cardPointerActive = false;
 
 function setStatus(message, mode = "") {
   statusText.textContent = message;
@@ -53,6 +54,8 @@ function resetDwell() {
 }
 
 function hideGestureCursor() {
+  cardPointerActive = false;
+  cardFistSince = null;
   cursor.classList.remove("is-visible");
   resetDwell();
   window.dispatchEvent(new CustomEvent("momo-gesture-pointer", {
@@ -150,6 +153,13 @@ function countExtendedFingers(hand) {
   return extendedFingers;
 }
 
+function isIndexPointing(hand, extendedFingers) {
+  if (extendedFingers !== 1) return false;
+  const wrist = hand[0];
+  const distance = index => Math.hypot(hand[index].x - wrist.x, hand[index].y - wrist.y);
+  return distance(8) > distance(6) * 1.16;
+}
+
 function mapPalm(hand, now) {
   const palm = PALM_POINTS.reduce((point, index) => ({
     x: point.x + hand[index].x / PALM_POINTS.length,
@@ -190,11 +200,29 @@ function processFrame(now) {
       if (isCardsScene) {
         lastHandAt = now;
         const extendedFingers = countExtendedFingers(hand);
-        if (extendedFingers >= 3) {
+        if (isIndexPointing(hand, extendedFingers)) {
+          cardFistSince = null;
+          if (!cardPointerActive) {
+            smoothX = null;
+            smoothY = null;
+            resetDwell();
+            // Lock the current card before moving the pointer to navigation.
+            window.dispatchEvent(new CustomEvent("momo-gesture-palm", {
+              detail: { active: false, pose: "point", clientX: 0, clientY: 0, now }
+            }));
+          }
+          cardPointerActive = true;
+          setStatus("食指移动光标 · 停留 1.2 秒确认", "tracking");
+          mapIndexFinger(hand[INDEX_TIP], now);
+        } else if (extendedFingers >= 3) {
+          if (cardPointerActive) { smoothX = null; smoothY = null; }
+          cardPointerActive = false;
           cardFistSince = null;
           setStatus("张掌向左拨转 · 握拳居中停止", "tracking");
           mapPalm(hand, now);
         } else if (extendedFingers <= 1) {
+          cardPointerActive = false;
+          resetDwell();
           cardFistSince ??= now;
           if (now - cardFistSince >= 65) {
             setStatus("已握拳 · 当前卡牌居中锁定", "ready");
@@ -207,9 +235,12 @@ function processFrame(now) {
             resetDwell();
           }
         } else {
+          cardPointerActive = false;
           cardFistSince = null;
+          resetDwell();
         }
       } else {
+        cardPointerActive = false;
         cardFistSince = null;
         setStatus("已识别食指 · 停留以确认", "tracking");
         mapIndexFinger(hand[INDEX_TIP], now);
