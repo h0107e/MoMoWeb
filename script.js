@@ -688,7 +688,7 @@ async function startResultRevealSequence() {
     const delays = style.transitionDelay.split(",").map(toMs);
     const dockMs = Math.max(0, ...durations.map((duration, i) => duration + delays[i % delays.length]));
     resultModelRevealTimer = setTimeout(finishDocking, dockMs + 80);
-  }, 1150);
+  }, 650);
 }
 
 blindBoxStage.addEventListener("pointermove", event => {
