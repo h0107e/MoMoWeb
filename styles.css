@@ -1946,7 +1946,9 @@ button { font: inherit; color: inherit; }
 }
 .scene-result.is-showcase.is-model-concealed .result-model-stage {
   opacity: 0;
+  visibility: hidden;
   translate: -50% 30px;
+  transition: none;
   pointer-events: none;
 }
 .scene-result.has-result-card.is-model-revealed .result-model-stage {

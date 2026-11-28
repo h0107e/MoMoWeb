@@ -33,6 +33,8 @@ let photoFrameCanvas = null;
 let resultRotationTimer = null;
 let resultCardDockTimer = null;
 let resultModelRevealTimer = null;
+let resultCardDockListener = null;
+let resultRevealRequest = 0;
 let hubBoxOpenTimer = null;
 let hubBoxOpening = false;
 let hubBoxSwayFrame = null;
@@ -182,6 +184,7 @@ function goTo(name, options = {}) {
   const changeScene = () => {
     if (sceneChanged) return;
     sceneChanged = true;
+    if (currentScene === "result" && name !== "result") clearResultRevealTimers();
     if (name === "draw" && currentScene === "result") resetDrawState();
     if (currentScene === "photo" && name !== "photo") stopPhotoCamera();
     if (currentScene === "cards" && name !== "cards") {
@@ -613,8 +616,13 @@ async function presentResultModel(figure) {
 }
 
 function clearResultRevealTimers() {
+  resultRevealRequest++;
   clearTimeout(resultCardDockTimer);
   clearTimeout(resultModelRevealTimer);
+  if (resultCardDockListener) {
+    resultCollectCard.removeEventListener("transitionend", resultCardDockListener);
+    resultCardDockListener = null;
+  }
 }
 
 function prepareResultReveal(figure) {
@@ -641,14 +649,18 @@ function revealResultModel() {
   if (resultModelViewer.loaded) holdResultModelFront();
 }
 
-function startResultRevealSequence() {
+async function startResultRevealSequence() {
   clearResultRevealTimers();
+  const request = resultRevealRequest;
 
   if (!resultScene.classList.contains("has-result-card")) {
     revealResultModel();
     return;
   }
 
+  // Start the sequence only once the card image can actually be displayed.
+  try { await resultCollectCardImage.decode(); } catch (_) {}
+  if (request !== resultRevealRequest || currentScene !== "result") return;
   resultScene.classList.add("is-card-intro");
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     resultScene.classList.add("is-card-docked");
@@ -657,9 +669,26 @@ function startResultRevealSequence() {
   }
 
   resultCardDockTimer = setTimeout(() => {
+    const finishDocking = () => {
+      if (request !== resultRevealRequest || currentScene !== "result") return;
+      clearTimeout(resultModelRevealTimer);
+      resultCollectCard.removeEventListener("transitionend", resultCardDockListener);
+      resultCardDockListener = null;
+      revealResultModel();
+    };
+    resultCardDockListener = event => {
+      if (event.target === resultCollectCard && event.propertyName === "left") finishDocking();
+    };
+    resultCollectCard.addEventListener("transitionend", resultCardDockListener);
     resultScene.classList.add("is-card-docked");
+    // Retain a fallback when the browser does not deliver transitionend.
+    const style = getComputedStyle(resultCollectCard);
+    const toMs = value => parseFloat(value) * (value.trim().endsWith("ms") ? 1 : 1000);
+    const durations = style.transitionDuration.split(",").map(toMs);
+    const delays = style.transitionDelay.split(",").map(toMs);
+    const dockMs = Math.max(0, ...durations.map((duration, i) => duration + delays[i % delays.length]));
+    resultModelRevealTimer = setTimeout(finishDocking, dockMs + 80);
   }, 1150);
-  resultModelRevealTimer = setTimeout(revealResultModel, 1550);
 }
 
 blindBoxStage.addEventListener("pointermove", event => {
